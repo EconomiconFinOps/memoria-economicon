@@ -47,13 +47,13 @@ La combinación de un motor analítico determinista (para los números: KPIs, an
 
 \textbf{Económica}. El coste del proyecto tiene dos componentes. El de la IA es bajo y está acotado: el techo de gasto de desarrollo es de 10 USD al mes, aplicado mediante claves virtuales revocables con tope de gasto \cite{adr-registro}, y evaluar 100 consultas de 2.000 tokens de entrada y 500 de salida cuesta unos 0,20 USD con el modelo principal \cite{adr-registro}. La infraestructura depende del entorno de despliegue: el sistema se ejecuta con nueve servicios, y once al activar la IA, y su coste mensual se estima con los precios públicos del proveedor en la fecha de la entrega.
 
-\textbf{Impacto esperado}
+\subsubsection{Impacto esperado}
 
 El impacto que persigue Economicon es que una persona sin formación en FinOps obtenga una respuesta trazable a la pregunta de en qué se le va el dinero, sin tener que construirla a partir de un panel. Para comprobarlo se midieron tres indicadores sobre una batería de 28 consultas de referencia: la proporción de respuestas correctas, con un umbral de 0,8; la latencia de respuesta en el percentil 95, con un objetivo de 10 segundos; y la proporción de cifras de la respuesta que no se pueden rastrear hasta los datos.
 
 Se partió de una línea base: la primera medición, hecha con una versión del chat que todavía no usaba un modelo y devolvía una plantilla con los fragmentos recuperados, dio 0 de 20 casos de respuesta aceptados \cite{jup070}.
 
-\textbf{Costes y supuestos}
+\subsubsection{Costes y supuestos}
 
 Los costes del proyecto se dividen en dos bloques: el de la inteligencia artificial, que ya está estimado con precios públicos fechados, y el de la infraestructura donde se ejecuta el sistema, que queda por cuantificar. Se presentan por separado porque el primero está acotado por diseño y el segundo depende de dónde y durante cuánto tiempo se despliegue el entregable.
 
@@ -61,7 +61,7 @@ Los costes del proyecto se dividen en dos bloques: el de la inteligencia artific
 
 \textbf{Coste de infraestructura}. El sistema se compone de nueve servicios con proveedores simulados y once al activar la IA, entre ellos las bases de datos relacional y vectorial, la cola de mensajes y la monitorización.
 
-\textbf{Riesgos}
+\subsubsection{Riesgos}
 
 Los riesgos del proyecto se agrupan en tres bloques: los técnicos, los económicos y los de contexto.
 

@@ -2,7 +2,7 @@
 
 Un asistente que explica costes solo es útil si acierta, cita de dónde saca las cifras, responde en un tiempo razonable, cuesta poco y se comporta bien con datos incompletos. Este apartado mide esas cinco cosas sobre el sistema actual, con DeepSeek V4.1 Flash como único modelo del chat.
 
-\textbf{h.1 Qué se evalúa y cómo}
+\subsection{Qué se evalúa y cómo}
 
 Un asistente con RAG puede fallar al recuperar, al generar o al citar, y por eso se mide cada etapa. El asistente puede fallar al recuperar, al redactar o al citar, así que medimos cada etapa, usando un banco de preguntas que tiene 28 items.
 
@@ -10,7 +10,7 @@ El banco tiene 28 preguntas: 20 de responder (tienen respuesta en los datos), 6 
 
 Los umbrales de admisibilidad son cuatro: el 80 \% de las preguntas de responder aprobadas (propuesta pendiente de validar por el equipo) \cite{jup070}, el 90 \% de las comprobaciones objetivas cumplidas, ninguna cifra sin rastro en casos críticos y un percentil 95 de latencia de 10 s o menos, es decir, que el 95 \% de las conversaciones no supere ese tiempo. Los tres últimos se fijaron en la decisión de arquitectura sobre la pasarela de modelos, el servicio que reparte las peticiones entre modelos y controla su gasto \cite{adr-registro}.
 
-\textbf{h.2 Resultados técnicos}
+\subsection{Resultados técnicos}
 
 Se midió el banco en tres cortes: la plantilla sin modelo (la primera versión del chat) y DeepSeek V4.1 Flash antes y después del arreglo de cortes de respuesta. \cite{jup070,banco28}
 
@@ -49,11 +49,11 @@ Prohibiciones incumplidas & 0 de 55 & 0 de 64 & 0 de 59 & --- \\
 
 \textbf{Qué hemos corregido}. Con preguntas sobre cifras de pantalla, una sola regla incumplida rechazaba la respuesta entera aunque el modelo hubiera acertado. El arreglo reintenta dentro de los cuatro intentos con temperatura creciente (regula cuánto varía el modelo), omite la cifra no verificada conservando el resto de la respuesta con un aviso, y recupera la conversación tras un fallo. En una batería propia de 14 preguntas repetidas 4 veces, las operaciones fallidas pasaron de más de un tercio a una sola de 56 \cite{cortes-medicion}. El aviso aún no se muestra en la interfaz \pendiente{}, y siguen sin resolverse las frases con huecos donde iría una cifra.
 
-\textbf{h.3 Resultados funcionales}
+\subsection{Resultados funcionales}
 
 El detector de anomalías usa reglas deterministas, sin modelo. Con 7 eventos inyectados en datos sintéticos detectó 5: precisión de 5 de 5 (todo lo que marcó era un evento real) y recall del 71,4 \% (la parte de los eventos que encontró), que sube al 100 \% sobre los 5 detectables por diseño. El retraso fue de 0 días por construcción. No detecta un pico desde cero ni la primera aparición de un servicio, porque exige una semana de referencia con coste positivo \cite{jup130-anomalias}. En los dos tenants de demostración (clientes con sus propios datos), la frescura fue de 0 días y la reconciliación con la fuente dio diferencia 0 en los tres pares tenant-divisa; al ser la fuente sintética, confirma la coherencia interna y no la integridad de datos reales \cite{jup130-anomalias}. Las métricas de negocio (tiempo ahorrado, cobertura de gasto asignado, ahorro potencial) tienen definición y un ejemplo sintético reproducible; el piloto con usuarios y el beneficio real no se han medido.
 
-\textbf{h.4 Cómo se reproduce}
+\subsection{Cómo se reproduce}
 
 Las medidas se cargan en un panel de Grafana (herramienta de monitorización) que registra el modelo servido en cada ejecución, y cada tabla se regenera con un comando del repositorio (anexo). \cite{adr-registro}
 
@@ -61,6 +61,6 @@ Las medidas se cargan en un panel de Grafana (herramienta de monitorización) qu
 
 Figura h.1: Dashboard provisional en Grafana
 
-\textbf{h.5 Qué podemos afirmar y qué no}
+\subsection{Qué podemos afirmar y qué no}
 
 Con 28 preguntas, una repetición y una revisora afirmamos que el sistema funciona de extremo a extremo, que cita con corrección y que su coste es bajo. No afirmamos la superioridad de un modelo, que el arreglo mejore la calidad en general ni la calidad en uso real, porque todo se midió en un ordenador local, con datos sintéticos, un corpus pequeño y casos críticos con un único decisor \cite{banco28}. La identidad del modelo es la que declara la configuración, y la batería de conformidad por requisito no se repitió con el modelo actual.
