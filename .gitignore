@@ -10,3 +10,9 @@
 *.toc
 *.synctex.gz
 main.pdf
+
+# Guía privada de redacción
+PROYECTO-JUPITER.md
+
+# Configuración local de cada persona (capítulo asignado)
+.claude/settings.local.json

@@ -47,6 +47,12 @@ jobs:
           root_file: main.tex
           latexmk_use_lualatex: true
           work_in_root_file_dir: true
+      - name: Comprobar citas y referencias sin resolver
+        run: |
+          if grep -E "Citation .* undefined|Reference .* undefined|could not be found" main.log; then
+            echo "Hay citas o referencias sin resolver (ver main.log en el paso de compilación)." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
       - name: Nombrar el PDF y resumir
         run: |
           mv main.pdf Economicon_Memoria_TFM.pdf
