@@ -12,12 +12,12 @@
 /.github/           @lmatsan
 
 # Capítulos
-# /capitulos/a-introduccion.tex          @PENDIENTE_USUARIO
-# /capitulos/b-caso-de-negocio.tex       @PENDIENTE_USUARIO
-# /capitulos/c-contribucion.tex          @PENDIENTE_USUARIO
-# /capitulos/d-arquitectura.tex          @PENDIENTE_USUARIO
-# /capitulos/e-diseno-ia.tex             @PENDIENTE_USUARIO
-# /capitulos/f-devops.tex                @PENDIENTE_USUARIO
-# /capitulos/g-modelos.tex               @PENDIENTE_USUARIO
-# /capitulos/h-evaluacion.tex            @PENDIENTE_USUARIO
-# /capitulos/i-conclusiones.tex          @PENDIENTE_USUARIO
+/capitulos/a-introduccion.tex           @lmatsan
+/capitulos/b-caso-de-negocio.tex        @lmatsan
+# /capitulos/c-contribucion.tex         # PENDIENTE: Víctor Méndez (usuario de GitHub)
+# /capitulos/d-arquitectura.tex         # PENDIENTE: Víctor Méndez (usuario de GitHub)
+# /capitulos/e-diseno-ia.tex            # PENDIENTE: Paris Arcos (usuario de GitHub)
+# /capitulos/f-devops.tex               # PENDIENTE: Alejandro Aguado (usuario de GitHub)
+# /capitulos/g-modelos.tex              # PENDIENTE: Paris Arcos (usuario de GitHub)
+/capitulos/h-evaluacion.tex             @lmatsan
+# /capitulos/i-conclusiones.tex         # PENDIENTE: Alejandro Aguado (usuario de GitHub)
