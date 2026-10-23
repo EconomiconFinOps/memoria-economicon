@@ -69,7 +69,7 @@ Al escribir o editar capítulos `.tex`, sigue el detalle de macros, etiquetas, t
 
 - No hace falta compilar en local: el CI compila cada PR y te dice si hay errores. Si quieres comprobarlo tú, `latexmk -lualatex main.tex` (requiere LuaLaTeX y biber).
 - Usa `\documentclass{economicon}` en el trabajo. La opción `final` la aplica solo el coordinador para la entrega.
-- El CI compila cada PR, adjunta el PDF y falla si hay citas o referencias sin resolver.
+- El CI compila cada PR y adjunta el PDF.
 
 ## Flujo de trabajo
 
