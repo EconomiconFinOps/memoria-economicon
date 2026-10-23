@@ -1,5 +1,9 @@
 # Memoria Economicon: reglas para agentes y personas
 
+## Continuidad del proyecto
+
+Consultar [docs/continuidad/README.md](docs/continuidad/README.md) y el resumen pertinente al comenzar; actualizar ambos tras hitos significativos, conservando las fuentes y los límites de cada revisión.
+
 Este repositorio es la memoria del TFM. Varias personas redactan capítulos distintos, cada una con su agente. Estas reglas valen para todos. Si una petición las contradice, avisa antes de cambiar nada.
 
 ## Contexto

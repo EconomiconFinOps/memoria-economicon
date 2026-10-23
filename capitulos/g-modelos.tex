@@ -2,8 +2,7 @@
 
 Economicon no entrena modelos propios: usa modelos preentrenados a través de un gateway y los guía con instrucciones y contexto. La elección importa porque determina el coste por consulta, el tiempo de respuesta y dónde viajan los datos del cliente. Este apartado explica por qué se descartó entrenar, por qué ruta se accede a los modelos, cómo se eligió el modelo y qué se puede afirmar sobre su coste y su latencia. La tabla~\ref{tab-g1} resume los datos clave.
 
-\needspace{0.38\textheight}
-\begin{table}[!h]
+\begin{table}[!htbp]
 \centering\small
 \caption{Configuración de la versión final y evidencias de la elección}\label{tab-g1}
 \begin{tabular}{@{}p{0.22\linewidth}p{0.3\linewidth}p{0.4\linewidth}@{}}
@@ -16,7 +15,7 @@ Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Implementada y probad
 Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 frente a Flash con las mismas preguntas; valoración de un juez LLM, un modelo que puntúa respuestas. \cite{comparativa-modelos} \\
 Comparativa de coste & GLM-5.2: 0,1806 USD; Flash: 0,0392 USD & Las 28 operaciones de cada modelo, con los embeddings de las preguntas; sin la indexación inicial. \cite{comparativa-modelos} \\
 Coste facturado por consulta & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & Consultas de chat terminadas, contrastadas con la factura del proveedor; ventanas de medición distintas. \cite{jup130-coste,jup133-coste} \\
-Latencia del modelo actual & Percentil 95: 41,3 s antes del arreglo y 42,4 s tras él; objetivo de 10 s & Tiempo bajo el que quedan el 95\,\% de las operaciones completadas del banco de 28 preguntas. \cite{reevaluacion-modelo,banco28} \\
+Latencia histórica del banco & Percentil 95: 41,3 s antes del arreglo y 42,4 s tras él; objetivo de 10 s & Tiempo bajo el que quedan el 95\,\% de las operaciones completadas del banco de 28 preguntas. \cite{reevaluacion-modelo,banco28-tras} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -37,10 +36,10 @@ Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativo
 
 GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez LLM, y Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
 
-Las mediciones posteriores con el modelo elegido usaron reglas automáticas y una revisora humana, con otros recursos y otro método de captura; por eso sus cifras no se comparan con las del juez (apartado~\ref{h-0}). El coste facturado por consulta confirmó la ventaja de Flash, aunque las ventanas de medición y el uso no son iguales y la diferencia no se atribuye solo al modelo. \cite{reevaluacion-modelo,jup133-coste}
+Una evaluación posterior usó reglas automáticas y una revisora humana, con otros recursos y método de captura. Las últimas repeticiones en DockerDevelop usaron un único juez IA sobre las respuestas disponibles. Son procedimientos distintos, separados en el apartado~\ref{h-0}; sus puntuaciones no se suman ni demuestran superioridad general de un modelo. La ventaja de coste observada también procede de ventanas diferentes y no se atribuye sólo al modelo. \cite{reevaluacion-modelo,jup133-coste,juez-infra}
 
 \subsection{Latencia y margen de mejora}\label{g-4}
 
-La latencia es el principal margen de mejora: el percentil 95 de la tabla~\ref{tab-g1} es más de cuatro veces el objetivo, y el arreglo de los cortes de respuesta no lo acercó. Ese tiempo incluye aplicación, cola y validación, no solo la generación. La versión final amplió además el límite de longitud de la respuesta, y su efecto en tiempo y coste no se ha medido. \cite{reevaluacion-modelo,banco28,demo-final}
+El histórico de la tabla~\ref{tab-g1} supera el objetivo de latencia. Después se amplió el límite final y se midieron una demo y seis repeticiones en DockerDevelop, recogidas por separado en el apartado~\ref{h-0}. El tiempo hasta el estado terminal incluye reintentos y operaciones fallidas; no es la duración de una única llamada al modelo. Existen observaciones posteriores de tiempo y coste, pero falta una comparación controlada que aísle el efecto del límite, del modelo o de la infraestructura. Tampoco se dispone de tiempos fiables por etapa. \cite{campanas-infra,demo-final}
 
 Acotar la salida sin truncarla, reutilizar contexto con caché o probar otra ruta compatible con la política de privacidad son vías de ajuste por evaluar. La elección conserva una ventaja de coste observada y deja pendiente alcanzar el objetivo de tiempo. \cite{comparativa-modelos,reevaluacion-modelo}

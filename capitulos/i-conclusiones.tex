@@ -2,29 +2,29 @@
 
 \subsection{Logros frente a los objetivos}\label{i-1}
 
-Economicon reúne en un mismo prototipo lo que el proyecto se propuso: ingiere y normaliza el gasto de Azure, calcula indicadores, detecta anomalías y responde preguntas en lenguaje natural citando sus fuentes. Las cifras de coste las calcula siempre el servidor y nunca el modelo, y cada cliente solo ve sus datos. El sistema se construye, se prueba y se despliega de forma automatizada, y cada medición se puede repetir con un comando y consultar en Grafana. \cite{arquitectura-final,panel-evaluacion}
+Economicon implementa ingesta y normalización de gasto, indicadores, anomalías y conversación documental, con separación por cliente, construcción y despliegue automatizados. El servidor calcula los agregados; la generación puede contener errores, como muestra h. Grafana presenta informes con procedencia y límites. \cite{arquitectura-final,panel-evaluacion}
 
-El alcance demostrado usa datos públicos y sintéticos y una API que simula Azure. Varias capacidades ---la recuperación híbrida, el chat generativo y el ciclo en AWS--- están implementadas pero apagadas por defecto o sin ejecutar en la nube, y su uso con una organización real está por demostrar. \cite{arquitectura-final,aws-ensayo}
+El alcance demostrado usa datos públicos y sintéticos y una API Azure simulada. Recuperación híbrida, chat generativo y ciclo AWS están implementados, pero requieren activación o ejecución específica. Su uso con una organización real no está probado. \cite{arquitectura-final,aws-ensayo}
 
 \subsection{Lecciones y límites}\label{i-2}
 
-La principal lección es que superar las pruebas técnicas no basta para aceptar un asistente. El chat cita bien, no inventa cifras y cuesta poco, pero acierta menos de lo exigido y tarda varias veces más que el objetivo (apartado~\ref{h-0}). Separar las cifras deterministas de la redacción del modelo resultó una buena decisión: los fallos se concentran en la redacción y en la verificación, no en los datos.
+Superar pruebas técnicas no basta para aceptar el asistente. Hay citas trazables, pero también fallos de criterio, bloqueos y latencia excesiva. Cumplir prohibiciones concretas no demuestra ausencia general de errores. La demo tiene incidencias y ninguna campaña reciente está aceptada. \cite{banco28-tras,campanas-infra,juez-infra,demo-final}
 
-La segunda lección es de método. Medir con reglas, con una revisora y con un juez LLM da lecturas distintas que no se pueden sumar, y cambiar varias cosas a la vez impidió aislar el efecto del modelo. En el tramo final, además, varias integraciones se hicieron sin revisión cruzada para llegar a la entrega, y esas partes tienen menos verificación independiente. \cite{reevaluacion-modelo,continuidad}
+El histórico con una revisora y las seis repeticiones con un juez IA tienen métodos distintos. Los juicios automáticos mantienen límites del lector numérico y no sustituyen revisión humana independiente. Variar varias condiciones impide aislar causas; integrar por excepción tampoco equivale a revisión cruzada completa. \cite{reevaluacion-modelo,juez-infra,continuidad}
 
 \subsection{Trabajo futuro}\label{i-3}
 
 \subsubsection{Validación con una organización real}
-El siguiente paso será probar Economicon con usuarios, datos y una cuenta de Azure reales, comprobando permisos y separación de clientes, y medir el impacto de negocio que hoy solo es una hipótesis. Se repetirán las evaluaciones con más revisores y repeticiones, y se medirá la latencia en la infraestructura definitiva antes de aceptar cambios.
+Se probará con usuarios y datos reales, comprobando permisos, aislamiento e impacto económico. Las repeticiones existentes se complementarán con revisión humana independiente y mediciones en el entorno elegido, variando una condición cada vez.
 
 \subsubsection{Herramientas para el modelo y tiempo de respuesta}
-Las consultas de propiedad, gasto y anomalías se ofrecerán al modelo como herramientas que el servidor autoriza y ejecuta, de modo que el chat pueda usarlas sin escribir SQL. Para reducir la latencia se estudiará acotar la salida sin truncarla, reutilizar contexto mediante caché y activar la recuperación híbrida tras preparar su índice. \cite{arquitectura-final}
+Se ofrecerán al modelo consultas autorizadas de gasto, propiedad y anomalías, sin generar SQL. Para reducir latencia se estudiarán salidas acotadas sin truncado, caché de contexto y recuperación híbrida con su índice preparado. \cite{arquitectura-final}
 
 \subsubsection{Una referencia predictiva para las anomalías}
-Hoy una anomalía se detecta comparando el gasto de los últimos siete días con el de los siete anteriores: se marca si sube más de un 20\,\% y más de 100 unidades monetarias diarias. La regla es determinista y explicable, pero no distingue un crecimiento normal de un salto inesperado. Se propondrá un modelo que estime el gasto esperado de cada día: una regresión lineal como punto de partida, comparada con modelos estacionales y técnicas no supervisadas por precisión y explicabilidad. Hará falta un histórico de varias semanas o meses que hoy no existe. \cite{detector-anomalias,jup130-anomalias}
+La regla actual compara dos semanas: exige un aumento superior al 20\,\% y a 100 unidades monetarias diarias. No distingue crecimiento normal de salto inesperado. Se comparará regresión lineal con modelos estacionales y no supervisados, usando un histórico de semanas o meses todavía inexistente y evaluando precisión y explicabilidad. \cite{detector-anomalias,jup130-anomalias}
 
 \subsubsection{Detección periódica y avisos}
-Las anomalías se detectan hoy cuando la persona pulsa un botón, y cada una se guarda como un episodio por cliente, moneda y servicio con su estado de seguimiento. Se añadirá una detección periódica, apagada por defecto y coordinada con la carga de costes, con aviso primero dentro de la aplicación y después, si aporta valor, mediante una regla de Grafana. Antes de activarla se definirán su frecuencia, el tratamiento de duplicados y las condiciones de envío. \cite{detector-anomalias}
+La detección actual es manual y guarda episodios por cliente, moneda y servicio. Se añadirá ejecución periódica, apagada por defecto y coordinada con la carga de costes. Antes de avisar en la aplicación o Grafana se definirán frecuencia, duplicados y condiciones de envío. \cite{detector-anomalias}
 
 \subsubsection{Despliegue en la nube}
 El ciclo desechable en AWS está preparado. Ejecutarlo permitirá medir la ruta con modelos nativos y comparar coste y latencia con la configuración actual. \cite{aws-ensayo}
