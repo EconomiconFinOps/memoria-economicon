@@ -1,6 +1,6 @@
 \section{Arquitectura técnica de la solución}\label{d-0}
 
-Versión de arquitectura: 10/10/2026. Base funcional c2995a1; documentación y referencia AWS/Terraform d523bc3 (PR92). \pendiente{} Revisión de Lucía y validación posterior. {[}R1--R3{]}
+Versión de arquitectura: 10/10/2026. Base funcional de la versión integrada; documentación y referencia AWS/Terraform de la PR 92. \pendiente{} Revisión de Lucía y validación posterior. \cite{arquitectura,arquitectura-aws,terraform-validacion}
 
 Componentes. Economicon separa la interfaz React, la API FastAPI en Python y un processor que ejecuta trabajos asíncronos mediante RabbitMQ. La API concentra autenticación, autorización y consultas; el processor se ocupa de la ingesta documental. Esta separación evita mantener peticiones HTTP abiertas durante el procesamiento y permite dimensionar ambos componentes independientemente. Los costes proceden de una API Azure simulada: no se acredita conexión con facturación real. El código se organiza en un monorepo con apps/frontend, apps/backend y apps/processor; infra reúne la configuración de infraestructura, docs las decisiones y openspec los requisitos.
 
@@ -20,7 +20,7 @@ Observabilidad y entrega. Prometheus recoge métricas de backend y processor y G
 
 \figura{image2}
 
-Figura d.1. Componentes del corte funcional; líneas discontinuas: integraciones opcionales. {[}R1{]}
+Figura d.1. Componentes del corte funcional; líneas discontinuas: integraciones opcionales. \cite{arquitectura}
 
 Alternativa documental AWS. El frontend se alojaría en S3 privado y CloudFront, con WAF y ACM; la API y el processor se ejecutarían en ECS Fargate, con un ALB interno para la API y subredes privadas. Amazon MQ conservaría RabbitMQ y RDS PostgreSQL alojaría datos operativos y vectores. Cognito, Bedrock, Secrets Manager, IAM/KMS y CloudWatch cubrirían identidad, IA, secretos, permisos, cifrado y observabilidad. El esquema AWS detalla las dependencias. Sustituir CockroachDB, la autenticación y los proveedores actuales exige adaptar SQL/migraciones, tokens y modelos/embeddings; no basta cambiar variables. Son brechas hipotéticas de compatibilidad, no tareas de despliegue pendientes de este encargo.
 
@@ -28,6 +28,4 @@ Terraform y límites. La plantilla Terraform complementa el diseño y define rec
 
 \figura{image3}
 
-Figura d.2. Referencia conceptual AWS; no representa un despliegue realizado. {[}R2{]}
-
-Fuentes: \href{https://github.com/EconomiconFinOps/tfm-economicon/blob/d523bc393b0be78674e540a242f3bc9cbeebc8f7/docs/architecture.md}{{[}R1{]} Arquitectura técnica}; \href{https://github.com/EconomiconFinOps/tfm-economicon/blob/d523bc393b0be78674e540a242f3bc9cbeebc8f7/docs/architecture-aws.md}{{[}R2{]} Arquitectura AWS}; \href{https://github.com/EconomiconFinOps/tfm-economicon/blob/d523bc393b0be78674e540a242f3bc9cbeebc8f7/infra/aws-reference/README.md}{{[}R3{]} Terraform y validación}. Referencias fijadas al commit d523bc3 de PR92.
+Figura d.2. Referencia conceptual AWS; no representa un despliegue realizado. \cite{arquitectura-aws}

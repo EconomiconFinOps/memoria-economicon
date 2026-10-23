@@ -10,6 +10,7 @@ name: Memoria PDF
       - 'capitulos/**'
       - 'figuras/**'
       - 'fuentes/**'
+      - 'VERSION'
       - '.github/workflows/memoria.yml'
   push:
     branches: [main]
@@ -20,6 +21,7 @@ name: Memoria PDF
       - 'capitulos/**'
       - 'figuras/**'
       - 'fuentes/**'
+      - 'VERSION'
       - '.github/workflows/memoria.yml'
   workflow_dispatch:
 
@@ -56,7 +58,7 @@ jobs:
           path: Economicon_Memoria_TFM.pdf
 
   publicar:
-    name: Publicar ultima version
+    name: Guardar PDF versionado en el repo
     needs: compilar
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -64,16 +66,31 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/download-artifact@v4
         with:
           name: Economicon_Memoria_TFM
-      - name: Actualizar la release memoria-ultima
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Copiar el PDF con la versión de VERSION
+        id: version
         run: |
-          gh release delete memoria-ultima --cleanup-tag --yes --repo "$GITHUB_REPOSITORY" || true
-          gh release create memoria-ultima Economicon_Memoria_TFM.pdf \
-            --repo "$GITHUB_REPOSITORY" \
-            --target "$GITHUB_SHA" \
-            --title "Memoria Economicon - ultima version" \
-            --notes "PDF compilado automaticamente desde el commit $GITHUB_SHA."
+          version="$(tr -d '[:space:]' < VERSION)"
+          destino="entregas/Economicon_Memoria_TFM_v${version}.pdf"
+          if [ -e "$destino" ]; then
+            echo "Ya existe $destino: sube el número en VERSION para generar una nueva versión." >> "$GITHUB_STEP_SUMMARY"
+            echo "nueva=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          mkdir -p entregas
+          cp Economicon_Memoria_TFM.pdf "$destino"
+          echo "destino=$destino" >> "$GITHUB_OUTPUT"
+          echo "nueva=true" >> "$GITHUB_OUTPUT"
+      - name: Commit y push a main
+        if: steps.version.outputs.nueva == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${{ steps.version.outputs.destino }}"
+          git commit -m "docs: PDF de la memoria $(basename "${{ steps.version.outputs.destino }}" .pdf) [skip ci]"
+          git push origin HEAD:main
