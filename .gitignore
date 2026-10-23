@@ -14,3 +14,6 @@ CLAUDE.local.md
 
 # Requisitos del proyecto (privado)
 PROYECTO-JUPITER.md
+
+# Configuración local de cada persona (capítulo asignado)
+.claude/settings.local.json

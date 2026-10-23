@@ -58,29 +58,34 @@ jobs:
           mv main.pdf Economicon_Memoria_TFM.pdf
           echo "Marcas pendientes: $(grep -o 'pendiente{' -r capitulos | wc -l)" >> "$GITHUB_STEP_SUMMARY"
           echo "Paginas: $(pdfinfo Economicon_Memoria_TFM.pdf 2>/dev/null | awk '/Pages/{print $2}')" >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - name: Subir el PDF para revisar el PR
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
         with:
           name: Economicon_Memoria_TFM
           path: Economicon_Memoria_TFM.pdf
 
   publicar:
     name: Guardar PDF versionado en el repo
-    needs: compilar
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - uses: actions/download-artifact@v4
+      - name: Compilar con LuaLaTeX
+        uses: xu-cheng/latex-action@v3
         with:
-          name: Economicon_Memoria_TFM
+          root_file: main.tex
+          latexmk_use_lualatex: true
+          work_in_root_file_dir: true
       - name: Copiar el PDF con la versión de VERSION
         id: version
         run: |
+          mv main.pdf Economicon_Memoria_TFM.pdf
           version="$(tr -d '[:space:]' < VERSION)"
           destino="entregas/Economicon_Memoria_TFM_v${version}.pdf"
           if [ -e "$destino" ]; then

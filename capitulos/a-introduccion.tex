@@ -1,36 +1,18 @@
 \section{Introducción y resumen ejecutivo}\label{a-0}
 
-Gastar en la nube es fácil; entender el gasto, no. Las startups, los equipos pequeños y los desarrolladores independientes acumulan facturas de proveedores cloud sin visibilidad real de dónde se va el dinero, y sin un equipo de FinOps ni tiempo para analizarlo a mano. Economicon nace para cerrar esa brecha: entender en qué se está yendo el dinero de la nube no debería requerir un máster en facturas ni un equipo dedicado.
+Gastar en la nube es fácil; entender el gasto, no. Las startups, los equipos pequeños y los desarrolladores independientes acumulan facturas de proveedores cloud sin visibilidad real de dónde se va el dinero. Rara vez tienen un equipo de FinOps, la práctica de dar visibilidad y control al coste de la nube, ni tiempo para analizar esas facturas a mano. Economicon nace para cerrar esa brecha: entender en qué se va el dinero de la nube no debería requerir un máster en facturas ni un equipo dedicado.
 
-Este documento presenta la memoria del proyecto Economicon, un asistente FinOps orientado a personas que no son expertas en FinOps. El alcance de este Trabajo Fin de Máster es el vertical de Microsoft Azure: sobre un conjunto de datos públicos de costes de Azure, servido a través de una API de Azure Cost Management simulada, la solución ingiere y normaliza el gasto, calcula indicadores accionables, detecta gasto innecesario y responde preguntas en lenguaje natural mediante un agente conversacional apoyado en recuperación aumentada por generación (RAG).
+Esta memoria presenta Economicon, un asistente FinOps para personas que no son expertas en la materia. El alcance de este Trabajo Fin de Máster es Microsoft Azure. Sobre un conjunto de datos públicos de costes de Azure, servido por una interfaz de programación (API) simulada, la solución ingiere y normaliza el gasto, calcula indicadores que permiten actuar, detecta gasto anómalo y responde preguntas en lenguaje natural. Para responder, un agente conversacional usa generación aumentada por recuperación (RAG): antes de redactar, el sistema recupera los fragmentos de documentación y de datos que vienen al caso.
 
 \subsection{Resumen ejecutivo}\label{a-6}
 
 \begin{itemize}
-\item
-  \begin{quote}
-  \textbf{Problema:} falta de visibilidad y de tiempo para analizar el gasto cloud en organizaciones sin función FinOps.
-  \end{quote}
-\item
-  \begin{quote}
-  \textbf{Solución:} un asistente que convierte datos de coste de Azure en indicadores claros, alertas de gasto anómalo y respuestas conversacionales con fuentes citadas.
-  \end{quote}
-\item
-  \begin{quote}
-  \textbf{Arquitectura:} monorepo con backend FastAPI, frontend React, procesamiento asíncrono sobre RabbitMQ, persistencia en CockroachDB, base vectorial pgvector y acceso a modelos de lenguaje vía LiteLLM sobre OpenRouter.
-  \end{quote}
-\item
-  \begin{quote}
-  \textbf{Enfoque de IA:} uso de modelos preentrenados a través de un gateway, sin fine-tuning; la personalización al dominio se consigue con RAG sobre los datos de coste y la documentación FinOps.
-  \end{quote}
-\item
-  \begin{quote}
-  \textbf{DevOps:} integración continua, versionado de decisiones con OpenSpec y ADR, protección de ramas y flujo de pull requests revisados.
-  \end{quote}
-\item
-  \begin{quote}
-  \textbf{Alcance del MVP:} solo Azure, dataset público y sin conexión a un tenant real; el objetivo es demostrar el circuito completo dato → analítica → asistente de forma reproducible.
-  \end{quote}
+\item \textbf{Problema:} falta de visibilidad y de tiempo para analizar el gasto cloud en organizaciones sin función FinOps.
+\item \textbf{Solución:} un asistente que convierte datos de coste de Azure en indicadores claros, alertas de gasto anómalo y respuestas conversacionales con fuentes citadas.
+\item \textbf{Arquitectura:} aplicación web con backend en Python, procesamiento asíncrono de tareas y dos bases de datos, una relacional y otra vectorial, que se apoya en modelos de lenguaje a través de un gateway (un punto de entrada que gestiona el acceso a esos modelos). El detalle está en d.
+\item \textbf{Enfoque de IA:} modelos preentrenados, sin entrenamiento propio. La adaptación al dominio se logra con RAG sobre los datos de coste y la documentación FinOps. Detalle en e y g.
+\item \textbf{DevOps:} integración y despliegue continuos, decisiones documentadas y cambios revisados mediante pull requests. Detalle en f.
+\item \textbf{Alcance del MVP:} el producto mínimo viable, es decir, la versión mínima que demuestra el circuito completo. Solo Azure, con datos públicos y sin conexión a la facturación real de ningún cliente.
 \end{itemize}
 
-\textbf{Nota sobre esta versión.} Se trata de una propuesta de memoria: el contenido de arquitectura, diseño de IA y DevOps refleja el estado real del proyecto, mientras que los resultados de evaluación se marcan como pendientes hasta completar la ejecución sobre el sistema desplegado.
+Los resultados y sus límites se presentan en h. Lo que la memoria puede afirmar es que el circuito completo funciona de extremo a extremo con datos reproducibles. Lo que no puede afirmar todavía es que la respuesta sea útil para el público objetivo, porque eso requiere una prueba con usuarios reales.

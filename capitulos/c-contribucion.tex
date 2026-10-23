@@ -1,29 +1,26 @@
 \section{Contribución individual}\label{c-0}
 
-Economicon organiza la colaboración mediante cuatro funciones rotatorias: liderazgo, pairing/coautoría, revisión de PR y validación. Trello conserva la asignación prevista y GitHub registra acciones enlazadas. Son evidencias complementarias: una asignación no acredita que se haya ejercido el rol, y abrir una PR no equivale a realizar en solitario toda la entrega. \cite{contribuciones-guia}
+Economicon organiza la colaboración mediante cuatro funciones rotatorias: liderazgo, pairing/coautoría, revisión de PR y validación. Trello conserva la asignación prevista y GitHub registra acciones enlazadas. Son evidencias complementarias: una asignación no acredita que se haya ejercido el rol, y abrir una PR no equivale a realizar en solitario toda la entrega. \cite{contribuciones}
 
 \subsection{Roles rotatorios}\label{c-4}
 
 El corte del 20/10/2026, 20:25--20:26 UTC, comprende 117 historias no archivadas y 143 PR distintas asociadas por JUP en título o rama (147 asociaciones). Incluye historias posteriores al MVP y conserva las 100 del corte anterior. La tabla cuenta asignaciones reconocidas, no participación efectiva. \cite{trello-jup064}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2877}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1580}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1297}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1533}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1651}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1061}}@{}}
-\toprule\noalign{}
+\begin{table}[htbp]
+\centering\small
+\caption{Asignaciones de rol por persona}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.2877}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1580}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1297}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1533}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1651}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1061}}@{}}
+\toprule
 \textbf{Persona} & \textbf{Liderazgo} & \textbf{Pairing} & \textbf{Revisión} & \textbf{Validación} & \textbf{Total} \\
+\midrule
 Alejandro Aguado & 26 & 30 & 22 & 31 & 109 \\
 Víctor Méndez & 28 & 22 & 27 & 28 & 105 \\
 Lucía Mateo & 30 & 28 & 30 & 22 & 110 \\
 Paris Arcos & 23 & 26 & 28 & 28 & 105 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{table}
+
 
 Se reconocen 429 posiciones de rol y quedan 39 sin resolver de 468 posibles: 10 de liderazgo, 11 de pairing, 10 de revisión y 8 de validación. Incluyen ambigüedades de extracción, dispensas y líneas sin responsable reconocible; no se reparten por equilibrio estadístico. \href{https://trello.com/c/UbyhMsNF}{JUP-055} y \href{https://trello.com/c/AG5fAbl3}{JUP-127}, por ejemplo, sí nombran personas, pero etiquetas repetidas con enlaces impiden resolver automáticamente algunas posiciones. Tampoco todas las tarjetas asignan cuatro personas distintas: siete repiten una identidad entre funciones. \cite{trello-jup064}
 
@@ -31,44 +28,36 @@ Se reconocen 429 posiciones de rol y quedan 39 sin resolver de 468 posibles: 10 
 
 Las PR integradas son las abiertas por cada persona y fusionadas en develop hasta el 19/10, contrastadas el 20/10: 119 en total, incluidos distintos métodos de integración. Las reviews corresponden al corte del 20/10 en las 143 PR asociadas: tituladas/total de eventos en PR ajenas al autor, contados una vez por PR. Se excluyen PENDING y las intervenciones del autor en su propia PR; se conservan dictámenes históricos, incluso sobre SHA anteriores. Un evento no acredita una validación vigente ni mide esfuerzo. \cite{trello-jup064}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3774}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2123}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4104}}@{}}
-\toprule\noalign{}
+\begin{table}[htbp]
+\centering\small
+\caption{Integración y revisiones por persona}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3774}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2123}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4104}}@{}}
+\toprule
 \textbf{Persona} & \textbf{PR integradas} & \textbf{Reviews tituladas/total} \\
+\midrule
 Alejandro Aguado & 56 & 46/54 \\
 Víctor Méndez & 17 & 76/87 \\
 Lucía Mateo & 33 & 83/103 \\
 Paris Arcos & 13 & 67/91 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{table}
 
-Alejandro Aguado: normalización de costes Azure (\href{https://trello.com/c/vw0xIKRN}{JUP-013}), chunking y embeddings (\href{https://trello.com/c/Mi3kPCOD}{JUP-020}), prompt y guardrails (\href{https://trello.com/c/8SDUi2t9}{JUP-024}), contrato de herramientas del agente (\href{https://trello.com/c/m1i7iXBm}{JUP-084}), contenedores y CD (\href{https://trello.com/c/yZnjgiSp}{JUP-049}/052). Implementó el recolector y la documentación inicial de \href{https://trello.com/c/wluz6AGW}{JUP-064}; su autoría material se distingue de la apertura de \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76}. \cite{contribuciones-guia}
 
-Víctor Méndez: inventario y migración del frontend y reconciliación de su capa de datos (\href{https://trello.com/c/DtlNd0u0}{JUP-090}--095/097), verificación del workspace y cierre de la migración (\href{https://trello.com/c/P33co27E}{JUP-103}/105), además de liderazgo y contraste del registro \href{https://trello.com/c/wluz6AGW}{JUP-064} y apertura de \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76}. \cite{contribuciones-guia}
+Alejandro Aguado: normalización de costes Azure (\href{https://trello.com/c/vw0xIKRN}{JUP-013}), chunking y embeddings (\href{https://trello.com/c/Mi3kPCOD}{JUP-020}), prompt y guardrails (\href{https://trello.com/c/8SDUi2t9}{JUP-024}), contrato de herramientas del agente (\href{https://trello.com/c/m1i7iXBm}{JUP-084}), contenedores y CD (\href{https://trello.com/c/yZnjgiSp}{JUP-049}/052). Implementó el recolector y la documentación inicial de \href{https://trello.com/c/wluz6AGW}{JUP-064}; su autoría material se distingue de la apertura de \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76}. \cite{contribuciones}
 
-Lucía Mateo: logging y seguimiento de ingestas (\href{https://trello.com/c/vKCJl5NY}{JUP-042}--045), entorno Docker Compose (\href{https://trello.com/c/4VYnTkuD}{JUP-050}), recuperación semántica (\href{https://trello.com/c/DPZpQ09b}{JUP-022}), anomalías (\href{https://trello.com/c/ScxJi1TO}{JUP-030}/114) y aportaciones de evaluación e interfaz identificadas en \href{https://trello.com/c/bwvfLpUG}{JUP-067}/070/071/106/107/119/112/117/100. En \href{https://trello.com/c/wluz6AGW}{JUP-064} realizó la revisión de código, con los límites de alcance indicados abajo. \cite{contribuciones-guia}
+Víctor Méndez: inventario y migración del frontend y reconciliación de su capa de datos (\href{https://trello.com/c/DtlNd0u0}{JUP-090}--095/097), verificación del workspace y cierre de la migración (\href{https://trello.com/c/P33co27E}{JUP-103}/105), además de liderazgo y contraste del registro \href{https://trello.com/c/wluz6AGW}{JUP-064} y apertura de \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76}. \cite{contribuciones}
 
-Paris Arcos: ingesta documental y OCR (\href{https://trello.com/c/SEkdYIYs}{JUP-124}), chunking documental (\href{https://trello.com/c/H0RUnArf}{JUP-125}), embeddings y recuperación híbrida (\href{https://trello.com/c/AG5fAbl3}{JUP-127}), integración de LiteLLM/OpenRouter y servicios asociados (\href{https://trello.com/c/O8elKkm9}{JUP-023}/108), KPIs y dashboard (\href{https://trello.com/c/anUswta8}{JUP-026}/055), además de componentes y pruebas de \href{https://trello.com/c/iMXH0o3a}{JUP-047}/085/086/051/053. En \href{https://trello.com/c/wluz6AGW}{JUP-064} realizó la validación documentada. \cite{contribuciones-guia}
+Lucía Mateo: logging y seguimiento de ingestas (\href{https://trello.com/c/vKCJl5NY}{JUP-042}--045), entorno Docker Compose (\href{https://trello.com/c/4VYnTkuD}{JUP-050}), recuperación semántica (\href{https://trello.com/c/DPZpQ09b}{JUP-022}), anomalías (\href{https://trello.com/c/ScxJi1TO}{JUP-030}/114) y aportaciones de evaluación e interfaz identificadas en \href{https://trello.com/c/bwvfLpUG}{JUP-067}/070/071/106/107/119/112/117/100. En \href{https://trello.com/c/wluz6AGW}{JUP-064} realizó la revisión de código, con los límites de alcance indicados abajo. \cite{contribuciones}
 
-\textbf{{[}Conforme --- 21/10/2026{]}} Alejandro Aguado: conformidad expresa con su fila y la atribución de contribuciones en esta versión.
-
-\textbf{\pendiente{}} Víctor Méndez: conformidad expresa con su fila y la atribución de contribuciones en esta versión.
-
-\textbf{\pendiente{}} Lucía Mateo: conformidad expresa con su fila y la atribución de contribuciones en esta versión.
-
-\textbf{\pendiente{}} Paris Arcos: conformidad expresa con su fila y la atribución de contribuciones en esta versión.
+Paris Arcos: ingesta documental y OCR (\href{https://trello.com/c/SEkdYIYs}{JUP-124}), chunking documental (\href{https://trello.com/c/H0RUnArf}{JUP-125}), embeddings y recuperación híbrida (\href{https://trello.com/c/AG5fAbl3}{JUP-127}), integración de LiteLLM/OpenRouter y servicios asociados (\href{https://trello.com/c/O8elKkm9}{JUP-023}/108), KPIs y dashboard (\href{https://trello.com/c/anUswta8}{JUP-026}/055), además de componentes y pruebas de \href{https://trello.com/c/iMXH0o3a}{JUP-047}/085/086/051/053. En \href{https://trello.com/c/wluz6AGW}{JUP-064} realizó la validación documentada. \cite{contribuciones}
 
 \subsection{Trazabilidad y límites de la evidencia}\label{c-65}
 
-Cada contribución se relaciona mediante JUP, tarjeta, cambios y PR. El flujo previsto exige revisión y validación; el historial conserva excepciones y ausencias de evidencia, por lo que no se afirma que todas las PR hayan recibido dos dictámenes independientes. Por ejemplo, PR1 está integrada sin reviews en la API. La existencia de documentación, pruebas y checks de CI acredita artefactos del equipo, no por sí sola su ejecución por una persona. \cite{contribuciones-guia}
+Cada contribución se relaciona mediante JUP, tarjeta, cambios y PR. El flujo previsto exige revisión y validación; el historial conserva excepciones y ausencias de evidencia, por lo que no se afirma que todas las PR hayan recibido dos dictámenes independientes. Por ejemplo, PR1 está integrada sin reviews en la API. La existencia de documentación, pruebas y checks de CI acredita artefactos del equipo, no por sí sola su ejecución por una persona. \cite{contribuciones}
 
-Las entregas \href{https://trello.com/c/3wiy5PJS}{JUP-017}/037/054/068/101/102/111 incorporan excepciones de cierre por plazo y ejecución asistida documentadas; no se atribuyen pairing ni aprobaciones humanas dispensadas. Integración y cierre en Trello son distintos: en el corte del 20/10, \href{https://trello.com/c/n4Aplko2}{JUP-037}/101/102 figuran en Backlog y las otras cuatro en Hecho. En \href{https://trello.com/c/4OJ1OK53}{JUP-102} la descripción atribuye liderazgo y comprobación propia a Alejandro y dispensa pairing y revisión humanos independientes. \cite{trello-jup064,contribuciones-guia}
+Las entregas \href{https://trello.com/c/3wiy5PJS}{JUP-017}/037/054/068/101/102/111 incorporan excepciones de cierre por plazo y ejecución asistida documentadas; no se atribuyen pairing ni aprobaciones humanas dispensadas. Integración y cierre en Trello son distintos: en el corte del 20/10, \href{https://trello.com/c/n4Aplko2}{JUP-037}/101/102 figuran en Backlog y las otras cuatro en Hecho. En \href{https://trello.com/c/4OJ1OK53}{JUP-102} la descripción atribuye liderazgo y comprobación propia a Alejandro y dispensa pairing y revisión humanos independientes. \cite{trello-jup064,contribuciones}
 
-El snapshot histórico del 10/10 reconoce cinco commits distintos con coautoría declarada; esta cifra no se ha actualizado con el corte de roles y reviews del 20/10. Los trailers no demuestran una sesión de pairing y las notas de colaboración no importadas no se reconstruyen. Su ausencia en el registro tampoco demuestra ausencia de trabajo. \cite{snapshot-jup064}
+El snapshot histórico del 10/10 reconoce cinco commits distintos con coautoría declarada; esta cifra no se ha actualizado con el corte de roles y reviews del 20/10. Los trailers no demuestran una sesión de pairing y las notas de colaboración no importadas no se reconstruyen. Su ausencia en el registro tampoco demuestra ausencia de trabajo. \cite{contribuciones}
 
-\href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76} se integró con revisión de Lucía y validación de Paris del 08/10: la primera excluía la recogida real y la segunda tenía alcance offline. \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/109}{PR109} actualizó los datos por excepción de plazo, sin nuevas reviews independientes. Las aprobaciones de \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76} no se trasladan a \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/109}{PR109} ni acreditan conformidad con las filas de esta memoria. Esa conformidad permanece pendiente para los cuatro miembros. \cite{contribuciones-guia}
+\href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76} se integró con revisión de Lucía y validación de Paris del 08/10: la primera excluía la recogida real y la segunda tenía alcance offline. \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/109}{PR109} actualizó los datos por excepción de plazo, sin nuevas reviews independientes. Las aprobaciones de \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76} no se trasladan a \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/109}{PR109} ni acreditan conformidad con las filas de esta memoria. Esa conformidad permanece pendiente para los cuatro miembros. \cite{contribuciones}
