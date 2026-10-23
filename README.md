@@ -23,7 +23,7 @@ Hace falta LuaLaTeX y `biber`. Cada PR compila el PDF y lo adjunta como artefact
 
 ## Reglas de redacción
 
-Las reglas de redacción, de propiedad de capítulos y de compilación están en [CLAUDE.md](CLAUDE.md).
+Las reglas de redacción, de propiedad de capítulos y de compilación están en [AGENTS.md](AGENTS.md).
 
 ## Identidad visual
 

@@ -2,13 +2,14 @@
 # Sustituye los marcadores por los usuarios de GitHub de cada persona y descomenta la línea.
 
 # Ficheros compartidos: solo el coordinador
+/AGENTS.md          @lmatsan
 /CLAUDE.md          @lmatsan
+/docs/            @lmatsan
 /README.md          @lmatsan
 /economicon.cls     @lmatsan
 /main.tex           @lmatsan
 /VERSION            @lmatsan
 /.github/           @lmatsan
-/.claude/           @lmatsan
 
 # Capítulos
 # /capitulos/a-introduccion.tex          @PENDIENTE_USUARIO

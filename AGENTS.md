@@ -12,9 +12,9 @@ Este repositorio es la memoria del TFM. Varias personas redactan capítulos dist
 
 ## Qué se puede editar
 
-- **Tu capítulo**: el que te haya asignado el coordinador. Solo editas `capitulos/<letra>-*.tex`. En Claude Code se fija con `CAPITULO` en `.claude/settings.local.json`.
+- **Tu capítulo**: el que te haya asignado el coordinador. Solo editas `capitulos/<letra>-*.tex`.
 - `referencias.bib` y `figuras/`: puedes añadir, sin modificar lo de otros.
-- Los demás ficheros compartidos son del coordinador. La lista está en `.github/CODEOWNERS`, y en Claude Code el hook `.claude/hooks/proteger-capitulos.js` impide editarlos. No busques formas de esquivarlo. En otras herramientas no hay hook: la protección real es CODEOWNERS y la revisión de la PR.
+- Los demás ficheros compartidos son del coordinador. La lista está en `.github/CODEOWNERS`. Aunque tu herramienta te deje editarlos, no lo hagas: la revisión de la PR los rechazará.
 
 ## Voz y estilo
 
@@ -63,7 +63,7 @@ Alejandro Aguado · Paris Arcos · Lucía Mateo · Víctor Méndez. Siempre con 
 
 ## LaTeX
 
-Al escribir o editar capítulos `.tex`, sigue el detalle de macros, etiquetas, tablas y escapes en `.claude/skills/latex-memoria/SKILL.md`.
+Al escribir o editar capítulos `.tex`, sigue el detalle de macros, etiquetas, tablas y escapes en `docs/latex.md`.
 
 ## Compilar y entregar
 

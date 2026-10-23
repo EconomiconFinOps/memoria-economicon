@@ -1,8 +1,3 @@
----
-name: latex-memoria
-description: Macros, etiquetas, tablas, escapes y notas al pie de la memoria LaTeX de Economicon. Úsala al escribir o editar capítulos .tex o economicon.cls.
----
-
 # LaTeX de la memoria
 
 - Compila siempre con LuaLaTeX (`fontspec`) y biber. No uses `pdflatex`.
