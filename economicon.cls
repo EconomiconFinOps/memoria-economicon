@@ -47,7 +47,10 @@
 \newfontfamily\titulos{SpaceGrotesk}[
   Path=fuentes/, Extension=.ttf,
   UprightFont=*-Regular, BoldFont=*-Bold, Ligatures=TeX]
-\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+\setmonofont{DejaVuSansMono}[
+  Path=fuentes/, Extension=.ttf,
+  UprightFont=*, ItalicFont=*-Oblique,
+  BoldFont=*-Bold, BoldItalicFont=*-BoldOblique, Scale=0.85]
 \setstretch{1.08}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.5em}
