@@ -12,7 +12,7 @@
 \RequirePackage{iftex}
 \RequirePackage[spanish,es-noquoting]{babel}
 \RequirePackage{fontspec}
-\RequirePackage[a4paper,margin=2.5cm,headheight=14pt]{geometry}
+\RequirePackage[a4paper,margin=2cm,headheight=14pt]{geometry}
 \RequirePackage{microtype}
 \RequirePackage{setspace}
 \RequirePackage[dvipsnames,table]{xcolor}
@@ -24,6 +24,7 @@
 \RequirePackage{ragged2e}
 \RequirePackage[font=small,labelfont=bf,labelsep=period]{caption}
 \RequirePackage{etoolbox}
+\RequirePackage{needspace}
 \RequirePackage{csquotes}
 \RequirePackage[backend=biber,style=numeric-comp,sorting=none,maxbibnames=6]{biblatex}
 \RequirePackage[hidelinks=false,colorlinks=true]{hyperref}
@@ -42,14 +43,14 @@
   Path=fuentes/, Extension=.otf,
   UprightFont=*-Regular, ItalicFont=*-Italic,
   BoldFont=*-Bold, BoldItalicFont=*-BoldItalic,
-  Color=tinta, Scale=0.95, Ligatures=TeX]
+  Color=tinta, Scale=0.92, Ligatures=TeX]
 \newfontfamily\titulos{SpaceGrotesk}[
   Path=fuentes/, Extension=.ttf,
   UprightFont=*-Regular, BoldFont=*-Bold, Ligatures=TeX]
 \setmonofont{DejaVu Sans Mono}[Scale=0.85]
-\setstretch{1.2}
+\setstretch{1.08}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.55em}
+\setlength{\parskip}{0.5em}
 \emergencystretch=2em
 
 % ---- Titulos ------------------------------------------------------------
@@ -65,7 +66,7 @@
 \titlespacing*{\section}{0pt}{2em}{0.8em}
 \titlespacing*{\subsection}{0pt}{1.4em}{0.4em}
 \let\oldsection\section
-\renewcommand{\section}{\clearpage\oldsection}
+\renewcommand{\section}{\needspace{8\baselineskip}\oldsection}
 
 % ---- Cabecera y pie -----------------------------------------------------
 \pagestyle{fancy}
