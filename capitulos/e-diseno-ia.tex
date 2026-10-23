@@ -1,8 +1,10 @@
 \section{Diseño y desarrollo de la solución de IA}\label{e-0}
 
+Este apartado explica cómo Economicon consigue que sus respuestas se apoyen en información verificable: qué conocimiento prepara, cómo lo recupera y qué controles aplica antes de mostrar una respuesta. La tabla~\ref{tab-e1} resume las decisiones que se desarrollan a continuación.
+
 \begin{table}[htbp]
 \centering\small
-\caption{Decisiones de preparación y recuperación del conocimiento}
+\caption{Decisiones de preparación y recuperación del conocimiento}\label{tab-e1}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2316}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3053}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4632}}@{}}
 \toprule
 \textbf{Elemento} & \textbf{Elección} & \textbf{Qué significa} \\
@@ -19,19 +21,19 @@ Evolución ensayada, pendiente de integración & Hasta 4 intentos; temperaturas 
 
 \subsection{Un asistente con información de referencia}\label{e-21}
 
-La gestión financiera de la nube, o FinOps, relaciona costes, decisiones y responsabilidades. Un modelo de lenguaje puede explicar conceptos generales, pero sus conocimientos previos no contienen necesariamente los datos de una consulta ni las reglas de una organización. Economicon utiliza generación aumentada por recuperación, RAG: selecciona información autorizada y la incorpora a la petición antes de redactar la respuesta. Así, la explicación puede vincularse con sus fuentes en lugar de depender solo de la memoria del modelo. \cite{especificaciones}
+FinOps relaciona costes, decisiones y responsabilidades. Un modelo de lenguaje puede explicar conceptos generales, pero sus conocimientos previos no contienen necesariamente los datos de una consulta ni las reglas de una organización. Economicon utiliza generación aumentada por recuperación, RAG: selecciona información autorizada y la incorpora a la petición antes de redactar la respuesta. Así, la explicación puede vincularse con sus fuentes en lugar de depender solo de la memoria del modelo. \cite{especificaciones}
 
-El recorrido distingue información documental, datos aportados por la persona y evidencia financiera obtenida por el servidor. La pregunta se recibe con la identidad y los permisos de la sesión; se recuperan los pasajes pertinentes y el modelo prepara una respuesta. Después, el servidor comprueba estructura, referencias y operaciones admitidas antes de confirmar el resultado. La figura e.1 muestra también cómo se prepara el conocimiento que alimenta ese ciclo. \cite{especificaciones}
+El recorrido distingue información documental, datos aportados por la persona y evidencia financiera obtenida por el servidor. La pregunta se recibe con la identidad y los permisos de la sesión; se recuperan los pasajes pertinentes y el modelo prepara una respuesta. Después, el servidor comprueba estructura, referencias y operaciones admitidas antes de confirmar el resultado. La figura~\ref{fig-e1} muestra también cómo se prepara el conocimiento que alimenta ese ciclo. \cite{especificaciones}
 
-El producto mínimo viable, MVP, cubre Azure con datos públicos de Microsoft FinOps Toolkit y una interfaz de programación, API, que simula el servicio de consulta de costes. No utiliza la facturación de un cliente real. El espacio de cada organización, o tenant, delimita el acceso a sus documentos y conversaciones; un escenario hipotético permanece identificado como tal y no se convierte en gasto verificado. \cite{especificaciones,dataset-azure}
+El MVP cubre Azure con datos públicos de Microsoft FinOps Toolkit y una API que simula el servicio de consulta de costes. No utiliza la facturación de un cliente real. El espacio de cada organización, o tenant, delimita el acceso a sus documentos y conversaciones; un escenario hipotético permanece identificado como tal y no se convierte en gasto verificado. \cite{especificaciones,dataset-azure}
 
-\figura{image1}{Preparación del conocimiento y ciclo de una respuesta en la referencia integrada. La evolución de reparación y reintento se distingue en e.4.}
+\figura{image1}{Preparación del conocimiento y ciclo de una respuesta en la referencia integrada. La evolución de reparación y reintento se distingue en la sección~\ref{e-47}.\label{fig-e1}}
 
 \subsection{Preparación del conocimiento}\label{e-33}
 
-La ingesta admite texto manual, Markdown, TXT, DOCX, DOC y PDF digital, escaneado o mixto. La extracción y el reconocimiento óptico de caracteres, OCR, se realizan localmente con recursos acotados. MinIO conserva temporalmente los originales; su eliminación sigue a la persistencia del texto normalizado, los vectores y el estado final del trabajo. Una limpieza fallida se recupera sin repetir el procesamiento. \cite{especificaciones}
+La ingesta admite texto manual, Markdown, TXT, DOCX, DOC y PDF digital, escaneado o mixto. La extracción y el reconocimiento óptico de caracteres, OCR, se realizan localmente con recursos acotados. MinIO, el almacén de ficheros del sistema, conserva temporalmente los originales; su eliminación sigue a la persistencia del texto normalizado, los vectores y el estado final del trabajo. Una limpieza fallida se recupera sin repetir el procesamiento. \cite{especificaciones}
 
-Un chunk o fragmento es la unidad de texto almacenada y recuperada por separado. El algoritmo respeta secciones, listas, tablas y código cuando caben y aplica cortes reproducibles cuando exceden el presupuesto de la tabla e.1. El solapamiento conserva continuidad entre fragmentos y queda registrado; los metadatos permiten reconstruir el texto normalizado retirando repeticiones, sin prometer la maquetación original. \cite{especificaciones}
+Un chunk o fragmento es la unidad de texto almacenada y recuperada por separado. El algoritmo respeta secciones, listas, tablas y código cuando caben y aplica cortes reproducibles cuando exceden el presupuesto de la tabla~\ref{tab-e1}. El solapamiento conserva continuidad entre fragmentos y queda registrado; los metadatos permiten reconstruir el texto normalizado retirando repeticiones, sin prometer la maquetación original. \cite{especificaciones}
 
 \subsection{Representación y recuperación}\label{e-39}
 
@@ -39,13 +41,13 @@ Un embedding es una representación numérica que permite comparar la proximidad
 
 Las variantes identifican cambios acumulativos: A empleó fragmentos por caracteres y búsqueda densa, basada en vectores; B introdujo fragmentación estructural; C añadió título y sección a la representación; D incorporó búsqueda léxica, que localiza palabras e identificadores concretos. La combinación complementa la cercanía semántica cuando importan una denominación, magnitud o condición literal. \cite{informe-rag}
 
-D fusiona las listas mediante Reciprocal Rank Fusion, RRF: puntúa la posición de cada candidato en los rankings sin tratar sus escalas como equivalentes. La distancia de la tabla e.1 limita la vía densa; el rescate léxico conserva sus condiciones de admisión. El índice se prepara por generaciones completas antes de activarlo y la caché se separa por organización, espacio y texto exacto. Así se evita mezclar vectores incompatibles o atribuir al pasaje citable el contexto añadido a su representación. \cite{especificaciones}
+D fusiona las listas mediante Reciprocal Rank Fusion, RRF: puntúa la posición de cada candidato en los rankings sin tratar sus escalas como equivalentes. La distancia de la tabla~\ref{tab-e1} limita la vía densa; el rescate léxico conserva sus condiciones de admisión. El índice se prepara por generaciones completas antes de activarlo y la caché se separa por organización, espacio y texto exacto. Así se evita mezclar vectores incompatibles o atribuir al pasaje citable el contexto añadido a su representación. \cite{especificaciones}
 
 \subsection{Generación, controles y continuidad}\label{e-47}
 
 Un prompt versionado es un conjunto de instrucciones identificado para reproducir qué se pide al modelo. La salida estructurada organiza la respuesta en campos con tipos y límites definidos. El servidor valida el contrato y conserva mensajes y fuentes; los cálculos permitidos, unidades y autorizaciones se resuelven mediante código. El resumen de turnos completos y los mensajes recientes acotan la ventana de contexto, y el envío se bloquea durante la compresión. \cite{especificaciones}
 
-La evolución evaluada, pendiente de integración, combina rechazo, reparación y reintento. Omite una métrica no verificada con un aviso visible, elimina segmentos de interpretación vacíos y recupera el estado de la conversación tras fallo o cancelación. Reintenta una salida rechazada con la variabilidad creciente indicada en la tabla e.1. Este comportamiento pertenece al candidato medido, no a la versión integrada de referencia. \cite{cortes-medicion}
+La evolución evaluada, pendiente de integración, combina rechazo, reparación y reintento. Omite una métrica no verificada con un aviso visible, elimina segmentos de interpretación vacíos y recupera el estado de la conversación tras fallo o cancelación. Reintenta una salida rechazada con la variabilidad creciente indicada en la tabla~\ref{tab-e1}. Este comportamiento pertenece al candidato medido, no a la versión integrada de referencia. \cite{cortes-medicion}
 
 \subsection{Decisión obtenida de la evolución del RAG}\label{e-53}
 
