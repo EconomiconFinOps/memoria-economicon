@@ -2,4 +2,4 @@
 
 | Tema | Estado | Actualizado |
 |---|---|---|
-| [Concordancia con develop](concordancia-develop.md) | Corrección autorizada de los ocho hallazgos restantes en b/d/f/g/h/i y bibliografía; cifras y métodos separados. Validación de PR pendiente. | 2026-10-23 |
+| [Concordancia con develop](concordancia-develop.md) | Ocho hallazgos corregidos en la PR13, abierta y sin merge. Cifras y métodos contrastados; PDF y recuento final en la PR. Dos revisiones numéricas históricas siguen marcadas. | 2026-10-23 |

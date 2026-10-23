@@ -22,10 +22,18 @@ Encargo del 23/10/2026 desde HAL, chat `01a1270c-e332-7462-9c90-706d49ade92c`: c
 | C08 | h conserva STR-1 como no aplicable para el instrumento; trazabilidad de citas no equivale a corrección semántica ni validación del esquema. |
 | C10 | f distingue locks específicos y rangos Python, e incluye la integración con PostgreSQL/pgvector real en CI sin confundirla con AWS ni con arranque completo. |
 
+## Publicación y ajuste de extensión
+
+Correcciones publicadas en la [PR13](https://github.com/EconomiconFinOps/memoria-economicon/pull/13), rama capitulo-b-d-f-g-h-i-concordancia, contra main. Abierta para revisión, sin merge.
+
+Se compactan b/h sin modificar tipografía ni márgenes, se retiran reservas de espacio que dejaban huecos al desplazar tablas y se omite del cuerpo la captura antigua de Grafana, conservada en figuras/ y sustituida por los cuadros con resultados y procedencia. a/c/e permanecen intactos.
+
 ## Validación y límites
 
-El cotejo anterior verificó 81 archivos fuente. Para esta corrección se vuelven a contrastar las seis filas del cuadro con los JSON, la suma Decimal de costes, las claves de bibliografía y las referencias/etiquetas LaTeX. La compilación y la paginación se comprobarán en la CI de la PR: la vista previa local no pudo preparar el compilador por una limitación del sandbox de Windows, no por un error LaTeX observado.
+El cotejo anterior verificó 81 archivos fuente. Las seis filas se contrastaron con los JSON y la suma Decimal es 0,5291594448 USD. Las 37 claves de cita están definidas; no hay referencias sin destino ni etiquetas duplicadas, y las estructuras LaTeX están equilibradas. La aritmética económica se comprobó por separado.
+
+Las primeras compilaciones LuaLaTeX/biber en CI pasaron. Su inspección detectó exceso de extensión, por lo que se ajustó la composición indicada arriba. El resultado del último SHA, el PDF y su recuento definitivo quedan en las comprobaciones y descripción de la PR13. La vista previa local no pudo iniciar el compilador por una limitación del sandbox Windows; no se interpreta como error de fuentes.
 
 No se reevalúan respuestas privadas ni se ejecutan producto, modelos o servicios. Los juicios se atribuyen a su fuente automatizada. Se mantienen las limitaciones históricas sin resolver del instrumento y las marcas de revisión pendientes; la corrección documental no equivale a aceptar campañas, cerrar la demo o aprobar la entrega final.
 
-Siguiente paso: revisar la PR, comprobar su PDF y resolver las validaciones ajenas a estos ocho hallazgos antes de la entrega. No realizar merge sin una petición específica.
+Siguiente paso: revisión de los responsables de los capítulos sobre la PR13 y resolución de las dos marcas de revisión numérica histórica que se conservan en h. Estas marcas no se cierran por la corrección de concordancia. No realizar merge sin una petición específica.

@@ -4,20 +4,19 @@ Un asistente que explica costes debe acertar, citar sus fuentes, responder a tie
 
 \subsection{Qué se evalúa y cómo}\label{h-1}
 
-Un asistente con RAG\footnote{Generación aumentada por recuperación: el sistema busca la información pertinente antes de que el modelo redacte.} puede fallar al recuperar, al redactar o al citar, así que se mide cada etapa con un banco de 28 preguntas: 20 tienen respuesta en los datos, 6 obligan a pedir un dato que falta y 2 exigen abstenerse. Cada pregunta es un caso y solo se aprueba si cumple todas sus comprobaciones. Las objetivas son reglas automáticas, como que aparezca la cifra correcta o que no se afirme algo prohibido; las juzgadas las decide una persona, por ejemplo si se pidió el dato que faltaba. \cite{jup070}
+La generación aumentada por recuperación (RAG) se evalúa por recuperación, respuesta y citas. El banco contiene 28 preguntas: 20 con respuesta, 6 que exigen pedir información y 2 que requieren abstenerse. Un caso aprueba sólo si cumple todas sus comprobaciones: reglas automáticas y juicios sobre la respuesta, atribuidos al evaluador de cada campaña. \cite{jup070}
 
-La robustez se mide con 29 casos más: 13 del banco con los datos intactos y 16 con un defecto introducido a propósito en etiquetas, reparto de costes compartidos, indicadores de coste, ámbito de los datos o anomalías. El asistente debe detectar el defecto y decirlo en lugar de inventar un resultado. \cite{robustez-tras}
+La robustez añade 29 casos: 13 con datos intactos y 16 con defectos en etiquetas, reparto de costes, indicadores, ámbito o anomalías. Se exige identificar el defecto sin inventar un resultado. \cite{robustez-tras}
 
-Los umbrales de admisibilidad son cuatro: aprobar el 80\,\% de las preguntas con respuesta, cumplir el 90\,\% de las comprobaciones objetivas, no dar ninguna cifra sin rastro en los casos críticos y que el 95\,\% de las conversaciones termine en 10 segundos o menos. El primero es una propuesta pendiente de validar por el equipo; los otros tres se fijaron al decidir el gateway de modelos. \cite{jup070,adr-registro}
+Los objetivos son aprobar el 80\,\% de preguntas con respuesta, cumplir el 90\,\% de reglas objetivas, no dar cifras sin rastro en casos críticos y terminar el 95\,\% de las conversaciones en diez segundos. El primero está pendiente de ratificación del equipo; los restantes se fijaron al elegir el gateway. \cite{jup070,adr-registro}
 
-Las campañas históricas de las tablas~\ref{tab-h1} y~\ref{tab-h2} se ejecutaron en un ordenador local, con chat generativo activado, cuatro documentos y datos sintéticos: una pasada y una revisora por campaña. Las repeticiones posteriores se realizaron en DockerDevelop y las revisó un único juez IA; se describen aparte para no atribuirles revisión humana. \cite{banco28,banco28-tras,reevaluacion-modelo,juez-infra}
+El histórico usó un ordenador local, chat generativo, cuatro documentos y datos sintéticos: una pasada y una revisora por campaña. Las repeticiones en DockerDevelop se revisaron con un único juez IA, sin revisión humana independiente. \cite{banco28,banco28-tras,reevaluacion-modelo,juez-infra}
 
 \subsection{Resultados técnicos}\label{h-2}
 
 La tabla~\ref{tab-h1} conserva tres cortes históricos: plantilla sin modelo, Flash antes del arreglo y Flash tras el arreglo. La fuente posterior está separada de la primera medición. \cite{banco28,banco28-tras}
 
-\needspace{0.3\textheight}
-\begin{table}[!h]
+\begin{table}[htbp]
 \centering\small
 \caption{Banco de 28 preguntas en tres cortes}\label{tab-h1}
 \begin{tabular}{@{}p{0.25\linewidth}p{0.11\linewidth}p{0.17\linewidth}p{0.2\linewidth}p{0.15\linewidth}@{}}
@@ -37,18 +36,17 @@ Percentil 95 de latencia total & --- & 41,3 s & 42,4 s & 10 s: por alcanzar \\
 \end{table}
 
 \subsubsection{Lo que funciona}
-El banco histórico no registró errores HTTP del servidor, aunque una operación quedó bloqueada. Las citas trazables apuntaban a fragmentos recuperados; eso no certifica la corrección semántica de cada afirmación. El instrumento declara no aplicable el cumplimiento de esquema porque no recibe la salida estructurada del chat, pese a una marca favorable de captura: no se toma como validación del contrato. La recuperación posterior encontró el documento correcto en los casos evaluables; la captura anterior era distinta y no admite comparación directa. \cite{banco28-tras}
+No hubo errores HTTP de servidor en el banco histórico, pero una operación quedó bloqueada. Las citas apuntaban a fragmentos recuperados, sin certificar su corrección semántica. El instrumento declara no aplicable el esquema porque no recibe la salida estructurada; la marca favorable de captura no acredita ese contrato. La recuperación posterior acertó en los casos evaluables, con una captura distinta que impide comparación directa. \cite{banco28-tras}
 
 \subsubsection{Dónde hay margen de mejora}
-El acierto en las preguntas con respuesta y en las comprobaciones objetivas está todavía lejos de sus objetivos, y la herramienta de puntuación no da por aceptado ninguno de los tres cortes. Las cifras admiten tres lecturas. La más exigente es la de casos completos de la tabla~\ref{tab-h1}. La segunda mira las comprobaciones sueltas y es más indulgente, porque un fallo no descarta el resto: en las juzgadas el cumplimiento es mucho mayor. La tercera es la de un juez LLM, un modelo que valoró las respuestas al elegir el modelo y dio por aceptables casi todas (apartado~\ref{g-0}); mide otra cosa y no es comparable. \cite{comparativa-modelos}
+Ningún corte histórico fue aceptado. Aprobar comprobaciones sueltas es menos exigente que aprobar casos completos: las valoraciones juzgadas son mejores que las objetivas. La comparación por juez LLM del apartado~\ref{g-0} empleó otro método y no sustituye estos resultados. \cite{comparativa-modelos}
 
-Parte de los fallos son del lector numérico automático, que comprueba que las cifras de la respuesta coincidan con las esperadas: antes del arreglo, la mitad de los casos fallidos fallaba solo por eso y tenía las cuentas correctas. Tras el arreglo no se ha cuantificado. \pendiente{} \cite{reevaluacion-modelo}
+Antes del arreglo, la mitad de los casos fallidos lo fue sólo por el lector numérico, aun con cuentas correctas. Falta cuantificar ese efecto en el histórico posterior. \pendiente{ revisión numérica} \cite{reevaluacion-modelo}
 
 \subsubsection{Robustez}
 La tabla~\ref{tab-h2} muestra la batería de robustez en la primera campaña con el chat real, que usaba el modelo anterior, y con Flash antes y después del arreglo.
 
-\needspace{0.13\textheight}
-\begin{table}[!h]
+\begin{table}[htbp]
 \centering\small
 \caption{Robustez ante datos incompletos o defectuosos (29 casos)}\label{tab-h2}
 \begin{tabular}{@{}p{0.34\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.18\linewidth}@{}}
@@ -62,15 +60,15 @@ Prohibiciones incumplidas & 0 de 55 & 0 de 64 & 0 de 59 \\
 \end{tabular}
 \end{table}
 
-Las rúbricas históricas no registraron incumplimientos de las prohibiciones concretas evaluadas. Ese resultado no significa ausencia general de errores o alucinaciones. Tras el arreglo se resolvieron los casos de reparto y ámbito, pero sólo parte de etiquetas e indicadores, y el de anomalías quedó bloqueado. La revisión manual de los fallos atribuidos al lector numérico en ese corte sigue pendiente. \pendiente{revisión del corte histórico} \cite{robustez-antes,robustez-tras}
+Las prohibiciones concretas evaluadas se cumplieron, sin demostrar ausencia general de alucinaciones. Tras el arreglo se resolvieron reparto y ámbito; etiquetas e indicadores fueron parciales y anomalías quedó bloqueado. Falta revisar manualmente los fallos del lector numérico de ese corte. \pendiente{ revisión del corte histórico} \cite{robustez-antes,robustez-tras}
 
 \subsubsection{El tiempo}
-En el histórico, el percentil 95 supera cuatro veces el objetivo. La captura no separa de forma fiable recuperación, generación, validación y otros tiempos de aplicación. Las repeticiones en DockerDevelop añaden observaciones posteriores, pero no sustituyen una medición en AWS ni permiten atribuir diferencias sólo a la infraestructura. \cite{banco28-tras,campanas-infra}
+El p95 histórico supera cuatro veces el objetivo y no se descompone de forma fiable por etapa. DockerDevelop aporta otras observaciones, sin medir AWS ni aislar el efecto de la infraestructura. \cite{banco28-tras,campanas-infra}
 
 \subsubsection{Qué se corrigió}
-Con preguntas sobre cifras de pantalla, una sola regla incumplida rechazaba la respuesta entera aunque el modelo hubiera acertado. El arreglo reintenta con temperatura creciente, omite la cifra no verificada con un aviso visible y recupera la conversación tras un fallo. En una batería propia de 14 preguntas repetidas 4 veces, las operaciones fallidas pasaron de más de un tercio a una sola de 56. Siguen pendientes las frases que quedan con un hueco donde iría la cifra omitida. \cite{cortes-medicion}
+El arreglo de los cortes reintenta con temperatura creciente, omite cifras no verificadas con un aviso visible y recupera la conversación. En su batería propia, de 14 preguntas repetidas cuatro veces, los fallos bajaron de más de un tercio a uno de 56; permanecen frases incompletas al omitir cifras. \cite{cortes-medicion}
 
-La versión integrada amplió el límite final a 10.000 tokens. En una demo separada de cinco casos se cumplieron cuatro rúbricas específicas, con una lista de comprobación de 27 conformes, 2 fallidas y 1 no evaluada: la aceptación integral fue desfavorable. Faltaron pasos de investigación por servicio y recurso y apareció una afirmación global no apoyada por el contexto. El rechazo de una acción no permitida terminó correctamente tras tres intentos y 120,955 s, con truncado y cierre prematuro previos. La revisión la hizo un agente autorizado; no acredita estabilidad ni validación humana independiente. \cite{demo-final}
+El límite final pasó a 10.000 tokens. En una demo separada se cumplieron cuatro de cinco rúbricas; su checklist registró 27 conformes, 2 fallidas y 1 no evaluada, con aceptación desfavorable. Faltó investigación por servicio y recurso y apareció una afirmación global sin apoyo. El rechazo de una acción no permitida terminó bien al tercer intento, en 120,955 s, tras truncado y cierre prematuro. Fue revisión por agente, sin acreditar estabilidad ni validación humana independiente. \cite{demo-final}
 
 \subsubsection{Repeticiones posteriores en DockerDevelop}
 La tabla~\ref{tab-h3} recoge tres repeticiones de cada batería con límite final de 10.000 tokens: 171 operaciones previstas, 158 respuestas disponibles y 13 bloqueadas. Un único juez IA revisó cada respuesta disponible, sin generar sustitutas. Los estados de caso combinan su juicio con el lector numérico original y sus falsos negativos conocidos; no son una puntuación semántica pura. Ninguna campaña está aceptada. \cite{campanas-infra,juez-infra}
@@ -100,8 +98,7 @@ El juez puntuó 720 criterios aplicables: 618 conformes y 102 fallidos, sobre la
 
 La tabla~\ref{tab-h4} recoge la calidad del detector de anomalías, la coherencia de los datos de coste y el coste del modelo.
 
-\needspace{0.2\textheight}
-\begin{table}[!h]
+\begin{table}[htbp]
 \centering\small
 \caption{Detector de anomalías, datos de coste y coste de IA}\label{tab-h4}
 \begin{tabular}{@{}p{0.34\linewidth}p{0.2\linewidth}p{0.36\linewidth}@{}}
@@ -117,13 +114,11 @@ Coste facturado por 100 consultas con Flash & 0,06 USD & Una ventana local; esti
 \end{tabular}
 \end{table}
 
-El detector usa reglas deterministas, sin modelo. Acertó todo lo que marcó y encontró todos los eventos detectables; no detecta un pico desde cero ni la primera aparición de un servicio, porque exige una semana de referencia con coste positivo. Los datos de los dos clientes de demostración estaban al día y cuadraban con la fuente, lo que confirma su coherencia interna, no la integridad de datos reales. El coste del modelo es bajo y se contrastó con la factura del proveedor. Las métricas de negocio ---tiempo ahorrado, gasto asignado y ahorro potencial--- tienen definición y un ejemplo sintético reproducible; el piloto con usuarios y el beneficio real no se han medido. \cite{jup130-anomalias,jup133-coste}
+El detector determinista encontró todos los eventos detectables; no detecta picos desde cero ni servicios nuevos porque exige una semana de referencia positiva. La reconciliación confirma coherencia de datos sintéticos, no integridad de facturas reales. El coste corresponde a la ventana histórica contrastada con el proveedor. Las métricas de negocio tienen definiciones y un ejemplo reproducible, pero no un piloto ni beneficios medidos. \cite{jup130-anomalias,jup133-coste}
 
 \subsection{Cómo se reproduce}\label{h-4}
 
-Los informes versionados permiten regenerar la proyección del panel de Grafana con su modelo declarado y procedencia; la figura~\ref{fig-h1} conserva una captura histórica. Las nuevas series del juez IA se identifican como automáticas y no sustituyen las filas de revisión humana sin medir. Las respuestas y juicios privados no están todos publicados: regenerar los agregados no equivale a reproducir independientemente la evaluación semántica. \cite{panel-evaluacion,juez-infra}
-
-\figura{grafana-panel-evaluacion}{Captura histórica del panel de evaluación; no muestra las seis repeticiones posteriores.\label{fig-h1}}
+Los informes versionados regeneran los agregados de Grafana con modelo declarado y procedencia. Las nuevas series del juez IA se identifican como automáticas y no sustituyen datos de revisión humana ausentes. Las respuestas y juicios privados no están todos publicados: reproducir el panel no equivale a una evaluación semántica independiente. \cite{panel-evaluacion,juez-infra}
 
 \subsection{Qué se puede afirmar y qué no}\label{h-5}
 
