@@ -21,12 +21,9 @@ latexmk -lualatex main.tex
 
 Hace falta LuaLaTeX y `biber`. Cada PR compila el PDF y lo adjunta como artefacto (pestaña *Actions*). Al fusionar en `main`, el CI guarda el PDF en `entregas/Economicon_Memoria_TFM_vX.X.pdf`, con la versión que indica el fichero `VERSION`. Para generar una versión nueva, sube ese número antes de fusionar; si el número no cambia, el CI no sobrescribe el PDF existente.
 
-## Reglas de estilo
+## Reglas de redacción
 
-- Tono tech-cercano, claridad sin jerga.
-- Máximo 20 páginas en total entre todos.
-- Toda cifra debe ser trazable al dato o fuente; lo que no exista se marca con `\pendiente{}` (nunca se inventa).
-- Para la entrega, usar `\documentclass[final]{economicon}`: la compilación falla si queda alguna marca pendiente.
+Las reglas de redacción, de propiedad de capítulos y de compilación están en [CLAUDE.md](CLAUDE.md).
 
 ## Identidad visual
 

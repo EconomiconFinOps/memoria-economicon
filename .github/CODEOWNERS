@@ -1,0 +1,22 @@
+# Propietarios de cada parte de la memoria. Quien figura aquí revisa las PR que la toquen.
+# Sustituye los marcadores por los usuarios de GitHub de cada persona y descomenta la línea.
+
+# Ficheros compartidos: solo el coordinador
+/CLAUDE.md          @lmatsan
+/README.md          @lmatsan
+/economicon.cls     @lmatsan
+/main.tex           @lmatsan
+/VERSION            @lmatsan
+/.github/           @lmatsan
+/.claude/           @lmatsan
+
+# Capítulos
+# /capitulos/a-introduccion.tex          @PENDIENTE_USUARIO
+# /capitulos/b-caso-de-negocio.tex       @PENDIENTE_USUARIO
+# /capitulos/c-contribucion.tex          @PENDIENTE_USUARIO
+# /capitulos/d-arquitectura.tex          @PENDIENTE_USUARIO
+# /capitulos/e-diseno-ia.tex             @PENDIENTE_USUARIO
+# /capitulos/f-devops.tex                @PENDIENTE_USUARIO
+# /capitulos/g-modelos.tex               @PENDIENTE_USUARIO
+# /capitulos/h-evaluacion.tex            @PENDIENTE_USUARIO
+# /capitulos/i-conclusiones.tex          @PENDIENTE_USUARIO
