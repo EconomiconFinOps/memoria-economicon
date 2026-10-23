@@ -8,6 +8,7 @@ Este repositorio es la memoria del TFM. Varias personas redactan capítulos dist
 
 ## Contexto
 
+- **Regla principal:** los capítulos describen el comportamiento de la aplicación Economicon según `EconomiconFinOps/tfm-economicon`, rama `develop`. Antes de escribir cualquier afirmación sobre la implementación, léela allí (ver Fuentes). Nada se inventa ni se deduce de otras ramas.
 - El lector es un tribunal que no conoce el proyecto en detalle. Cada apartado responde a: por qué importa, qué se hizo, qué se puede afirmar y qué no.
 - La evaluación es individual: cualquiera del equipo debe poder defender toda la memoria. Escribe de forma que se entienda sin leer los demás capítulos.
 - Máximo 20 páginas entre todos los apartados. Presupuesto orientativo: a 1 · b 2,5 · c 1,5 · d 3 · e 3 · f 2,5 · g 2 · h 3 · i 1,5.
