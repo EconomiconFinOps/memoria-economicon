@@ -1,22 +1,20 @@
 \section{Uso de modelos preentrenados}\label{g-0}
 
-Tabla g.1. Configuración de referencia y evidencias distintas para la selección.
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2316}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3053}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4632}}@{}}
-\toprule\noalign{}
+\begin{table}[htbp]
+\centering\small
+\caption{Configuración de referencia y evidencias distintas para la selección}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2316}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3053}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4632}}@{}}
+\toprule
 \textbf{Ámbito} & \textbf{Dato o elección} & \textbf{Qué cuenta} \\
+\midrule
 Configuración integrada & DeepSeek V4.1 Flash; DeepInfra, 8 bits; sin cambio automático de ruta & Único generador del ejemplo versionado; no certifica un servicio externo. \cite{config-gateway} \\
 Comparativa histórica de contenido & 27 de 28 aceptables en cada modelo & GLM-5.2 y Flash: preguntas previstas por modelo; valoración posterior de un juez LLM. \cite{comparativa-modelos} \\
 Coste histórico comparable & GLM: 0,18059109 USD; Flash: 0,0391877208 USD & Consultas e intentos de las 28 operaciones por modelo, incluidos embeddings de consulta; excluye indexación inicial. \cite{comparativa-modelos} \\
 Latencia local posterior: antes / tras el arreglo & p95 total: 41,3 / 42,4 s; objetivo: 10 s & p95: tiempo bajo el que se sitúa el 95 \% de las operaciones completadas con latencia total registrada. Banco de 28 casos: n = 28 antes y 27 después. No cuenta respuestas aprobadas por contenido ni cada intento del proveedor. \cite{reevaluacion-modelo,banco28} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{table}
+
 
 \subsection{Adaptación sin entrenamiento propio}\label{g-20}
 

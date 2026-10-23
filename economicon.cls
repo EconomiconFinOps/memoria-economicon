@@ -22,6 +22,7 @@
 \RequirePackage{titlesec}
 \RequirePackage{fancyhdr}
 \RequirePackage{ragged2e}
+\RequirePackage[font=small,labelfont=bf,labelsep=period]{caption}
 \RequirePackage{etoolbox}
 \RequirePackage{csquotes}
 \RequirePackage[backend=biber,style=numeric-comp,sorting=none,maxbibnames=6]{biblatex}
@@ -91,8 +92,13 @@
 \providecommand{\real}[1]{#1}
 
 % ---- Utilidades de contenido -------------------------------------------
-% Figura a ancho de pagina y tamano proporcional.
-\newcommand{\figura}[1]{\begin{center}\includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{figuras/#1.png}\end{center}}
+% Tablas y figuras numeradas por apartado: Tabla x.n y Figura x.n.
+\@addtoreset{table}{section}
+\@addtoreset{figure}{section}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+% Figura a ancho de pagina y tamano proporcional; el pie se pasa como segundo argumento.
+\newcommand{\figura}[2]{\begin{figure}[htbp]\centering\includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{figuras/#1.png}\caption{#2}\end{figure}}
 % Marca de contenido pendiente: resaltada en borrador; con la opcion final falla la compilacion.
 \newcommand{\pendiente}[1]{\ifborrador\colorbox{coral!35}{\textbf{[Pendiente#1]}}\else\PackageError{economicon}{Queda un [Pendiente#1]}{Resuelve las marcas pendientes antes de la entrega.}\fi}
 \newcommand{\recuadro}[1]{\begin{center}\colorbox{lavanda}{\parbox{0.94\linewidth}{#1}}\end{center}}

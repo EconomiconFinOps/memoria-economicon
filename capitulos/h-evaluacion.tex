@@ -14,14 +14,13 @@ Los umbrales de admisibilidad son cuatro: el 80 \% de las preguntas de responder
 
 Se midió el banco en tres cortes: la plantilla sin modelo (la primera versión del chat) y DeepSeek V4.1 Flash antes y después del arreglo de cortes de respuesta. \cite{jup070,banco28}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2760}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1652}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1899}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2006}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1683}}@{}}
-\toprule\noalign{}
+\begin{table}[htbp]
+\centering\small
+\caption{Resultados técnicos del chat en tres cortes}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2760}}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1652}}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1899}}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2006}}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1683}}@{}}
+\toprule
 \textbf{Medida} & \textbf{Primer corte} & \textbf{Antes del arreglo \cite{banco28,robustez-antes}} & \textbf{Tras el arreglo \cite{banco28}} & \textbf{Objetivo} \\
+\midrule
 \textbf{Banco de 28 preguntas} &  &  &  &  \\
 Casos aprobados, de 28 & 0 & 10 & 13 (14 fallan, 1 bloqueado) & --- \\
 Preguntas de responder aprobadas & 0 de 20 & 6 de 20 & 7 de 19 & 80 \%: no se cumple \\
@@ -33,11 +32,10 @@ Percentil 95 de latencia & --- & 41,3 s & 42,4 s & 10 s: no se cumple \\
 Aprobados / fallidos / bloqueados & 7 / 17 / 5 & 7 / 21 / 1 & 15 / 10 / 4 & --- \\
 Aprobados sobre evaluados & 29,2 \% & 25,0 \% & 60,0 \% & --- \\
 Prohibiciones incumplidas & 0 de 55 & 0 de 64 & 0 de 59 & --- \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{table}
+
 
 \textbf{Lo que funciona}. El chat atendió todas las peticiones del banco sin errores del servidor. Cuando cita, cita bien: todas las citas del último corte apuntaban a un fragmento realmente recuperado y todas las respuestas cumplieron el esquema \cite{banco28}. Además es barato. Contrastamos las consultas de la última ventana de medición con la factura del proveedor de acceso a modelos (OpenRouter): el gasto estimado y el facturado difirieron en menos de un 1 \% \cite{jup133-coste}. Con DeepSeek V4.1 Flash, 100 consultas al modelo cuestan unos 0,06 USD, frente a unos 0,26 USD con el modelo anterior; son ventanas y recursos distintos, y no atribuimos la diferencia solo al modelo.
 
@@ -57,9 +55,7 @@ El detector de anomalías usa reglas deterministas, sin modelo. Con 7 eventos in
 
 Las medidas se cargan en un panel de Grafana (herramienta de monitorización) que registra el modelo servido en cada ejecución, y cada tabla se regenera con un comando del repositorio (anexo). \cite{adr-registro}
 
-\figura{image4}
-
-Figura h.1: Dashboard provisional en Grafana
+\figura{image4}{Dashboard provisional en Grafana}
 
 \subsection{Qué podemos afirmar y qué no}
 

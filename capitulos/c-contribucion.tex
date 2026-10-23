@@ -6,24 +6,21 @@ Economicon organiza la colaboración mediante cuatro funciones rotatorias: lider
 
 El corte del 20/10/2026, 20:25--20:26 UTC, comprende 117 historias no archivadas y 143 PR distintas asociadas por JUP en título o rama (147 asociaciones). Incluye historias posteriores al MVP y conserva las 100 del corte anterior. La tabla cuenta asignaciones reconocidas, no participación efectiva. \cite{trello-jup064}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2877}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1580}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1297}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1533}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1651}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1061}}@{}}
-\toprule\noalign{}
+\begin{table}[htbp]
+\centering\small
+\caption{Asignaciones de rol por persona}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.2877}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1580}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1297}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1533}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1651}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1061}}@{}}
+\toprule
 \textbf{Persona} & \textbf{Liderazgo} & \textbf{Pairing} & \textbf{Revisión} & \textbf{Validación} & \textbf{Total} \\
+\midrule
 Alejandro Aguado & 26 & 30 & 22 & 31 & 109 \\
 Víctor Méndez & 28 & 22 & 27 & 28 & 105 \\
 Lucía Mateo & 30 & 28 & 30 & 22 & 110 \\
 Paris Arcos & 23 & 26 & 28 & 28 & 105 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{table}
+
 
 Se reconocen 429 posiciones de rol y quedan 39 sin resolver de 468 posibles: 10 de liderazgo, 11 de pairing, 10 de revisión y 8 de validación. Incluyen ambigüedades de extracción, dispensas y líneas sin responsable reconocible; no se reparten por equilibrio estadístico. \href{https://trello.com/c/UbyhMsNF}{JUP-055} y \href{https://trello.com/c/AG5fAbl3}{JUP-127}, por ejemplo, sí nombran personas, pero etiquetas repetidas con enlaces impiden resolver automáticamente algunas posiciones. Tampoco todas las tarjetas asignan cuatro personas distintas: siete repiten una identidad entre funciones. \cite{trello-jup064}
 
@@ -31,21 +28,21 @@ Se reconocen 429 posiciones de rol y quedan 39 sin resolver de 468 posibles: 10 
 
 Las PR integradas son las abiertas por cada persona y fusionadas en develop hasta el 19/10, contrastadas el 20/10: 119 en total, incluidos distintos métodos de integración. Las reviews corresponden al corte del 20/10 en las 143 PR asociadas: tituladas/total de eventos en PR ajenas al autor, contados una vez por PR. Se excluyen PENDING y las intervenciones del autor en su propia PR; se conservan dictámenes históricos, incluso sobre SHA anteriores. Un evento no acredita una validación vigente ni mide esfuerzo. \cite{trello-jup064}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3774}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2123}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4104}}@{}}
-\toprule\noalign{}
+\begin{table}[htbp]
+\centering\small
+\caption{Integración y revisiones por persona}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3774}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2123}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4104}}@{}}
+\toprule
 \textbf{Persona} & \textbf{PR integradas} & \textbf{Reviews tituladas/total} \\
+\midrule
 Alejandro Aguado & 56 & 46/54 \\
 Víctor Méndez & 17 & 76/87 \\
 Lucía Mateo & 33 & 83/103 \\
 Paris Arcos & 13 & 67/91 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{table}
+
 
 Alejandro Aguado: normalización de costes Azure (\href{https://trello.com/c/vw0xIKRN}{JUP-013}), chunking y embeddings (\href{https://trello.com/c/Mi3kPCOD}{JUP-020}), prompt y guardrails (\href{https://trello.com/c/8SDUi2t9}{JUP-024}), contrato de herramientas del agente (\href{https://trello.com/c/m1i7iXBm}{JUP-084}), contenedores y CD (\href{https://trello.com/c/yZnjgiSp}{JUP-049}/052). Implementó el recolector y la documentación inicial de \href{https://trello.com/c/wluz6AGW}{JUP-064}; su autoría material se distingue de la apertura de \href{https://github.com/EconomiconFinOps/tfm-economicon/pull/76}{PR76}. \cite{contribuciones}
 
