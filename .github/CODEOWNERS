@@ -12,12 +12,11 @@
 /.github/           @lmatsan
 
 # Capítulos
+# f-devops e i-conclusiones no tienen responsable fijo: cualquier persona del equipo puede editarlos.
 /capitulos/a-introduccion.tex           @lmatsan
 /capitulos/b-caso-de-negocio.tex        @lmatsan
 /capitulos/c-contribucion.tex           @Victorh1397
 /capitulos/d-arquitectura.tex           @Victorh1397
 /capitulos/e-diseno-ia.tex              @ParisArcos
-/capitulos/f-devops.tex                 @Iber1to
 /capitulos/g-modelos.tex                @ParisArcos
 /capitulos/h-evaluacion.tex             @lmatsan
-/capitulos/i-conclusiones.tex           @Iber1to
