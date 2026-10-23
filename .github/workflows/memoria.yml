@@ -1,0 +1,79 @@
+name: Memoria PDF
+
+"on":
+  pull_request:
+    branches: [main]
+    paths:
+      - 'main.tex'
+      - 'economicon.cls'
+      - 'referencias.bib'
+      - 'capitulos/**'
+      - 'figuras/**'
+      - 'fuentes/**'
+      - '.github/workflows/memoria.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'main.tex'
+      - 'economicon.cls'
+      - 'referencias.bib'
+      - 'capitulos/**'
+      - 'figuras/**'
+      - 'fuentes/**'
+      - '.github/workflows/memoria.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: memoria-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compilar:
+    name: Compilar PDF
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Compilar con LuaLaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_lualatex: true
+          work_in_root_file_dir: true
+      - name: Nombrar el PDF y resumir
+        run: |
+          mv main.pdf Economicon_Memoria_TFM.pdf
+          echo "Marcas pendientes: $(grep -o 'pendiente{' -r capitulos | wc -l)" >> "$GITHUB_STEP_SUMMARY"
+          echo "Paginas: $(pdfinfo Economicon_Memoria_TFM.pdf 2>/dev/null | awk '/Pages/{print $2}')" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Economicon_Memoria_TFM
+          path: Economicon_Memoria_TFM.pdf
+
+  publicar:
+    name: Publicar ultima version
+    needs: compilar
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Economicon_Memoria_TFM
+      - name: Actualizar la release memoria-ultima
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete memoria-ultima --cleanup-tag --yes --repo "$GITHUB_REPOSITORY" || true
+          gh release create memoria-ultima Economicon_Memoria_TFM.pdf \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Memoria Economicon - ultima version" \
+            --notes "PDF compilado automaticamente desde el commit $GITHUB_SHA."

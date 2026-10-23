@@ -1,0 +1,33 @@
+\section{Arquitectura técnica de la solución}\label{d-0}
+
+Versión de arquitectura: 10/10/2026. Base funcional c2995a1; documentación y referencia AWS/Terraform d523bc3 (PR92). \pendiente{} Revisión de Lucía y validación posterior. {[}R1--R3{]}
+
+Componentes. Economicon separa la interfaz React, la API FastAPI en Python y un processor que ejecuta trabajos asíncronos mediante RabbitMQ. La API concentra autenticación, autorización y consultas; el processor se ocupa de la ingesta documental. Esta separación evita mantener peticiones HTTP abiertas durante el procesamiento y permite dimensionar ambos componentes independientemente. Los costes proceden de una API Azure simulada: no se acredita conexión con facturación real. El código se organiza en un monorepo con apps/frontend, apps/backend y apps/processor; infra reúne la configuración de infraestructura, docs las decisiones y openspec los requisitos.
+
+Persistencia. CockroachDB conserva usuarios, tenants, membresías, trabajos, conversaciones y costes. PostgreSQL con pgvector almacena documentos, fragmentos y embeddings. Esta separación mantiene responsabilidades y contratos explícitos; no demuestra por sí misma una ventaja de rendimiento. Las migraciones respetan el propietario de cada tabla y un único ejecutor. La persistencia y la publicación en RabbitMQ no forman una transacción distribuida: confirmar la publicación no equivale a procesamiento exactamente una vez.
+
+Consultas. El navegador envía la pregunta con el token y el tenant seleccionado. La API comprueba identidad, membresía y propiedad de la conversación, persiste la pregunta, obtiene su embedding y recupera fragmentos por similitud coseno, filtrando por tenant. La respuesta incluye referencias. En el corte documentado se construye mediante una plantilla determinista; no se ha acreditado generación conversacional mediante un LLM. El chat es síncrono y no pasa por la cola del processor. Los errores se comunican explícitamente.
+
+Ingestas. La ingesta documental recibe text\_content, registra un trabajo y lo publica en RabbitMQ. El processor normaliza, fragmenta, analiza, genera embeddings y almacena el resultado. artifact\_uri es metadato, no una descarga automática. La ingesta Azure utiliza un comando independiente contra el simulador. Las consultas de facturación agregan registros completados por intervalo y moneda, rechazan solapamientos y no presentan ahorro realizado sin evidencia. Los paneles que utilizan fixtures tampoco acreditan análisis automático de costes reales.
+
+Inteligencia artificial. El perfil opcional incorpora LiteLLM como gateway hacia OpenRouter, con claves virtuales por consumidor y credenciales de proveedor fuera del navegador. El backend utiliza embeddings y el processor puede solicitar análisis estructurado. Estos contratos no prueban que el chat ejecute un flujo generativo completo ni herramientas FinOps. La autorización permanece en la aplicación. \pendiente{} La integración conversacional generativa y su evaluación siguen pendientes de acreditación; las pruebas simuladas no demuestran calidad del modelo.
+
+Seguridad. La autorización combina JWT, membresía y tenant: enviar X-Tenant-Id no concede acceso por sí solo. Las conversaciones se restringen a su propietario y los documentos al tenant autorizado; las consultas vectoriales preservan ese aislamiento. El entorno de demostración no acredita MFA, revocación completa ni endurecimiento para exposición pública. Los secretos se suministran mediante configuración protegida y no forman parte del frontend ni de los entregables documentales.
+
+Reproducibilidad. Docker Compose define nueve servicios y cinco volúmenes en el perfil base; el perfil de IA añade dos servicios y un volumen. Permite reproducir dependencias y ejecutar la demostración con datos simulados. Los puertos publicados, CockroachDB en modo inseguro y el servidor de previsualización frontend requieren controles adicionales para otro contexto operativo. El entorno local es la referencia implementada, sin acreditar un despliegue productivo AWS.
+
+Observabilidad y entrega. Prometheus recoge métricas de backend y processor y Grafana las visualiza. Los logs JSON y los identificadores de petición ayudan a correlacionar eventos, sin equivaler a trazabilidad distribuida completa; tampoco se acredita un receptor externo de alertas. GitHub Actions verifica código y documentación mediante CI. El despliegue continuo corresponde a JUP-052 y requiere su propia evidencia. Los procedimientos de pruebas y los resultados se desarrollan en los apartados f y h para evitar duplicidades.
+
+\figura{image2}
+
+Figura d.1. Componentes del corte funcional; líneas discontinuas: integraciones opcionales. {[}R1{]}
+
+Alternativa documental AWS. El frontend se alojaría en S3 privado y CloudFront, con WAF y ACM; la API y el processor se ejecutarían en ECS Fargate, con un ALB interno para la API y subredes privadas. Amazon MQ conservaría RabbitMQ y RDS PostgreSQL alojaría datos operativos y vectores. Cognito, Bedrock, Secrets Manager, IAM/KMS y CloudWatch cubrirían identidad, IA, secretos, permisos, cifrado y observabilidad. El esquema AWS detalla las dependencias. Sustituir CockroachDB, la autenticación y los proveedores actuales exige adaptar SQL/migraciones, tokens y modelos/embeddings; no basta cambiar variables. Son brechas hipotéticas de compatibilidad, no tareas de despliegue pendientes de este encargo.
+
+Terraform y límites. La plantilla Terraform complementa el diseño y define recursos de red, aplicación, datos y seguridad. Se validó localmente mediante formato, validación estática, seis pruebas con proveedores simulados y ocho casos de enrutamiento. No acredita un plan real, compatibilidad integral ni operación en AWS. El pipeline CodeConnections--CodePipeline--CodeBuild--ECR--CDK/CloudFormation es conceptual; Terraform es una alternativa de aprovisionamiento y no implementa ese pipeline. El alcance acordado es documental: no se han creado recursos ni realizado despliegues AWS.
+
+\figura{image3}
+
+Figura d.2. Referencia conceptual AWS; no representa un despliegue realizado. {[}R2{]}
+
+Fuentes: \href{https://github.com/EconomiconFinOps/tfm-economicon/blob/d523bc393b0be78674e540a242f3bc9cbeebc8f7/docs/architecture.md}{{[}R1{]} Arquitectura técnica}; \href{https://github.com/EconomiconFinOps/tfm-economicon/blob/d523bc393b0be78674e540a242f3bc9cbeebc8f7/docs/architecture-aws.md}{{[}R2{]} Arquitectura AWS}; \href{https://github.com/EconomiconFinOps/tfm-economicon/blob/d523bc393b0be78674e540a242f3bc9cbeebc8f7/infra/aws-reference/README.md}{{[}R3{]} Terraform y validación}. Referencias fijadas al commit d523bc3 de PR92.

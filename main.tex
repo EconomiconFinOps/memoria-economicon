@@ -1,0 +1,21 @@
+% Memoria del TFM de Economicon. Compilar con:  latexmk -lualatex main.tex
+\documentclass{economicon}
+\addbibresource{referencias.bib}
+
+\begin{document}
+\portada
+\tableofcontents
+
+\input{capitulos/a-introduccion}
+\input{capitulos/b-caso-de-negocio}
+\input{capitulos/c-contribucion}
+\input{capitulos/d-arquitectura}
+\input{capitulos/e-diseno-ia}
+\input{capitulos/f-devops}
+\input{capitulos/g-modelos}
+\input{capitulos/h-evaluacion}
+\input{capitulos/i-conclusiones}
+
+% La bibliografia comun se activa cuando las fuentes pasen a referencias.bib.
+% \printbibliography[title={Referencias}]
+\end{document}
