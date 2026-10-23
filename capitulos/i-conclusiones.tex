@@ -1,12 +1,30 @@
 \section{Conclusiones y trabajo futuro}\label{i-0}
 
-\subsection{Una referencia predictiva para detectar anomalías}
+\subsection{Logros frente a los objetivos}\label{i-1}
 
-Actualmente, una anomalía de coste se detecta comparando el gasto de los últimos siete días con el de los siete anteriores: si sube más de un 20 \% y más de 100 unidades monetarias diarias, se marca como candidata. Se optó por esta regla determinista porque siempre da el mismo resultado y cada alerta puede explicarse.
+Economicon reúne en un mismo prototipo lo que el proyecto se propuso: ingiere y normaliza el gasto de Azure, calcula indicadores, detecta anomalías y responde preguntas en lenguaje natural citando sus fuentes. Las cifras de coste las calcula siempre el servidor y nunca el modelo, y cada cliente solo ve sus datos. El sistema se construye, se prueba y se despliega de forma automatizada, y cada medición se puede repetir con un comando y consultar en Grafana. \cite{arquitectura-final,panel-evaluacion}
 
-Su limitación es que toma como referencia la semana anterior, por lo que no distingue un crecimiento normal de un salto inesperado. Como trabajo futuro se propone sustituirla por un modelo predictivo que estime el gasto esperado de cada día y compare el real con esa estimación. La regresión lineal sería un punto de partida sencillo, aunque modelos con estacionalidad o técnicas no supervisadas podrían ajustarse mejor; la elección dependería de compararlos con datos reales, valorando tanto su precisión como su explicabilidad. Para ello haría falta un histórico de varias semanas o meses, del que hoy no se dispone.
+El alcance demostrado usa datos públicos y sintéticos y una API que simula Azure. Varias capacidades ---la recuperación híbrida, el chat generativo y el ciclo en AWS--- están implementadas pero apagadas por defecto o sin ejecutar en la nube, y su uso con una organización real está por demostrar. \cite{arquitectura-final,aws-ensayo}
 
-\subsection{Detección periódica y avisos de anomalías}
+\subsection{Lecciones y límites}\label{i-2}
 
-En la versión entregada, las anomalías de coste se detectan cuando la persona usuaria pulsa «Detectar ahora». Cada una se guarda como un episodio por cliente, moneda y servicio, con su criticidad y un estado que se puede seguir. El siguiente paso es detectarlas de forma periódica y avisar con tiempo antes del cierre mensual. Quedó fuera por falta de calendario, y porque la ingesta de costes también se lanza a mano, de modo que una detección automática solo vigilaría lo ya cargado. La propuesta es un servicio propio, apagado por defecto, que ejecute la detección existente y registre su resultado, con aviso primero dentro de la aplicación y después, si procede, mediante una regla de Grafana.
+La principal lección es que superar las pruebas técnicas no basta para aceptar un asistente. El chat cita bien, no inventa cifras y cuesta poco, pero acierta menos de lo exigido y tarda varias veces más que el objetivo (apartado~\ref{h-0}). Separar las cifras deterministas de la redacción del modelo resultó una buena decisión: los fallos se concentran en la redacción y en la verificación, no en los datos.
 
+La segunda lección es de método. Medir con reglas, con una revisora y con un juez LLM da lecturas distintas que no se pueden sumar, y cambiar varias cosas a la vez impidió aislar el efecto del modelo. En el tramo final, además, varias integraciones se hicieron sin revisión cruzada para llegar a la entrega, y esas partes tienen menos verificación independiente. \cite{reevaluacion-modelo,continuidad}
+
+\subsection{Trabajo futuro}\label{i-3}
+
+\subsubsection{Validación con una organización real}
+El siguiente paso será probar Economicon con usuarios, datos y una cuenta de Azure reales, comprobando permisos y separación de clientes, y medir el impacto de negocio que hoy solo es una hipótesis. Se repetirán las evaluaciones con más revisores y repeticiones, y se medirá la latencia en la infraestructura definitiva antes de aceptar cambios.
+
+\subsubsection{Herramientas para el modelo y tiempo de respuesta}
+Las consultas de propiedad, gasto y anomalías se ofrecerán al modelo como herramientas que el servidor autoriza y ejecuta, de modo que el chat pueda usarlas sin escribir SQL. Para reducir la latencia se estudiará acotar la salida sin truncarla, reutilizar contexto mediante caché y activar la recuperación híbrida tras preparar su índice. \cite{arquitectura-final}
+
+\subsubsection{Una referencia predictiva para las anomalías}
+Hoy una anomalía se detecta comparando el gasto de los últimos siete días con el de los siete anteriores: se marca si sube más de un 20\,\% y más de 100 unidades monetarias diarias. La regla es determinista y explicable, pero no distingue un crecimiento normal de un salto inesperado. Se propondrá un modelo que estime el gasto esperado de cada día: una regresión lineal como punto de partida, comparada con modelos estacionales y técnicas no supervisadas por precisión y explicabilidad. Hará falta un histórico de varias semanas o meses que hoy no existe. \cite{detector-anomalias,jup130-anomalias}
+
+\subsubsection{Detección periódica y avisos}
+Las anomalías se detectan hoy cuando la persona pulsa un botón, y cada una se guarda como un episodio por cliente, moneda y servicio con su estado de seguimiento. Se añadirá una detección periódica, apagada por defecto y coordinada con la carga de costes, con aviso primero dentro de la aplicación y después, si aporta valor, mediante una regla de Grafana. Antes de activarla se definirán su frecuencia, el tratamiento de duplicados y las condiciones de envío. \cite{detector-anomalias}
+
+\subsubsection{Despliegue en la nube}
+El ciclo desechable en AWS está preparado. Ejecutarlo permitirá medir la ruta con modelos nativos y comparar coste y latencia con la configuración actual. \cite{aws-ensayo}

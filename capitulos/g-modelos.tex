@@ -1,41 +1,46 @@
 \section{Uso de modelos preentrenados}\label{g-0}
 
-Economicon no entrena modelos propios: usa modelos preentrenados a través de un gateway y los guía con instrucciones y contexto. Este apartado explica por qué, por qué ruta se accede a ellos, cómo se eligió el modelo y qué se puede afirmar sobre su coste y su tiempo de respuesta. La tabla~\ref{tab-g1} resume los datos clave.
+Economicon no entrena modelos propios: usa modelos preentrenados a través de un gateway y los guía con instrucciones y contexto. La elección importa porque determina el coste por consulta, el tiempo de respuesta y dónde viajan los datos del cliente. Este apartado explica por qué se descartó entrenar, por qué ruta se accede a los modelos, cómo se eligió el modelo y qué se puede afirmar sobre su coste y su latencia. La tabla~\ref{tab-g1} resume los datos clave.
 
-\begin{table}[htbp]
+\needspace{0.38\textheight}
+\begin{table}[!h]
 \centering\small
-\caption{Configuración de referencia y evidencias distintas para la selección}\label{tab-g1}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2316}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3053}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4632}}@{}}
+\caption{Configuración de la versión final y evidencias de la elección}\label{tab-g1}
+\begin{tabular}{@{}p{0.22\linewidth}p{0.3\linewidth}p{0.4\linewidth}@{}}
 \toprule
 \textbf{Ámbito} & \textbf{Dato o elección} & \textbf{Qué cuenta} \\
 \midrule
-Modelo actual (configuración integrada) & DeepSeek V4.1 Flash; DeepInfra, 8 bits; sin cambio automático de ruta & Único generador del ejemplo versionado; no certifica un servicio externo. \cite{config-gateway} \\
-Comparativa histórica de contenido & 27 de 28 aceptables en cada modelo & GLM-5.2 y Flash: preguntas previstas por modelo; valoración posterior de un juez LLM, un modelo de lenguaje que valora las respuestas. \cite{comparativa-modelos} \\
-Comparativa histórica de coste & GLM: 0,1806 USD; Flash: 0,0392 USD & Consultas e intentos de las 28 operaciones por modelo, incluidos embeddings de consulta; excluye indexación inicial. \cite{comparativa-modelos} \\
-Medición posterior del modelo actual: latencia, antes / tras el arreglo & p95 total: 41,3 / 42,4 s; objetivo: 10 s & p95: tiempo bajo el que se sitúa el 95 \% de las operaciones completadas con latencia total registrada. Banco de 28 casos: n = 28 antes y 27 después. No cuenta respuestas aprobadas por contenido ni cada intento del proveedor. \cite{reevaluacion-modelo,banco28} \\
+Modelo de chat por defecto & DeepSeek V4.1 Flash; proveedor DeepInfra, 8 bits; sin ruta de reserva & Único generador de la configuración versionada; no certifica qué modelo respondió en cada llamada. \cite{config-gateway,arquitectura-final} \\
+Modelo de embeddings & text-embedding-3-small & Convierte texto en vectores para la recuperación; no genera respuestas. \cite{config-gateway} \\
+Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Implementada y probada sin conexión; apagada por defecto y sin invocaciones reales. \cite{aws-ensayo} \\
+Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 frente a Flash con las mismas preguntas; valoración de un juez LLM, un modelo que puntúa respuestas. \cite{comparativa-modelos} \\
+Comparativa de coste & GLM-5.2: 0,1806 USD; Flash: 0,0392 USD & Las 28 operaciones de cada modelo, con los embeddings de las preguntas; sin la indexación inicial. \cite{comparativa-modelos} \\
+Coste facturado por consulta & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & Consultas de chat terminadas, contrastadas con la factura del proveedor; ventanas de medición distintas. \cite{jup130-coste,jup133-coste} \\
+Latencia del modelo actual & Percentil 95: 41,3 s antes del arreglo y 42,4 s tras él; objetivo de 10 s & Tiempo bajo el que quedan el 95\,\% de las operaciones completadas del banco de 28 preguntas. \cite{reevaluacion-modelo,banco28} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\subsection{Adaptación sin entrenamiento propio}\label{g-1}
 
-\subsection{Adaptación sin entrenamiento propio}\label{g-20}
+Un modelo preentrenado ha aprendido patrones del lenguaje antes de integrarse en la aplicación. Caben tres opciones: entrenarlo desde cero, ajustar sus pesos con datos propios (fine-tuning) o usarlo tal cual con instrucciones y contexto. Para el MVP\footnote{Producto mínimo viable: la versión más pequeña que permite comprobar la propuesta con usuarios.} se eligió la tercera, que concentra el esfuerzo en lo que diferencia a Economicon y evita mantener un ciclo propio de entrenamiento: las fuentes, los controles de la respuesta y el cálculo determinista de las cifras. El modelo de embeddings también se usa sin modificar. \cite{especificaciones,config-gateway}
 
-Un modelo preentrenado ha aprendido patrones antes de integrarse en la aplicación. Las opciones son entrenarlo desde el inicio, ajustar sus pesos mediante fine-tuning o utilizarlo con instrucciones y contexto. Para el MVP se eligió la tercera: concentró el desarrollo en las fuentes y el control de la respuesta, sin mantener un ciclo propio de entrenamiento. La generación de embeddings emplea otro modelo existente y no modifica sus pesos. \cite{especificaciones,config-gateway}
+\subsection{Ruta y condiciones de uso}\label{g-2}
 
-\subsection{Ruta y condiciones de uso}\label{g-24}
+LiteLLM actúa como gateway de modelos: una entrada común que guarda las credenciales, aplica límites de gasto por clave y registra cada consulta. OpenRouter encamina después la petición al proveedor. La aplicación solo conoce un alias estable, de modo que cambiar de modelo es un cambio de configuración y no de código. La decisión sobre el modelo por defecto sigue en estado de propuesta, a la espera de su ratificación por el equipo. \cite{config-gateway,adr-registro}
 
-LiteLLM actúa como gateway de modelos: una entrada común para credenciales, límites y acceso; OpenRouter encamina la petición al proveedor externo. El alias economicon-chat, nombre estable usado por la aplicación, resuelve al único generador de referencia de la tabla~\ref{tab-g1}. La configuración figura en la versión integrada de referencia; su registro de decisión sigue propuesto y pendiente de ratificación del equipo. \cite{config-gateway,adr-registro}
+La configuración exige retención cero de datos (ZDR, Zero Data Retention), excluye a los proveedores que recopilan los datos de las peticiones y desactiva el cambio automático de proveedor ante un fallo. La cuantización a 8 bits representa los parámetros del modelo con menor precisión para abaratar la inferencia. Son condiciones configuradas, no una atestación externa de cada llamada. \cite{config-gateway}
 
-ZDR, Zero Data Retention, identifica la política de retención cero exigida al encaminamiento. La configuración rechaza recopilación y fallback, el cambio automático de ruta ante un fallo; el historial de la aplicación conserva su propia persistencia. La cuantización FP4/FP8 representa parámetros con precisión reducida de cuatro u ocho bits. El presupuesto de tokens, las unidades de texto que procesa el modelo, limita la longitud permitida y se ajusta junto a la calidad, la latencia y el coste. Estas condiciones configuradas no equivalen a una atestación externa de cada inferencia. \cite{config-gateway,comparativa-modelos}
+Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativos de la nube, sin pasar por el gateway. El código y sus controles están probados sin conexión, pero no se ha invocado ningún modelo de AWS, así que esta memoria no aporta mediciones de esa ruta. \cite{aws-ensayo}
 
-\subsection{Cómo se eligió el modelo y cómo leer las mediciones}\label{g-30}
+\subsection{Cómo se eligió el modelo}\label{g-3}
 
-GLM-5.2 fue el modelo principal del chat y DeepSeek V4 Pro una alternativa distinta de V4.1 Flash; ninguno de los dos sigue activo en la configuración de referencia. Para elegir el modelo se compararon GLM-5.2 y Flash con las mismas preguntas, corpus, índice y contexto sintético. El coste comparable de la tabla~\ref{tab-g1} apoyó la elección de Flash; GLM necesitó menos reintentos y tuvo tiempos más regulares. La valoración del juez LLM describió el contenido de aquella muestra, no una clasificación general de modelos ni una validación humana. \cite{comparativa-modelos}
+GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez LLM, y Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
 
-Las mediciones posteriores por reglas y con una revisora humana única emplearon otros recursos y métodos de captura. Aumentó el número de casos aprobados, pero cambiaron denominadores y puntos juzgados; el veredicto del instrumento siguió siendo «No aceptado». Por ello se conservan ambas lecturas separadas. Las métricas de Grafana son registros técnicos, no juicios semánticos, y los importes recientes del informe de autor siguen pendientes de contraste independiente de sus originales. \cite{reevaluacion-modelo,banco28}
+Las mediciones posteriores con el modelo elegido usaron reglas automáticas y una revisora humana, con otros recursos y otro método de captura; por eso sus cifras no se comparan con las del juez (apartado~\ref{h-0}). El coste facturado por consulta confirmó la ventaja de Flash, aunque las ventanas de medición y el uso no son iguales y la diferencia no se atribuye solo al modelo. \cite{reevaluacion-modelo,jup133-coste}
 
-\subsection{Latencia y alcance de la decisión}\label{g-36}
+\subsection{Latencia y margen de mejora}\label{g-4}
 
-El percentil de latencia de la tabla~\ref{tab-g1} supera ampliamente el objetivo; el arreglo no lo alcanza. Es tiempo del recorrido observado, con aplicación, cola y validación, no solo de generación del modelo. La recuperación tampoco admite una comparación directa entre cortes, porque cambió cómo se capturó. \cite{reevaluacion-modelo,banco28}
+La latencia es el principal margen de mejora: el percentil 95 de la tabla~\ref{tab-g1} es más de cuatro veces el objetivo, y el arreglo de los cortes de respuesta no lo acercó. Ese tiempo incluye aplicación, cola y validación, no solo la generación. La versión final amplió además el límite de longitud de la respuesta, y su efecto en tiempo y coste no se ha medido. \cite{reevaluacion-modelo,banco28,demo-final}
 
-Acotar la salida sin truncarla, estudiar otra ruta compatible con la política de privacidad o reutilizar contexto mediante caché son vías de ajuste no evaluadas aquí. La elección mantiene una ventaja de coste observada en la comparación histórica y un margen de mejora de tiempo y calidad; no convierte las mediciones de candidatos pendientes de integración en garantías del sistema desplegado. \cite{comparativa-modelos,reevaluacion-modelo,banco28}
+Acotar la salida sin truncarla, reutilizar contexto con caché o probar otra ruta compatible con la política de privacidad son vías de ajuste por evaluar. La elección conserva una ventaja de coste observada y deja pendiente alcanzar el objetivo de tiempo. \cite{comparativa-modelos,reevaluacion-modelo}

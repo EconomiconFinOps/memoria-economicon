@@ -1,67 +1,106 @@
 \section{Evaluación de la solución}\label{h-0}
 
-Un asistente que explica costes solo es útil si acierta, cita de dónde saca las cifras, responde en un tiempo razonable, cuesta poco y se comporta bien con datos incompletos. Este apartado mide esas cinco cosas sobre el sistema actual, con DeepSeek V4.1 Flash como único modelo del chat.
+Un asistente que explica costes solo es útil si acierta, cita de dónde saca las cifras, responde en un tiempo razonable, cuesta poco y se comporta bien con datos incompletos. Este apartado mide esas cinco cosas sobre el chat con DeepSeek V4.1 Flash, el modelo por defecto, y la calidad de las funciones deterministas: el detector de anomalías y los datos de coste. Las tablas~\ref{tab-h1}, \ref{tab-h2} y~\ref{tab-h3} reúnen las cifras.
 
-\subsection{Qué se evalúa y cómo}
+\subsection{Qué se evalúa y cómo}\label{h-1}
 
-Un asistente con RAG puede fallar al recuperar, al generar o al citar, y por eso se mide cada etapa. El asistente puede fallar al recuperar, al redactar o al citar, así que medimos cada etapa, usando un banco de preguntas que tiene 28 items.
+Un asistente con RAG\footnote{Generación aumentada por recuperación: el sistema busca la información pertinente antes de que el modelo redacte.} puede fallar al recuperar, al redactar o al citar, así que se mide cada etapa con un banco de 28 preguntas: 20 tienen respuesta en los datos, 6 obligan a pedir un dato que falta y 2 exigen abstenerse. Cada pregunta es un caso y solo se aprueba si cumple todas sus comprobaciones. Las objetivas son reglas automáticas, como que aparezca la cifra correcta o que no se afirme algo prohibido; las juzgadas las decide una persona, por ejemplo si se pidió el dato que faltaba. \cite{jup070}
 
-El banco tiene 28 preguntas: 20 de responder (tienen respuesta en los datos), 6 de pedir el dato que falta y 2 de abstenerse. Cada pregunta es un caso y se aprueba solo si cumple todas sus comprobaciones. Las objetivas son reglas automáticas (que aparezca la cifra correcta, que no se afirme algo prohibido); las juzgadas las decide una persona (por ejemplo, que se pida el dato que falta) \cite{jup070}. La robustez se mide con 29 preguntas adicionales, 13 del banco anterior con datos intactos y 16 con un defecto introducido a propósito: etiquetas, reparto de costes compartidos, indicadores de coste, ámbito de los datos y anomalías
+La robustez se mide con 29 casos más: 13 del banco con los datos intactos y 16 con un defecto introducido a propósito en etiquetas, reparto de costes compartidos, indicadores de coste, ámbito de los datos o anomalías. El asistente debe detectar el defecto y decirlo en lugar de inventar un resultado. \cite{robustez-tras}
 
-Los umbrales de admisibilidad son cuatro: el 80 \% de las preguntas de responder aprobadas (propuesta pendiente de validar por el equipo) \cite{jup070}, el 90 \% de las comprobaciones objetivas cumplidas, ninguna cifra sin rastro en casos críticos y un percentil 95 de latencia de 10 s o menos, es decir, que el 95 \% de las conversaciones no supere ese tiempo. Los tres últimos se fijaron en la decisión de arquitectura sobre la pasarela de modelos, el servicio que reparte las peticiones entre modelos y controla su gasto \cite{adr-registro}.
+Los umbrales de admisibilidad son cuatro: aprobar el 80\,\% de las preguntas con respuesta, cumplir el 90\,\% de las comprobaciones objetivas, no dar ninguna cifra sin rastro en los casos críticos y que el 95\,\% de las conversaciones termine en 10 segundos o menos. El primero es una propuesta pendiente de validar por el equipo; los otros tres se fijaron al decidir el gateway de modelos. \cite{jup070,adr-registro}
 
-\subsection{Resultados técnicos}
+Las campañas se ejecutaron en un ordenador local con el chat generativo activado expresamente, un corpus de cuatro documentos y datos sintéticos. Cada una se repitió una vez y la revisó una sola persona. \cite{banco28}
 
-Se midió el banco en tres cortes: la plantilla sin modelo (la primera versión del chat) y DeepSeek V4.1 Flash antes y después del arreglo de cortes de respuesta. \cite{jup070,banco28}
+\subsection{Resultados técnicos}\label{h-2}
 
-\begin{table}[htbp]
+La tabla~\ref{tab-h1} compara tres cortes del banco: la primera versión del chat, una plantilla sin modelo, y Flash antes y después del arreglo de los cortes de respuesta.
+
+\needspace{0.3\textheight}
+\begin{table}[!h]
 \centering\small
-\caption{Resultados técnicos del chat en tres cortes}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2760}}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1652}}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1899}}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2006}}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1683}}@{}}
+\caption{Banco de 28 preguntas en tres cortes}\label{tab-h1}
+\begin{tabular}{@{}p{0.25\linewidth}p{0.11\linewidth}p{0.17\linewidth}p{0.2\linewidth}p{0.15\linewidth}@{}}
 \toprule
-\textbf{Medida} & \textbf{Primer corte} & \textbf{Antes del arreglo \cite{banco28,robustez-antes}} & \textbf{Tras el arreglo \cite{banco28,robustez-tras}} & \textbf{Objetivo} \\
+\textbf{Qué cuenta} & \textbf{Plantilla sin modelo} & \textbf{Flash, antes del arreglo} & \textbf{Flash, tras el arreglo} & \textbf{Objetivo} \\
 \midrule
-\textbf{Banco de 28 preguntas} &  &  &  &  \\
 Casos aprobados, de 28 & 0 & 10 & 13 (14 fallan, 1 bloqueado) & --- \\
-Preguntas de responder aprobadas & 0 de 20 & 6 de 20 & 7 de 19 & 80 \%: no se cumple \\
-Comprobaciones objetivas cumplidas & 26 de 51 & 31 de 51 (60,8 \%) & 28 de 46 (60,9 \%) & 90 \%: no se cumple \\
-Comprobaciones juzgadas cumplidas & --- & 25 de 30 (83,3 \%) & 26 de 28 (92,9 \%) & --- \\
-Cifras sin rastro & --- & 1 (no crítico) & 0 & 0 en críticos: se cumple \\
-Percentil 95 de latencia & --- & 41,3 s & 42,4 s & 10 s: no se cumple \\
-\textbf{Robustez (29 casos)} &  &  &  &  \\
-Aprobados / fallidos / bloqueados & 7 / 17 / 5 & 7 / 21 / 1 & 15 / 10 / 4 & --- \\
-Aprobados sobre evaluados & 29,2 \% & 25,0 \% & 60,0 \% & --- \\
-Prohibiciones incumplidas & 0 de 55 & 0 de 64 & 0 de 59 & --- \\
+Preguntas con respuesta aprobadas & 0 de 20 & 6 de 20 & 7 de 19 & 80\,\%: por alcanzar \\
+Comprobaciones objetivas cumplidas & 26 de 51 & 31 de 51 (60,8\,\%) & 28 de 46 (60,9\,\%) & 90\,\%: por alcanzar \\
+Comprobaciones juzgadas cumplidas & --- & 25 de 30 (83,3\,\%) & 26 de 28 (92,9\,\%) & --- \\
+Citas que apuntan a un fragmento recuperado & --- & 22 de 22 & 17 de 17 & --- \\
+Cifras sin rastro & --- & 1 (no crítica) & 0 & 0 en críticos: se cumple \\
+Documento correcto recuperado & --- & 8 de 20 & 19 de 19 & --- \\
+Percentil 95 de latencia total & --- & 41,3 s & 42,4 s & 10 s: por alcanzar \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-
 \subsubsection{Lo que funciona}
-El chat atendió todas las peticiones del banco sin errores del servidor. Cuando cita, cita bien: todas las citas del último corte apuntaban a un fragmento realmente recuperado y todas las respuestas cumplieron el esquema \cite{banco28}. Además es barato. Contrastamos las consultas de la última ventana de medición con la factura del proveedor de acceso a modelos (OpenRouter): el gasto estimado y el facturado difirieron en menos de un 1 \% \cite{jup133-coste}. Con DeepSeek V4.1 Flash, 100 consultas al modelo cuestan unos 0,06 USD, frente a unos 0,26 USD con el modelo anterior; son ventanas y recursos distintos, y no atribuimos la diferencia solo al modelo.
+El chat atendió todas las peticiones del banco sin errores del servidor, todas sus respuestas cumplieron el esquema y, cuando cita, cita bien: cada cita apuntaba a un fragmento realmente recuperado. Tras el arreglo no quedó ninguna cifra sin rastro. La recuperación encontró el documento correcto en todas las preguntas con respuesta del último corte; el corte anterior se capturó de otra forma y no admite comparación directa. \cite{banco28}
 
 \subsubsection{Dónde hay margen de mejora}
-El acierto de las preguntas de responder y el de las comprobaciones objetivas están todavía por debajo de los objetivos, y por eso la herramienta de puntuación aún no da el resultado por aceptado en ninguno de los tres cortes. Las cifras admiten tres lecturas. La más exigente es la de casos completos, que es la de la tabla. La segunda mira las comprobaciones sueltas y es más indulgente, porque un solo fallo no descarta el resto: en las juzgadas el cumplimiento es mucho mayor. La tercera es la de un juez LLM, que en la comparativa entre modelos dio casi todas las respuestas por aceptables (27 de 28) \cite{comparativa-modelos}; mide otra cosa y no es comparable. Además, parte de los fallos es del lector numérico automático, que comprueba que las cifras de la respuesta coincidan con las esperadas: antes del arreglo, la mitad de los casos fallidos fallaba solo por eso y tenía las cuentas correctas a mano \cite{reevaluacion-modelo}; después no lo hemos cuantificado \pendiente{}. Con el mismo método de captura, la recuperación localizó el documento correcto en todos los casos de responder y la sección correcta en la gran mayoría \cite{banco28}; las campañas RAG A--D se resumen en \cite{informe-rag}.
+El acierto en las preguntas con respuesta y en las comprobaciones objetivas está todavía lejos de sus objetivos, y la herramienta de puntuación no da por aceptado ninguno de los tres cortes. Las cifras admiten tres lecturas. La más exigente es la de casos completos de la tabla~\ref{tab-h1}. La segunda mira las comprobaciones sueltas y es más indulgente, porque un fallo no descarta el resto: en las juzgadas el cumplimiento es mucho mayor. La tercera es la de un juez LLM, un modelo que valoró las respuestas al elegir el modelo y dio por aceptables casi todas (apartado~\ref{g-0}); mide otra cosa y no es comparable. \cite{comparativa-modelos}
+
+Parte de los fallos son del lector numérico automático, que comprueba que las cifras de la respuesta coincidan con las esperadas: antes del arreglo, la mitad de los casos fallidos fallaba solo por eso y tenía las cuentas correctas. Tras el arreglo no se ha cuantificado. \pendiente{} \cite{reevaluacion-modelo}
 
 \subsubsection{Robustez}
-El asistente debe detectar un defecto en los datos y decirlo, en lugar de inventar un resultado. Tras el arreglo aprobó todos los casos de reparto de costes compartidos y de ámbito de los datos, pero solo una parte de los de etiquetas defectuosas y de indicadores de coste, y el de anomalías quedó bloqueado. En ningún corte afirmó algo prohibido. La mayoría de los fallos del último corte lo son solo de la comprobación numérica automática y no se han revisado a mano \pendiente{}. \cite{robustez-tras}
+La tabla~\ref{tab-h2} muestra la batería de robustez en la primera campaña con el chat real, que usaba el modelo anterior, y con Flash antes y después del arreglo.
+
+\needspace{0.13\textheight}
+\begin{table}[!h]
+\centering\small
+\caption{Robustez ante datos incompletos o defectuosos (29 casos)}\label{tab-h2}
+\begin{tabular}{@{}p{0.34\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.18\linewidth}@{}}
+\toprule
+\textbf{Qué cuenta} & \textbf{Modelo anterior} & \textbf{Flash, antes del arreglo} & \textbf{Flash, tras el arreglo} \\
+\midrule
+Aprobados / fallidos / bloqueados & 7 / 17 / 5 & 7 / 21 / 1 & 15 / 10 / 4 \\
+Aprobados sobre casos evaluados & 29,2\,\% & 25,0\,\% & 60,0\,\% \\
+Prohibiciones incumplidas & 0 de 55 & 0 de 64 & 0 de 59 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+En ningún corte el asistente incumplió una prohibición, como inventar cifras o repartir costes sin una regla. Tras el arreglo resolvió todos los casos de reparto de costes compartidos y de ámbito de los datos, pero solo una parte de los de etiquetas defectuosas y de indicadores de coste, y el de anomalías quedó bloqueado. La mayoría de los fallos del último corte lo son de la comprobación numérica automática y no se han revisado a mano. \pendiente{} \cite{robustez-antes,robustez-tras}
 
 \subsubsection{El tiempo}
-La latencia es el otro margen de mejora: el percentil 95 está en torno a cuatro veces por encima del objetivo, la mediana ronda los 20 s y el máximo supera el minuto \cite{banco28}. La llamada al modelo tardó entre 4 y 16 s; el resto es servidor, cola y validador. Al ser una medida del ordenador local, queda pendiente repetirla en la infraestructura definitiva.
+La latencia es el mayor margen de mejora: el percentil 95 está más de cuatro veces por encima del objetivo, la mediana ronda los 20 segundos y el máximo supera el minuto. El tiempo incluye aplicación, cola y validación, además de la generación. Al ser una medida de un ordenador local, queda por repetir en la infraestructura definitiva. \cite{banco28}
 
-\subsubsection{Qué hemos corregido}
-Con preguntas sobre cifras de pantalla, una sola regla incumplida rechazaba la respuesta entera aunque el modelo hubiera acertado. El arreglo reintenta dentro de los cuatro intentos con temperatura creciente (regula cuánto varía el modelo), omite la cifra no verificada conservando el resto de la respuesta con un aviso, y recupera la conversación tras un fallo. En una batería propia de 14 preguntas repetidas 4 veces, las operaciones fallidas pasaron de más de un tercio a una sola de 56 \cite{cortes-medicion}. El aviso de cifra omitida ya se muestra en la interfaz, en el panel y en el historial \cite{cortes-medicion}, y siguen sin resolverse las frases con huecos donde iría una cifra.
+\subsubsection{Qué se corrigió}
+Con preguntas sobre cifras de pantalla, una sola regla incumplida rechazaba la respuesta entera aunque el modelo hubiera acertado. El arreglo reintenta con temperatura creciente, omite la cifra no verificada con un aviso visible y recupera la conversación tras un fallo. En una batería propia de 14 preguntas repetidas 4 veces, las operaciones fallidas pasaron de más de un tercio a una sola de 56. Siguen pendientes las frases que quedan con un hueco donde iría la cifra omitida. \cite{cortes-medicion}
 
-\subsection{Resultados funcionales}
+La versión final amplió después el límite de longitud de la respuesta. Las cifras de este apartado se midieron antes de ese cambio, y su efecto en calidad, tiempo y coste no se ha medido. \cite{demo-final}
 
-El detector de anomalías usa reglas deterministas, sin modelo. Con 7 eventos inyectados en datos sintéticos detectó 5: precisión de 5 de 5 (todo lo que marcó era un evento real) y recall del 71,4 \% (la parte de los eventos que encontró), que sube al 100 \% sobre los 5 detectables por diseño. El retraso fue de 0 días por construcción. No detecta un pico desde cero ni la primera aparición de un servicio, porque exige una semana de referencia con coste positivo \cite{jup130-anomalias}. En los dos tenants de demostración (clientes con sus propios datos), la frescura fue de 0 días y la reconciliación con la fuente dio diferencia 0 en los tres pares tenant-divisa; al ser la fuente sintética, confirma la coherencia interna y no la integridad de datos reales \cite{jup130-anomalias}. Las métricas de negocio (tiempo ahorrado, cobertura de gasto asignado, ahorro potencial) tienen definición y un ejemplo sintético reproducible; el piloto con usuarios y el beneficio real no se han medido.
+\subsection{Resultados funcionales y coste}\label{h-3}
 
-\subsection{Cómo se reproduce}
+La tabla~\ref{tab-h3} recoge la calidad del detector de anomalías, la coherencia de los datos de coste y el coste del modelo.
 
-Las medidas se cargan en un panel de Grafana (herramienta de monitorización) que registra el modelo servido en cada ejecución, y cada tabla se regenera con un comando del repositorio (anexo). \cite{adr-registro}
+\needspace{0.2\textheight}
+\begin{table}[!h]
+\centering\small
+\caption{Detector de anomalías, datos de coste y coste de IA}\label{tab-h3}
+\begin{tabular}{@{}p{0.34\linewidth}p{0.2\linewidth}p{0.36\linewidth}@{}}
+\toprule
+\textbf{Qué cuenta} & \textbf{Resultado} & \textbf{Alcance} \\
+\midrule
+Precisión del detector: episodios marcados que eran eventos reales & 5 de 5 & 7 eventos inyectados en datos sintéticos \\
+Recall: eventos encontrados & 5 de 7 (71,4\,\%); 5 de 5 detectables & Dos eventos no son detectables por diseño \\
+Retraso hasta la detección & 0 días & Esperable por construcción del conjunto \\
+Frescura y reconciliación de los datos & 0 días; diferencia 0 en 3 pares cliente-divisa & Coherencia interna de datos sintéticos \\
+Coste facturado por 100 consultas con Flash & 0,06 USD & Una ventana local; estimado y facturado difieren menos de un 1\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\figura{grafana-panel-evaluacion}{Dashboard provisional en Grafana}
+El detector usa reglas deterministas, sin modelo. Acertó todo lo que marcó y encontró todos los eventos detectables; no detecta un pico desde cero ni la primera aparición de un servicio, porque exige una semana de referencia con coste positivo. Los datos de los dos clientes de demostración estaban al día y cuadraban con la fuente, lo que confirma su coherencia interna, no la integridad de datos reales. El coste del modelo es bajo y se contrastó con la factura del proveedor. Las métricas de negocio ---tiempo ahorrado, gasto asignado y ahorro potencial--- tienen definición y un ejemplo sintético reproducible; el piloto con usuarios y el beneficio real no se han medido. \cite{jup130-anomalias,jup133-coste}
 
-\subsection{Qué podemos afirmar y qué no}
+\subsection{Cómo se reproduce}\label{h-4}
 
-Con 28 preguntas, una repetición y una revisora afirmamos que el sistema funciona de extremo a extremo, que cita con corrección y que su coste es bajo. No afirmamos la superioridad de un modelo, que el arreglo mejore la calidad en general ni la calidad en uso real, porque todo se midió en un ordenador local, con datos sintéticos, un corpus pequeño y casos críticos con un único decisor \cite{banco28}. La identidad del modelo es la que declara la configuración, y la batería de conformidad por requisito no se repitió con el modelo actual.
+Los resultados se cargan en un panel de Grafana que registra el modelo declarado en cada ejecución (figura~\ref{fig-h1}), y cada tabla se regenera con un comando del repositorio. \cite{panel-evaluacion}
+
+\figura{grafana-panel-evaluacion}{Panel de evaluación del asistente en Grafana.\label{fig-h1}}
+
+\subsection{Qué se puede afirmar y qué no}\label{h-5}
+
+Con 28 preguntas, una repetición y una revisora, se puede afirmar que el chat funciona de extremo a extremo, que cita con corrección, que no inventa cifras ante datos defectuosos y que su coste es bajo. No se puede afirmar que un modelo sea superior, que el arreglo mejore la calidad en general ni cómo se comporta en uso real: todo se midió en un ordenador local, con datos sintéticos, un corpus pequeño y una única revisora. La identidad del modelo es la que declara la configuración. La demo final se integró clasificada como demo con incidencias, sin aceptación integral. \cite{banco28,demo-final}

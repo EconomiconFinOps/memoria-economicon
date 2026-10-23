@@ -1,54 +1,53 @@
 \section{Diseño y desarrollo de la solución de IA}\label{e-0}
 
-Este apartado explica cómo Economicon consigue que sus respuestas se apoyen en información verificable: qué conocimiento prepara, cómo lo recupera y qué controles aplica antes de mostrar una respuesta. La tabla~\ref{tab-e1} resume las decisiones que se desarrollan a continuación.
+Un asistente FinOps solo es útil si sus respuestas se pueden comprobar: una cifra sin origen o una recomendación que no se apoya en los datos del cliente no sirve para decidir gasto. Este apartado explica qué conocimiento prepara Economicon, cómo lo recupera, qué controles aplica antes de mostrar una respuesta y qué partes del diseño están activas en la configuración por defecto. La tabla~\ref{tab-e1} resume las decisiones; la evaluación de su calidad está en el apartado~\ref{h-0}.
 
-\begin{table}[htbp]
+\needspace{0.36\textheight}
+\begin{table}[!h]
 \centering\small
-\caption{Decisiones de preparación y recuperación del conocimiento}\label{tab-e1}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2316}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3053}}>{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4632}}@{}}
+\caption{Decisiones de preparación, recuperación y generación}\label{tab-e1}
+\begin{tabular}{@{}p{0.2\linewidth}p{0.3\linewidth}p{0.42\linewidth}@{}}
 \toprule
 \textbf{Elemento} & \textbf{Elección} & \textbf{Qué significa} \\
 \midrule
-Representación del texto & text-embedding-3-small; 1.536 dimensiones & Cada pasaje se representa mediante un vector numérico compatible con el de la consulta. \cite{especificaciones,config-gateway} \\
-Fragmentación & Objetivo 600; máximo 800; solapamiento hasta 60 tokens & Un token es una unidad de texto procesada por el modelo; el presupuesto se aplica por fragmento y respeta su estructura. \cite{especificaciones} \\
-Recuperación & Distancia coseno ≤ 0,6; hasta 4 pasajes principales & La distancia coseno mide cuánto se parecen dos vectores (0 es idéntico) y solo se admiten los pasajes por debajo de 0,6; los vecinos y el apoyo por palabras tienen reglas propias. \cite{especificaciones} \\
-Resultado histórico que apoyó la elección & Configuración híbrida elegida: 68 de 68 respuestas obtenidas & Completitud de una campaña concreta; no equivale a exactitud universal. \cite{informe-rag} \\
-Evolución ensayada, pendiente de integración & Hasta 4 intentos; temperaturas 0 / 0,2 / 0,4 / 0,6 & La temperatura regula la variabilidad; aumenta en los reintentos de una salida rechazada. \cite{cortes-medicion} \\
+Representación del texto & text-embedding-3-small; 1.536 dimensiones & Cada pasaje se convierte en un vector comparable con el de la pregunta. El código admite además Titan de AWS, apagado por defecto. \cite{especificaciones,config-gateway,arquitectura-final} \\
+Fragmentación & Objetivo de 600 tokens; máximo de 800; solapamiento del 10\,\% & Un token es la unidad de texto que procesa el modelo. El corte respeta secciones, listas y tablas cuando caben. \cite{especificaciones} \\
+Recuperación por defecto & Distancia coseno $\leq$ 0,6; hasta 4 pasajes & La distancia coseno mide cuánto se parecen dos vectores (0 es idéntico); solo se admiten pasajes por debajo del umbral. \cite{arquitectura-final} \\
+Recuperación híbrida & Vectorial y por palabras, fusionadas por posición & Implementada y elegida en las campañas, pero apagada por defecto: requiere activarla y preparar un índice verificado. \cite{arquitectura-final,informe-rag} \\
+Reintentos de una respuesta rechazada & Hasta 4 intentos; temperatura 0; 0,2; 0,4; 0,6 & La temperatura regula cuánto varía el modelo; sube en cada reintento. Incluido en la versión final. \cite{cortes-medicion} \\
+Consultas de costes & SQL determinista, sin modelo & Propiedad, gasto y anomalías se calculan en el servidor y se devuelven con su evidencia. \cite{arquitectura-final} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\subsection{Un asistente con información de referencia}\label{e-1}
 
-\subsection{Un asistente con información de referencia}\label{e-21}
+FinOps\footnote{Práctica que une finanzas, tecnología y negocio para gestionar el gasto en la nube.} relaciona costes, decisiones y responsables. Un modelo de lenguaje puede explicar conceptos generales, pero no conoce los datos de un cliente ni las reglas de su organización. Economicon usa generación aumentada por recuperación, RAG\footnote{Retrieval-Augmented Generation: antes de redactar, el sistema busca la información pertinente y se la entrega al modelo.}: selecciona información autorizada del cliente y la incorpora a la petición, de modo que la respuesta pueda citar sus fuentes en lugar de depender de la memoria del modelo. \cite{especificaciones}
 
-FinOps relaciona costes, decisiones y responsabilidades. Un modelo de lenguaje puede explicar conceptos generales, pero sus conocimientos previos no contienen necesariamente los datos de una consulta ni las reglas de una organización. Economicon utiliza generación aumentada por recuperación, RAG: selecciona información autorizada y la incorpora a la petición antes de redactar la respuesta. Así, la explicación puede vincularse con sus fuentes en lugar de depender solo de la memoria del modelo. \cite{especificaciones}
+El sistema separa dos tipos de pregunta. Las preguntas sobre costes ---cuánto gasta un proyecto, qué servicio ha crecido o por qué se marcó una anomalía--- se resuelven con consultas SQL en el servidor y devuelven las cifras exactas con su procedencia; ahí no interviene ningún modelo. Las preguntas abiertas pasan por el chat generativo, que recibe el resumen de costes verificado por el servidor y los pasajes documentales recuperados. La figura~\ref{fig-e1} muestra cómo se prepara el conocimiento y el ciclo de una respuesta. \cite{arquitectura-final}
 
-El recorrido distingue información documental, datos aportados por la persona y evidencia financiera obtenida por el servidor. La pregunta se recibe con la identidad y los permisos de la sesión; se recuperan los pasajes pertinentes y el modelo prepara una respuesta. Después, el servidor comprueba estructura, referencias y operaciones admitidas antes de confirmar el resultado. La figura~\ref{fig-e1} muestra también cómo se prepara el conocimiento que alimenta ese ciclo. \cite{especificaciones}
+El alcance cubre Azure con datos públicos de Microsoft FinOps Toolkit, servidos por una API que simula el servicio de consulta de costes; no se usa la facturación de un cliente real. Cada organización, o tenant, solo accede a sus documentos, costes y conversaciones. \cite{especificaciones,dataset-azure}
 
-El MVP cubre Azure con datos públicos de Microsoft FinOps Toolkit y una API que simula el servicio de consulta de costes. No utiliza la facturación de un cliente real. El espacio de cada organización, o tenant, delimita el acceso a sus documentos y conversaciones; un escenario hipotético permanece identificado como tal y no se convierte en gasto verificado. \cite{especificaciones,dataset-azure}
+\figura{ia-flujo-conocimiento-y-respuesta}{Preparación del conocimiento y ciclo de una respuesta.\label{fig-e1}}
 
-\figura{ia-flujo-conocimiento-y-respuesta}{Preparación del conocimiento y ciclo de una respuesta en la referencia integrada. La evolución de reparación y reintento se distingue en la sección~\ref{e-47}.\label{fig-e1}}
+\subsection{Preparación del conocimiento}\label{e-2}
 
-\subsection{Preparación del conocimiento}\label{e-33}
+La ingesta admite texto pegado y ficheros Markdown, TXT, DOCX, DOC y PDF, incluidos los escaneados. La extracción y el reconocimiento óptico de caracteres (OCR) se hacen dentro del sistema, aislados y con límites de páginas, tiempo y memoria. El fichero original se guarda de forma temporal en MinIO, un almacén de objetos, y se retira cuando el texto normalizado, los vectores y el estado del trabajo ya están guardados. Así, la recuperación y las citas no dependen de conservar el binario. \cite{arquitectura-final}
 
-La ingesta admite texto manual, Markdown, TXT, DOCX, DOC y PDF digital, escaneado o mixto. La extracción y el reconocimiento óptico de caracteres, OCR, se realizan localmente con recursos acotados. MinIO, el almacén de ficheros del sistema, conserva temporalmente los originales; su eliminación sigue a la persistencia del texto normalizado, los vectores y el estado final del trabajo. Una limpieza fallida se recupera sin repetir el procesamiento. \cite{especificaciones}
+Un fragmento (chunk) es la unidad de texto que se guarda y se recupera por separado. El algoritmo conserva secciones, listas, tablas y bloques de código cuando caben en el presupuesto de la tabla~\ref{tab-e1} y aplica cortes reproducibles cuando no caben, sin usar modelos para decidir dónde cortar. El solapamiento mantiene la continuidad entre fragmentos y queda registrado, de forma que el texto normalizado se puede reconstruir. \cite{especificaciones}
 
-Un chunk o fragmento es la unidad de texto almacenada y recuperada por separado. El algoritmo respeta secciones, listas, tablas y código cuando caben y aplica cortes reproducibles cuando exceden el presupuesto de la tabla~\ref{tab-e1}. El solapamiento conserva continuidad entre fragmentos y queda registrado; los metadatos permiten reconstruir el texto normalizado retirando repeticiones, sin prometer la maquetación original. \cite{especificaciones}
+\subsection{Representación y recuperación}\label{e-3}
 
-\subsection{Representación y recuperación}\label{e-39}
+Un embedding es una representación numérica que permite comparar el significado de dos textos. PostgreSQL con la extensión pgvector actúa como base vectorial: guarda esas representaciones y devuelve los pasajes más próximos a la pregunta, siempre filtrados por tenant. Documentos y preguntas deben compartir el mismo espacio de representación ---modelo, proveedor, dimensión y preparación del texto---; cambiar de proveedor exige reindexar, nunca mezclar vectores. \cite{arquitectura-final}
 
-Un embedding es una representación numérica que permite comparar la proximidad de significado entre textos. PostgreSQL, ampliado con pgvector, funciona como base vectorial: almacena esas representaciones y recupera pasajes por similitud. Documento y consulta deben pertenecer a un espacio compatible, identificado por modelo, proveedor, dimensión, tokenizador y preparación del texto. \cite{especificaciones}
+Para elegir la recuperación se compararon cuatro variantes acumulativas: A usaba fragmentos por caracteres y búsqueda solo vectorial; B introdujo la fragmentación estructural; C añadió título y sección a la representación; D sumó la búsqueda por palabras, útil cuando importan un nombre, una magnitud o un identificador literal. D combina ambas listas con Reciprocal Rank Fusion (RRF), que puntúa la posición de cada candidato sin mezclar escalas distintas. \cite{informe-rag}
 
-Las variantes identifican cambios acumulativos: A empleó fragmentos por caracteres y búsqueda densa, basada en vectores; B introdujo fragmentación estructural; C añadió título y sección a la representación; D incorporó búsqueda léxica, que localiza palabras e identificadores concretos. La combinación complementa la cercanía semántica cuando importan una denominación, magnitud o condición literal. \cite{informe-rag}
+Elegimos D porque obtuvo respuesta en todas las preguntas de su campaña y seleccionó contexto más útil en las preguntas específicas; A y B cubrieron mejor algunas de las originales. Es una decisión ligada a ese corpus y a esa muestra, no una superioridad general. En la versión final, la recuperación verificada, contextual e híbrida está implementada pero apagada por defecto: activarla exige preparar el índice por generaciones completas, y mientras tanto el sistema usa la recuperación vectorial con umbral de la tabla~\ref{tab-e1}. \cite{informe-rag,arquitectura-final}
 
-D fusiona las listas mediante Reciprocal Rank Fusion, RRF: puntúa la posición de cada candidato en los rankings sin tratar sus escalas como equivalentes. La distancia de la tabla~\ref{tab-e1} limita la vía densa; el rescate léxico conserva sus condiciones de admisión. El índice se prepara por generaciones completas antes de activarlo y la caché se separa por organización, espacio y texto exacto. Así se evita mezclar vectores incompatibles o atribuir al pasaje citable el contexto añadido a su representación. \cite{especificaciones}
+\subsection{Generación y controles}\label{e-4}
 
-\subsection{Generación, controles y continuidad}\label{e-47}
+El chat generativo también se activa de forma explícita; en la configuración por defecto la interfaz no lo muestra. Cuando está activo, el modelo no decide si se busca ni qué se busca: el servidor prepara una única búsqueda por intento a partir de la pregunta y la ejecuta antes del primer borrador. El modelo recibe solo ese resultado y el resumen de costes del cliente; no ejecuta consultas ni accede a otros datos. \cite{arquitectura-final}
 
-Un prompt versionado es un conjunto de instrucciones identificado para reproducir qué se pide al modelo. La salida estructurada organiza la respuesta en campos con tipos y límites definidos. El servidor valida el contrato y conserva mensajes y fuentes; los cálculos permitidos, unidades y autorizaciones se resuelven mediante código. El resumen de turnos completos y los mensajes recientes acotan la ventana de contexto, y el envío se bloquea durante la compresión. \cite{especificaciones}
+La respuesta sigue un esquema estructurado ---campos con tipos y límites definidos--- y un prompt versionado, es decir, un conjunto de instrucciones identificado. Antes de guardarla, el servidor comprueba que cada cifra, periodo y cita se apoya en la evidencia autorizada. Si una cifra no se puede verificar, se omite con un aviso visible y se conserva el resto de la respuesta; si la salida no es válida, se reintenta con la variabilidad creciente de la tabla~\ref{tab-e1}. La conversación se recupera tras un fallo o una cancelación, y el historial largo se resume para acotar el contexto que recibe el modelo. \cite{cortes-medicion,especificaciones}
 
-La evolución evaluada, pendiente de integración, combina rechazo, reparación y reintento. Omite una métrica no verificada con un aviso visible, elimina segmentos de interpretación vacíos y recupera el estado de la conversación tras fallo o cancelación. Reintenta una salida rechazada con la variabilidad creciente indicada en la tabla~\ref{tab-e1}. Este comportamiento pertenece al candidato medido, no a la versión integrada de referencia. \cite{cortes-medicion}
-
-\subsection{Decisión obtenida de la evolución del RAG}\label{e-53}
-
-Elegimos D por su completitud observada y por seleccionar contexto más útil en las preguntas adicionales y específicas; A y B conservaron mayor cobertura en las originales. Un juez LLM, modelo de lenguaje que valoró el contenido guardado, apoyó esa lectura. Se trata de una decisión ligada al corpus, código y muestra históricos, sin superioridad general demostrada. El detalle y sus denominadores se conservan en el informe de campaña; los controles estructurales no sustituyen la evaluación de pertinencia de la respuesta. \cite{informe-rag}
+Las consultas de propiedad, gasto y anomalías todavía no están disponibles como herramientas que el modelo pueda invocar: se piden mediante formularios explícitos. Conectarlas al chat es el siguiente paso del diseño (apartado~\ref{i-0}). \cite{arquitectura-final}
