@@ -22,6 +22,7 @@
 \RequirePackage{titlesec}
 \RequirePackage{fancyhdr}
 \RequirePackage{ragged2e}
+\RequirePackage[font=small,labelfont=bf,labelsep=period]{caption}
 \RequirePackage{etoolbox}
 \RequirePackage{needspace}
 \RequirePackage{csquotes}
@@ -92,8 +93,13 @@
 \providecommand{\real}[1]{#1}
 
 % ---- Utilidades de contenido -------------------------------------------
-% Figura a ancho de pagina y tamano proporcional.
-\newcommand{\figura}[1]{\begin{center}\includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{figuras/#1.png}\end{center}}
+% Tablas y figuras numeradas por apartado: Tabla x.n y Figura x.n.
+\@addtoreset{table}{section}
+\@addtoreset{figure}{section}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+% Figura a ancho de pagina y tamano proporcional; el pie se pasa como segundo argumento.
+\newcommand{\figura}[2]{\begin{figure}[htbp]\centering\includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{figuras/#1.png}\caption{#2}\end{figure}}
 % Marca de contenido pendiente: resaltada en borrador; con la opcion final falla la compilacion.
 \newcommand{\pendiente}[1]{\ifborrador\colorbox{coral!35}{\textbf{[Pendiente#1]}}\else\PackageError{economicon}{Queda un [Pendiente#1]}{Resuelve las marcas pendientes antes de la entrega.}\fi}
 \newcommand{\recuadro}[1]{\begin{center}\colorbox{lavanda}{\parbox{0.94\linewidth}{#1}}\end{center}}
@@ -104,7 +110,7 @@
     \thispagestyle{empty}
     \centering
     \vspace*{2cm}
-    \includegraphics[width=3.2cm]{figuras/image5.png}\par\vspace{1.2cm}
+    \includegraphics[width=3.2cm]{figuras/logo-economicon.png}\par\vspace{1.2cm}
     {\titulos\bfseries\fontsize{34}{40}\selectfont\color{morado} ECONOMICON\par}
     \vspace{0.4cm}
     {\itshape\color{gris} FinOps sin fricción, para quien no tiene tiempo de ser experto en FinOps.\par}

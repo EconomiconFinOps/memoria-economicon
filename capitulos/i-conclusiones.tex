@@ -1,25 +1,12 @@
 \section{Conclusiones y trabajo futuro}\label{i-0}
 
-\textbf{Una referencia predictiva para detectar anomalías}
+\subsection{Una referencia predictiva para detectar anomalías}
 
 Actualmente, una anomalía de coste se detecta comparando el gasto de los últimos siete días con el de los siete anteriores: si sube más de un 20 \% y más de 100 unidades monetarias diarias, se marca como candidata. Se optó por esta regla determinista porque siempre da el mismo resultado y cada alerta puede explicarse.
 
 Su limitación es que toma como referencia la semana anterior, por lo que no distingue un crecimiento normal de un salto inesperado. Como trabajo futuro se propone sustituirla por un modelo predictivo que estime el gasto esperado de cada día y compare el real con esa estimación. La regresión lineal sería un punto de partida sencillo, aunque modelos con estacionalidad o técnicas no supervisadas podrían ajustarse mejor; la elección dependería de compararlos con datos reales, valorando tanto su precisión como su explicabilidad. Para ello haría falta un histórico de varias semanas o meses, del que hoy no se dispone.
 
-\textbf{Detección periódica y avisos de anomalías}.
+\subsection{Detección periódica y avisos de anomalías}
 
 En la versión entregada, las anomalías de coste se detectan cuando la persona usuaria pulsa «Detectar ahora». Cada una se guarda como un episodio por cliente, moneda y servicio, con su criticidad y un estado que se puede seguir. El siguiente paso es detectarlas de forma periódica y avisar con tiempo antes del cierre mensual. Quedó fuera por falta de calendario, y porque la ingesta de costes también se lanza a mano, de modo que una detección automática solo vigilaría lo ya cargado. La propuesta es un servicio propio, apagado por defecto, que ejecute la detección existente y registre su resultado, con aviso primero dentro de la aplicación y después, si procede, mediante una regla de Grafana.
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
-\toprule\noalign{}
-\textbf{Apartado reservado --- pendiente de redacción}
-
-\textbf{Responsable previsto:} Alejandro Aguado · Cierre de la memoria
-
-\textbf{Contenido previsto:} Conclusiones del proyecto y líneas de trabajo futuro (multi-cloud, conexión a datos reales, escalado, profundización analítica). A consensuar entre los cuatro. Aplica la guía de estilo general. \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\end{longtable}
