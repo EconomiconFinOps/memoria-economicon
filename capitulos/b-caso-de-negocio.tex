@@ -40,7 +40,7 @@ El circuito completo, desde los datos de coste hasta el asistente, está constru
 Todo el entorno se levanta con un único comando de Docker Compose, una herramienta que arranca varios servicios a la vez: nueve servicios con proveedores simulados, y once al activar la IA. Se alimenta de un conjunto de datos público de Microsoft (FinOps Toolkit v14, con licencia MIT) servido por una API de Azure simulada, de modo que no necesita conectarse a una cuenta real.
 
 \subsubsection{Económica}
-La viabilidad económica se analiza con un caso de negocio sencillo: cuánto ingresa Economicon frente a lo que cuesta mantenerlo. Se cobra un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €. Los costes son la infraestructura, 1.200 € al mes y dimensionada para hasta 100 clientes, y el desarrollo, 730 horas al mes a 25 € la hora. Se comparan dos escenarios a un año: 20 clientes y 100 clientes.
+La viabilidad económica se analiza con un caso de negocio sencillo: cuánto ingresa Economicon frente a lo que cuesta mantenerlo. Se cobra un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €. Los costes son la infraestructura, 1.200 € al mes y dimensionada para hasta 100 clientes, y el desarrollo, 80 horas al mes de mantenimiento y evolución a 25 € la hora. Se comparan dos escenarios a un año: 20 clientes y 100 clientes.
 
 \begin{table}[htbp]
 \centering\small
@@ -52,14 +52,14 @@ La viabilidad económica se analiza con un caso de negocio sencillo: cuánto ing
 Ingresos por despliegue (200 € por cliente) & 4.000 & 20.000 \\
 Ingresos por mensualidad (50 € durante 12 meses) & 12.000 & 60.000 \\
 Infraestructura (1.200 € al mes) & 14.400 & 14.400 \\
-Desarrollo (730 h al mes a 25 € la hora) & 219.000 & 219.000 \\
-\textbf{Resultado} & \textbf{$-$217.400} & \textbf{$-$153.400} \\
-\textbf{Retorno sobre la inversión (ROI)} & \textbf{$-$93\,\%} & \textbf{$-$66\,\%} \\
+Desarrollo (80 h al mes a 25 € la hora) & 24.000 & 24.000 \\
+\textbf{Resultado} & \textbf{$-$22.400} & \textbf{41.600} \\
+\textbf{Retorno sobre la inversión (ROI)} & \textbf{$-$58\,\%} & \textbf{108\,\%} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Con esta mensualidad, la plataforma no cubre el coste del desarrollo ni siquiera con la capacidad completa de la infraestructura. El desarrollo supone más del 90\,\% de los costes. Para igualar los 19.450 € mensuales de costes harían falta unos 390 clientes, casi cuatro veces la capacidad prevista, o una mensualidad de unos 195 € con 100 clientes.
+Con 20 clientes la plataforma no cubre sus costes, y con 100 sí. El punto de equilibrio está en unos 64 clientes con la mensualidad, o en 48 si se cuenta el pago de despliegue del primer año, ambos dentro de la capacidad de la infraestructura.
 
 \subsection{Impacto esperado}
 
