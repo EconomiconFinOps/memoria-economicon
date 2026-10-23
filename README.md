@@ -21,6 +21,11 @@ latexmk -lualatex main.tex
 
 Hace falta LuaLaTeX y `biber`. Cada PR compila el PDF y lo adjunta como artefacto (pestaña *Actions*). Al fusionar en `main`, el CI guarda el PDF en `entregas/Economicon_Memoria_TFM_vX.X.pdf`, con la versión que indica el fichero `VERSION`. Para generar una versión nueva, sube ese número antes de fusionar; si el número no cambia, el CI no sobrescribe el PDF existente.
 
+Criterio de versionado `vX.Y`:
+
+- **X** cambia cuando pasa algo grande: un apartado nuevo o eliminado, un cambio de estructura o una entrega.
+- **Y** cambia con los cambios pequeños: texto, cifras, referencias o figuras.
+
 ## Reglas de estilo
 
 - Tono tech-cercano, claridad sin jerga.
