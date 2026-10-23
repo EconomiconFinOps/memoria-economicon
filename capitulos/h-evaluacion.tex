@@ -1,6 +1,6 @@
 \section{Evaluación de la solución}\label{h-0}
 
-Un asistente que explica costes solo es útil si acierta, cita de dónde saca las cifras, responde en un tiempo razonable, cuesta poco y se comporta bien con datos incompletos. Este apartado mide esas cinco cosas sobre el chat con DeepSeek V4.1 Flash, el modelo por defecto, y la calidad de las funciones deterministas: el detector de anomalías y los datos de coste. Las tablas~\ref{tab-h1}, \ref{tab-h2} y~\ref{tab-h3} reúnen las cifras.
+Un asistente que explica costes debe acertar, citar sus fuentes, responder a tiempo y comportarse bien con datos incompletos. Se distinguen tres evidencias: campañas históricas de referencia, una demo de cinco casos y seis repeticiones posteriores en DockerDevelop. Sus métodos y poblaciones se mantienen separados. Las tablas~\ref{tab-h1}, \ref{tab-h2}, \ref{tab-h3} y~\ref{tab-h4} resumen los resultados del chat y de las funciones deterministas.
 
 \subsection{Qué se evalúa y cómo}\label{h-1}
 
@@ -10,11 +10,11 @@ La robustez se mide con 29 casos más: 13 del banco con los datos intactos y 16 
 
 Los umbrales de admisibilidad son cuatro: aprobar el 80\,\% de las preguntas con respuesta, cumplir el 90\,\% de las comprobaciones objetivas, no dar ninguna cifra sin rastro en los casos críticos y que el 95\,\% de las conversaciones termine en 10 segundos o menos. El primero es una propuesta pendiente de validar por el equipo; los otros tres se fijaron al decidir el gateway de modelos. \cite{jup070,adr-registro}
 
-Las campañas se ejecutaron en un ordenador local con el chat generativo activado expresamente, un corpus de cuatro documentos y datos sintéticos. Cada una se repitió una vez y la revisó una sola persona. \cite{banco28}
+Las campañas históricas de las tablas~\ref{tab-h1} y~\ref{tab-h2} se ejecutaron en un ordenador local, con chat generativo activado, cuatro documentos y datos sintéticos: una pasada y una revisora por campaña. Las repeticiones posteriores se realizaron en DockerDevelop y las revisó un único juez IA; se describen aparte para no atribuirles revisión humana. \cite{banco28,banco28-tras,reevaluacion-modelo,juez-infra}
 
 \subsection{Resultados técnicos}\label{h-2}
 
-La tabla~\ref{tab-h1} compara tres cortes del banco: la primera versión del chat, una plantilla sin modelo, y Flash antes y después del arreglo de los cortes de respuesta.
+La tabla~\ref{tab-h1} conserva tres cortes históricos: plantilla sin modelo, Flash antes del arreglo y Flash tras el arreglo. La fuente posterior está separada de la primera medición. \cite{banco28,banco28-tras}
 
 \needspace{0.3\textheight}
 \begin{table}[!h]
@@ -37,7 +37,7 @@ Percentil 95 de latencia total & --- & 41,3 s & 42,4 s & 10 s: por alcanzar \\
 \end{table}
 
 \subsubsection{Lo que funciona}
-El chat atendió todas las peticiones del banco sin errores del servidor, todas sus respuestas cumplieron el esquema y, cuando cita, cita bien: cada cita apuntaba a un fragmento realmente recuperado. Tras el arreglo no quedó ninguna cifra sin rastro. La recuperación encontró el documento correcto en todas las preguntas con respuesta del último corte; el corte anterior se capturó de otra forma y no admite comparación directa. \cite{banco28}
+El banco histórico no registró errores HTTP del servidor, aunque una operación quedó bloqueada. Las citas trazables apuntaban a fragmentos recuperados; eso no certifica la corrección semántica de cada afirmación. El instrumento declara no aplicable el cumplimiento de esquema porque no recibe la salida estructurada del chat, pese a una marca favorable de captura: no se toma como validación del contrato. La recuperación posterior encontró el documento correcto en los casos evaluables; la captura anterior era distinta y no admite comparación directa. \cite{banco28-tras}
 
 \subsubsection{Dónde hay margen de mejora}
 El acierto en las preguntas con respuesta y en las comprobaciones objetivas está todavía lejos de sus objetivos, y la herramienta de puntuación no da por aceptado ninguno de los tres cortes. Las cifras admiten tres lecturas. La más exigente es la de casos completos de la tabla~\ref{tab-h1}. La segunda mira las comprobaciones sueltas y es más indulgente, porque un fallo no descarta el resto: en las juzgadas el cumplimiento es mucho mayor. La tercera es la de un juez LLM, un modelo que valoró las respuestas al elegir el modelo y dio por aceptables casi todas (apartado~\ref{g-0}); mide otra cosa y no es comparable. \cite{comparativa-modelos}
@@ -62,24 +62,48 @@ Prohibiciones incumplidas & 0 de 55 & 0 de 64 & 0 de 59 \\
 \end{tabular}
 \end{table}
 
-En ningún corte el asistente incumplió una prohibición, como inventar cifras o repartir costes sin una regla. Tras el arreglo resolvió todos los casos de reparto de costes compartidos y de ámbito de los datos, pero solo una parte de los de etiquetas defectuosas y de indicadores de coste, y el de anomalías quedó bloqueado. La mayoría de los fallos del último corte lo son de la comprobación numérica automática y no se han revisado a mano. \pendiente{} \cite{robustez-antes,robustez-tras}
+Las rúbricas históricas no registraron incumplimientos de las prohibiciones concretas evaluadas. Ese resultado no significa ausencia general de errores o alucinaciones. Tras el arreglo se resolvieron los casos de reparto y ámbito, pero sólo parte de etiquetas e indicadores, y el de anomalías quedó bloqueado. La revisión manual de los fallos atribuidos al lector numérico en ese corte sigue pendiente. \pendiente{revisión del corte histórico} \cite{robustez-antes,robustez-tras}
 
 \subsubsection{El tiempo}
-La latencia es el mayor margen de mejora: el percentil 95 está más de cuatro veces por encima del objetivo, la mediana ronda los 20 segundos y el máximo supera el minuto. El tiempo incluye aplicación, cola y validación, además de la generación. Al ser una medida de un ordenador local, queda por repetir en la infraestructura definitiva. \cite{banco28}
+En el histórico, el percentil 95 supera cuatro veces el objetivo. La captura no separa de forma fiable recuperación, generación, validación y otros tiempos de aplicación. Las repeticiones en DockerDevelop añaden observaciones posteriores, pero no sustituyen una medición en AWS ni permiten atribuir diferencias sólo a la infraestructura. \cite{banco28-tras,campanas-infra}
 
 \subsubsection{Qué se corrigió}
 Con preguntas sobre cifras de pantalla, una sola regla incumplida rechazaba la respuesta entera aunque el modelo hubiera acertado. El arreglo reintenta con temperatura creciente, omite la cifra no verificada con un aviso visible y recupera la conversación tras un fallo. En una batería propia de 14 preguntas repetidas 4 veces, las operaciones fallidas pasaron de más de un tercio a una sola de 56. Siguen pendientes las frases que quedan con un hueco donde iría la cifra omitida. \cite{cortes-medicion}
 
-La versión final amplió después el límite de longitud de la respuesta. Las cifras de este apartado se midieron antes de ese cambio, y su efecto en calidad, tiempo y coste no se ha medido. \cite{demo-final}
+La versión integrada amplió el límite final a 10.000 tokens. En una demo separada de cinco casos se cumplieron cuatro rúbricas específicas, con una lista de comprobación de 27 conformes, 2 fallidas y 1 no evaluada: la aceptación integral fue desfavorable. Faltaron pasos de investigación por servicio y recurso y apareció una afirmación global no apoyada por el contexto. El rechazo de una acción no permitida terminó correctamente tras tres intentos y 120,955 s, con truncado y cierre prematuro previos. La revisión la hizo un agente autorizado; no acredita estabilidad ni validación humana independiente. \cite{demo-final}
+
+\subsubsection{Repeticiones posteriores en DockerDevelop}
+La tabla~\ref{tab-h3} recoge tres repeticiones de cada batería con límite final de 10.000 tokens: 171 operaciones previstas, 158 respuestas disponibles y 13 bloqueadas. Un único juez IA revisó cada respuesta disponible, sin generar sustitutas. Los estados de caso combinan su juicio con el lector numérico original y sus falsos negativos conocidos; no son una puntuación semántica pura. Ninguna campaña está aceptada. \cite{campanas-infra,juez-infra}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Repeticiones posteriores: resultados provisionales por ejecución}\label{tab-h3}
+\begin{tabular}{@{}p{0.18\linewidth}p{0.13\linewidth}p{0.23\linewidth}p{0.14\linewidth}p{0.17\linewidth}@{}}
+\toprule
+\textbf{Batería y repetición} & \textbf{Respuestas / previstas} & \textbf{Casos conformes / fallidos / bloqueados} & \textbf{p95 total (s)} & \textbf{Coste (USD)} \\
+\midrule
+Banco 28 · 1 & 27 / 28 & 13 / 14 / 1 & 144,177 & 0,089582 \\
+Banco 28 · 2 & 25 / 28 & 8 / 17 / 3 & 148,796 & 0,087941 \\
+Banco 28 · 3 & 25 / 28 & 12 / 13 / 3 & 151,506 & 0,090278 \\
+Robustez 29 · 1 & 27 / 29 & 11 / 16 / 2 & 106,866 & 0,086849 \\
+Robustez 29 · 2 & 26 / 29 & 9 / 17 / 3 & 238,114 & 0,100138 \\
+Robustez 29 · 3 & 28 / 29 & 7 / 21 / 1 & 62,960 & 0,074371 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Los tiempos llegan hasta el estado terminal, incluyen reintentos y operaciones fallidas, y excluyen la espera de conciliación contable. No son duraciones de una sola llamada ni se promedian para obtener un p95 conjunto. Los costes, redondeados en la tabla, suman 0,5291594448 USD desde los importes originales: registro liquidado del gateway con embeddings y reintentos, no factura ni gasto acumulado del proyecto. El coste del juez IA no está medido en ese registro. \cite{campanas-infra,juez-infra}
+
+El juez puntuó 720 criterios aplicables: 618 conformes y 102 fallidos, sobre las respuestas disponibles, no sobre las operaciones bloqueadas. La configuración declara el modelo y la fuente conserva huellas de imágenes y corpus, pero no acredita la versión exacta de producto desplegada. Cambiaron segmentación y método respecto al histórico; falta una comparación controlada que aísle el efecto del límite, del modelo o de la infraestructura. Las distancias, tiempos por etapa y otros datos ausentes permanecen sin medir. \cite{juez-infra,campanas-infra}
 
 \subsection{Resultados funcionales y coste}\label{h-3}
 
-La tabla~\ref{tab-h3} recoge la calidad del detector de anomalías, la coherencia de los datos de coste y el coste del modelo.
+La tabla~\ref{tab-h4} recoge la calidad del detector de anomalías, la coherencia de los datos de coste y el coste del modelo.
 
 \needspace{0.2\textheight}
 \begin{table}[!h]
 \centering\small
-\caption{Detector de anomalías, datos de coste y coste de IA}\label{tab-h3}
+\caption{Detector de anomalías, datos de coste y coste de IA}\label{tab-h4}
 \begin{tabular}{@{}p{0.34\linewidth}p{0.2\linewidth}p{0.36\linewidth}@{}}
 \toprule
 \textbf{Qué cuenta} & \textbf{Resultado} & \textbf{Alcance} \\
@@ -97,10 +121,10 @@ El detector usa reglas deterministas, sin modelo. Acertó todo lo que marcó y e
 
 \subsection{Cómo se reproduce}\label{h-4}
 
-Los resultados se cargan en un panel de Grafana que registra el modelo declarado en cada ejecución (figura~\ref{fig-h1}), y cada tabla se regenera con un comando del repositorio. \cite{panel-evaluacion}
+Los informes versionados permiten regenerar la proyección del panel de Grafana con su modelo declarado y procedencia; la figura~\ref{fig-h1} conserva una captura histórica. Las nuevas series del juez IA se identifican como automáticas y no sustituyen las filas de revisión humana sin medir. Las respuestas y juicios privados no están todos publicados: regenerar los agregados no equivale a reproducir independientemente la evaluación semántica. \cite{panel-evaluacion,juez-infra}
 
-\figura{grafana-panel-evaluacion}{Panel de evaluación del asistente en Grafana.\label{fig-h1}}
+\figura{grafana-panel-evaluacion}{Captura histórica del panel de evaluación; no muestra las seis repeticiones posteriores.\label{fig-h1}}
 
 \subsection{Qué se puede afirmar y qué no}\label{h-5}
 
-Con 28 preguntas, una repetición y una revisora, se puede afirmar que el chat funciona de extremo a extremo, que cita con corrección, que no inventa cifras ante datos defectuosos y que su coste es bajo. No se puede afirmar que un modelo sea superior, que el arreglo mejore la calidad en general ni cómo se comporta en uso real: todo se midió en un ordenador local, con datos sintéticos, un corpus pequeño y una única revisora. La identidad del modelo es la que declara la configuración. La demo final se integró clasificada como demo con incidencias, sin aceptación integral. \cite{banco28,demo-final}
+El histórico demuestra recorridos observados y trazabilidad de citas en una muestra pequeña. La demo sigue clasificada con incidencias y las seis repeticiones posteriores continúan provisionales, con bloqueos y un único juez IA. No acreditan ausencia general de cifras inventadas, superioridad de un modelo, mejora causal del arreglo ni comportamiento con clientes reales. La revisión humana independiente, la estabilidad y el objetivo de tiempo siguen por alcanzar. \cite{banco28-tras,demo-final,campanas-infra,juez-infra}

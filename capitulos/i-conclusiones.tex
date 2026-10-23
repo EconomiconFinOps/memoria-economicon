@@ -2,20 +2,20 @@
 
 \subsection{Logros frente a los objetivos}\label{i-1}
 
-Economicon reúne en un mismo prototipo lo que el proyecto se propuso: ingiere y normaliza el gasto de Azure, calcula indicadores, detecta anomalías y responde preguntas en lenguaje natural citando sus fuentes. Las cifras de coste las calcula siempre el servidor y nunca el modelo, y cada cliente solo ve sus datos. El sistema se construye, se prueba y se despliega de forma automatizada, y cada medición se puede repetir con un comando y consultar en Grafana. \cite{arquitectura-final,panel-evaluacion}
+Economicon reúne ingesta y normalización de gasto, indicadores, anomalías y conversación con fuentes. Los agregados de coste se calculan en el servidor; el texto del modelo se somete a controles y puede contener errores, como muestra el apartado~\ref{h-0}. La aplicación separa los datos por cliente y dispone de construcción, pruebas y despliegue automatizados. Los informes reproducibles se proyectan en Grafana, conservando procedencia y límites. \cite{arquitectura-final,panel-evaluacion}
 
 El alcance demostrado usa datos públicos y sintéticos y una API que simula Azure. Varias capacidades ---la recuperación híbrida, el chat generativo y el ciclo en AWS--- están implementadas pero apagadas por defecto o sin ejecutar en la nube, y su uso con una organización real está por demostrar. \cite{arquitectura-final,aws-ensayo}
 
 \subsection{Lecciones y límites}\label{i-2}
 
-La principal lección es que superar las pruebas técnicas no basta para aceptar un asistente. El chat cita bien, no inventa cifras y cuesta poco, pero acierta menos de lo exigido y tarda varias veces más que el objetivo (apartado~\ref{h-0}). Separar las cifras deterministas de la redacción del modelo resultó una buena decisión: los fallos se concentran en la redacción y en la verificación, no en los datos.
+La principal lección es que superar pruebas técnicas no basta para aceptar un asistente. El histórico acredita trazabilidad de citas en su muestra; las últimas repeticiones siguen mostrando fallos de criterio, operaciones bloqueadas y latencia por encima del objetivo. Una tasa nula de prohibiciones concretas incumplidas no demuestra ausencia general de errores ni de cifras inventadas. La demo conserva incidencias y ninguna de las campañas recientes está aceptada. \cite{banco28-tras,campanas-infra,juez-infra,demo-final}
 
-La segunda lección es de método. Medir con reglas, con una revisora y con un juez LLM da lecturas distintas que no se pueden sumar, y cambiar varias cosas a la vez impidió aislar el efecto del modelo. En el tramo final, además, varias integraciones se hicieron sin revisión cruzada para llegar a la entrega, y esas partes tienen menos verificación independiente. \cite{reevaluacion-modelo,continuidad}
+La segunda lección es de método. El histórico con una revisora y las seis repeticiones con un único juez IA ofrecen evidencias diferentes. Los juicios automáticos son provisionales, mantienen los límites del lector numérico y no sustituyen revisión humana independiente. Cambiar varias condiciones impide aislar sus efectos. Las integraciones finales por excepción autorizada tampoco equivalen a aceptación funcional ni a revisión cruzada completa. \cite{reevaluacion-modelo,juez-infra,continuidad}
 
 \subsection{Trabajo futuro}\label{i-3}
 
 \subsubsection{Validación con una organización real}
-El siguiente paso será probar Economicon con usuarios, datos y una cuenta de Azure reales, comprobando permisos y separación de clientes, y medir el impacto de negocio que hoy solo es una hipótesis. Se repetirán las evaluaciones con más revisores y repeticiones, y se medirá la latencia en la infraestructura definitiva antes de aceptar cambios.
+El siguiente paso será probar Economicon con usuarios, datos y una cuenta de Azure reales, comprobando permisos, separación de clientes e impacto de negocio. Las repeticiones ya realizadas en DockerDevelop se complementarán con revisión humana independiente y con mediciones en el entorno de despliegue elegido. Se variará una condición cada vez para distinguir efectos antes de aceptar cambios.
 
 \subsubsection{Herramientas para el modelo y tiempo de respuesta}
 Las consultas de propiedad, gasto y anomalías se ofrecerán al modelo como herramientas que el servidor autoriza y ejecuta, de modo que el chat pueda usarlas sin escribir SQL. Para reducir la latencia se estudiará acotar la salida sin truncarla, reutilizar contexto mediante caché y activar la recuperación híbrida tras preparar su índice. \cite{arquitectura-final}
