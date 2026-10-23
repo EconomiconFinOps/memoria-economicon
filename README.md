@@ -19,7 +19,7 @@ Memoria del TFM de Economicon en LaTeX: plantilla con identidad visual, bibliogr
 latexmk -lualatex main.tex
 ```
 
-Hace falta LuaLaTeX y `biber`. Cada PR compila el PDF y lo adjunta como artefacto (pestaña *Actions*).
+Hace falta LuaLaTeX y `biber`. Cada PR compila el PDF y lo adjunta como artefacto (pestaña *Actions*). Al fusionar en `main`, la última versión queda publicada como `Economicon_Memoria_TFM.pdf` en la release [memoria-ultima](https://github.com/EconomiconFinOps/memoria-economicon/releases/tag/memoria-ultima).
 
 ## Reglas de estilo
 
