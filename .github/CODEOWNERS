@@ -1,0 +1,23 @@
+# Propietarios de cada parte de la memoria. Quien figura aquí revisa las PR que la toquen.
+# Para cambiar de responsable, edita la línea del capítulo correspondiente.
+
+# Ficheros compartidos: solo el coordinador
+/AGENTS.md          @lmatsan
+/CLAUDE.md          @lmatsan
+/docs/            @lmatsan
+/README.md          @lmatsan
+/economicon.cls     @lmatsan
+/main.tex           @lmatsan
+/VERSION            @lmatsan
+/.github/           @lmatsan
+
+# Capítulos
+/capitulos/a-introduccion.tex           @lmatsan
+/capitulos/b-caso-de-negocio.tex        @lmatsan
+/capitulos/c-contribucion.tex           @Victorh1397
+/capitulos/d-arquitectura.tex           @Victorh1397
+/capitulos/e-diseno-ia.tex              @ParisArcos
+/capitulos/f-devops.tex                 @Iber1to
+/capitulos/g-modelos.tex                @ParisArcos
+/capitulos/h-evaluacion.tex             @lmatsan
+/capitulos/i-conclusiones.tex           @Iber1to
