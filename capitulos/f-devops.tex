@@ -1,6 +1,6 @@
 \section{Integración con herramientas DevOps}\label{f-0}
 
-Un equipo de cuatro personas que integra cambios a diario necesita saber, en cada momento, qué versión funciona, qué se comprobó y qué falta. Este apartado describe cómo Economicon se construye, se prueba, se despliega y se observa de forma automatizada, y qué evidencia deja cada paso. DevOps designa esa unión entre desarrollo y operación; la tabla~\ref{tab-f1} resume las piezas y lo que cada una acredita.
+DevOps une desarrollo y operación para construir, probar, desplegar y observar cada versión. La tabla~\ref{tab-f1} relaciona las herramientas de Economicon con sus evidencias y límites.
 
 \begin{table}[htbp]
 \centering\small
@@ -21,10 +21,10 @@ Observabilidad & Prometheus cada 15 s; paneles y una alerta en Grafana & Diagnó
 
 \subsection{Flujo de trabajo y trazabilidad}\label{f-1}
 
-Cada cambio nace en una tarjeta de Trello, que fija alcance, responsables y estado. OpenSpec, una especificación versionada dentro del repositorio, recoge los requisitos y los escenarios de aceptación, y GitHub conserva código, documentación y revisiones. El trabajo se hace en una rama corta y entra en la rama de integración (develop) mediante una pull request (PR), una propuesta de cambio que se revisa antes de fusionarse; la rama principal (main) queda para las versiones estables. \cite{gobierno}
+Trello fija alcance, responsables y estado; OpenSpec versiona requisitos y escenarios, y GitHub conserva código y revisiones. Las ramas cortas se integran mediante pull request (PR), una propuesta revisable, en develop; main contiene versiones estables. \cite{gobierno}
 
 
-El proceso separa cuatro papeles: liderazgo, trabajo en pareja (pairing), revisión y validación, y exige que la revisión y la validación las haga alguien distinto del autor. En el tramo final, con el plazo encima, varias integraciones se hicieron por excepción autorizada, sin completar esa revisión cruzada; cada una quedó registrada como tal, junto con lo que no se validó. Lo hicimos así para entregar a tiempo, y la consecuencia es que esas partes tienen menos verificación independiente que el resto. \cite{continuidad}
+Se separan liderazgo, trabajo en pareja, revisión y validación; los dos últimos corresponden a personas distintas del autor. Varias integraciones finales usaron excepciones autorizadas por plazo, registrando lo no validado. Por ello tienen menos verificación independiente. \cite{continuidad}
 
 \subsection{Integración continua}\label{f-2}
 
@@ -40,16 +40,16 @@ Dos ensayos documentan el entorno: uno construyó el sistema y pasó la prueba d
 
 \subsection{Despliegue continuo}\label{f-4}
 
-Cuando la CI de develop termina bien, GitHub Actions declara elegible esa versión concreta del código. Un agente en el servidor del equipo la descarga, prepara una versión aislada, arranca el sistema y ejecuta cinco comprobaciones funcionales ---salud, inicio de sesión, ingesta, facturación y cola de trabajos--- antes de promoverla. Si algo falla, reactiva la versión anterior con sus propios volúmenes; esa recuperación no revierte migraciones ni restaura datos de la versión retirada. El entorno usa datos desechables y proveedores simulados, y las promociones automáticas quedaron registradas en el propio servidor. \cite{despliegue}
+Una CI correcta declara elegible una versión de develop. El agente del servidor prepara una copia aislada y prueba salud, login, ingesta, facturación y cola antes de promoverla. Si falla, reactiva la versión anterior y sus volúmenes; no revierte migraciones ni restaura los datos retirados. El entorno usa datos desechables y proveedores simulados, con promociones registradas. \cite{despliegue}
 
-Para la defensa se preparó además un ciclo desechable en AWS: dos pipelines manuales, uno de creación y otro de retirada, sobre servicios gestionados de la nube y con la autenticación y los modelos nativos de AWS. El código y sus controles se prueban en la CI sin conectarse a la cuenta; en la versión final no hay nada desplegado en AWS, y su puesta en marcha queda fuera de lo que esta memoria acredita. \cite{aws-ensayo,arquitectura-final}
+Para la defensa se prepararon dos pipelines manuales AWS, de creación y retirada, con servicios, autenticación y modelos nativos. Sus controles se prueban sin conexión a la cuenta; no hay despliegue de aplicación AWS acreditado. \cite{aws-ensayo,arquitectura-final}
 
 \subsection{Observabilidad}\label{f-5}
 
-Backend y processor emiten registros JSON con un identificador por petición, que viaja con cada trabajo de ingesta por la cola. Así se puede seguir una operación asíncrona de principio a fin y localizar sus errores. Prometheus recoge las métricas de ambos servicios y Grafana las muestra en paneles con latencias, errores del servidor, ingestas y consultas. Una alerta salta cuando los fallos de ingesta superan un umbral durante varios minutos; cuenta también los reintentos y no tiene configurado un receptor externo. \cite{convenciones,monitorizacion,arquitectura-final}
+Los logs JSON incluyen un identificador que acompaña a la petición y a la ingesta en cola. Prometheus recoge métricas y Grafana muestra latencias, errores, ingestas y consultas. La alerta de fallos de ingesta cuenta reintentos y no tiene receptor externo. \cite{convenciones,monitorizacion,arquitectura-final}
 
 Un segundo panel de Grafana reúne los resultados de la evaluación del asistente y los indicadores de la memoria, con el modelo declarado en cada ejecución. Cada cifra se regenera con un comando del repositorio (apartado~\ref{h-0}). \cite{panel-evaluacion}
 
 \subsection{Documentación y decisiones}\label{f-6}
 
-Los manuales explican cómo ejecutar y operar el sistema; los registros de decisiones de arquitectura justifican cada alternativa elegida, y los ficheros de evidencia permiten repetir cada verificación. Integrar una decisión no la convierte en ratificada: varias, como el modelo por defecto o el ciclo en AWS, siguen en estado de propuesta a la espera del acuerdo del equipo. \cite{adr-registro,arquitectura-final}
+Los manuales describen la operación, las decisiones de arquitectura justifican alternativas y los informes conservan evidencia. Integrar una decisión no la ratifica: el modelo por defecto y el ciclo AWS siguen propuestos, pendientes del equipo. \cite{adr-registro,arquitectura-final}

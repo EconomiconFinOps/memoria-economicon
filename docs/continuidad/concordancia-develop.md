@@ -26,7 +26,7 @@ Encargo del 23/10/2026 desde HAL, chat `01a1270c-e332-7462-9c90-706d49ade92c`: c
 
 Correcciones publicadas en la [PR13](https://github.com/EconomiconFinOps/memoria-economicon/pull/13), rama capitulo-b-d-f-g-h-i-concordancia, contra main. Abierta para revisión, sin merge.
 
-Se compactan b/h sin modificar tipografía ni márgenes, se retiran reservas de espacio que dejaban huecos al desplazar tablas y se omite del cuerpo la captura antigua de Grafana, conservada en figuras/ y sustituida por los cuadros con resultados y procedencia. a/c/e permanecen intactos.
+Se compactan b/d/f/h/i sin modificar tipografía ni márgenes, se retiran reservas de espacio que dejaban huecos al desplazar tablas y se omite del cuerpo la captura antigua de Grafana, conservada en figuras/ y sustituida por los cuadros con resultados y procedencia. a/c/e permanecen intactos.
 
 ## Validación y límites
 
