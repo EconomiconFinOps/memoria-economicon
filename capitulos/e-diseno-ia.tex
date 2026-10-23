@@ -11,7 +11,7 @@ Este apartado explica cómo Economicon consigue que sus respuestas se apoyen en 
 \midrule
 Representación del texto & text-embedding-3-small; 1.536 dimensiones & Cada pasaje se representa mediante un vector numérico compatible con el de la consulta. \cite{especificaciones,config-gateway} \\
 Fragmentación & Objetivo 600; máximo 800; solapamiento hasta 60 tokens & Un token es una unidad de texto procesada por el modelo; el presupuesto se aplica por fragmento y respeta su estructura. \cite{especificaciones} \\
-Recuperación & Distancia coseno ≤ 0,6; hasta 4 pasajes principales & Admisión de la vía semántica; los vecinos y el apoyo por palabras tienen reglas propias. \cite{especificaciones} \\
+Recuperación & Distancia coseno ≤ 0,6; hasta 4 pasajes principales & La distancia coseno mide cuánto se parecen dos vectores (0 es idéntico) y solo se admiten los pasajes por debajo de 0,6; los vecinos y el apoyo por palabras tienen reglas propias. \cite{especificaciones} \\
 Resultado histórico que apoyó la elección & Configuración híbrida elegida: 68 de 68 respuestas obtenidas & Completitud de una campaña concreta; no equivale a exactitud universal. \cite{informe-rag} \\
 Evolución ensayada, pendiente de integración & Hasta 4 intentos; temperaturas 0 / 0,2 / 0,4 / 0,6 & La temperatura regula la variabilidad; aumenta en los reintentos de una salida rechazada. \cite{cortes-medicion} \\
 \bottomrule
