@@ -18,10 +18,10 @@ Reproducibilidad. Docker Compose define nueve servicios y cinco volúmenes en el
 
 Observabilidad y entrega. Prometheus recoge métricas de backend y processor y Grafana las visualiza. Los logs JSON y los identificadores de petición ayudan a correlacionar eventos, sin equivaler a trazabilidad distribuida completa; tampoco se acredita un receptor externo de alertas. GitHub Actions verifica código y documentación mediante CI. El despliegue continuo corresponde a JUP-052 y requiere su propia evidencia. Los procedimientos de pruebas y los resultados se desarrollan en los apartados f y h para evitar duplicidades.
 
-\figura{image2}{Componentes del corte funcional; líneas discontinuas: integraciones opcionales. \cite{arquitectura}}
+\figura{arquitectura-componentes}{Componentes del corte funcional; líneas discontinuas: integraciones opcionales. \cite{arquitectura}}
 
 Alternativa documental AWS. El frontend se alojaría en S3 privado y CloudFront, con WAF y ACM; la API y el processor se ejecutarían en ECS Fargate, con un ALB interno para la API y subredes privadas. Amazon MQ conservaría RabbitMQ y RDS PostgreSQL alojaría datos operativos y vectores. Cognito, Bedrock, Secrets Manager, IAM/KMS y CloudWatch cubrirían identidad, IA, secretos, permisos, cifrado y observabilidad. El esquema AWS detalla las dependencias. Sustituir CockroachDB, la autenticación y los proveedores actuales exige adaptar SQL/migraciones, tokens y modelos/embeddings; no basta cambiar variables. Son brechas hipotéticas de compatibilidad, no tareas de despliegue pendientes de este encargo.
 
 Terraform y límites. La plantilla Terraform complementa el diseño y define recursos de red, aplicación, datos y seguridad. Se validó localmente mediante formato, validación estática, seis pruebas con proveedores simulados y ocho casos de enrutamiento. No acredita un plan real, compatibilidad integral ni operación en AWS. El pipeline CodeConnections--CodePipeline--CodeBuild--ECR--CDK/CloudFormation es conceptual; Terraform es una alternativa de aprovisionamiento y no implementa ese pipeline. El alcance acordado es documental: no se han creado recursos ni realizado despliegues AWS. \cite{terraform-validacion}
 
-\figura{image3}{Referencia conceptual AWS; no representa un despliegue realizado. \cite{arquitectura-aws}}
+\figura{arquitectura-aws-referencia}{Referencia conceptual AWS; no representa un despliegue realizado. \cite{arquitectura-aws}}

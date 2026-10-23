@@ -109,7 +109,7 @@
     \thispagestyle{empty}
     \centering
     \vspace*{2cm}
-    \includegraphics[width=3.2cm]{figuras/image5.png}\par\vspace{1.2cm}
+    \includegraphics[width=3.2cm]{figuras/logo-economicon.png}\par\vspace{1.2cm}
     {\titulos\bfseries\fontsize{34}{40}\selectfont\color{morado} ECONOMICON\par}
     \vspace{0.4cm}
     {\itshape\color{gris} FinOps sin fricción, para quien no tiene tiempo de ser experto en FinOps.\par}
