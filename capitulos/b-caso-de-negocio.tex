@@ -40,39 +40,24 @@ El circuito completo, desde los datos de coste hasta el asistente, está constru
 Todo el entorno se levanta con un único comando de Docker Compose, una herramienta que arranca varios servicios a la vez: nueve servicios con proveedores simulados, y once al activar la IA. Se alimenta de un conjunto de datos público de Microsoft (FinOps Toolkit v14, con licencia MIT) servido por una API de Azure simulada, de modo que no necesita conectarse a una cuenta real.
 
 \subsubsection{Económica}
-La viabilidad económica se analiza con un caso de negocio sencillo: cuántos clientes necesita Economicon para cubrir sus costes. Los ingresos son una mensualidad según el plan y un pago único de despliegue de 200 € por cliente, que no se cuenta en el cálculo para ser prudentes. Cada mensualidad ronda el 40\,\% del ahorro estimado del cliente: según Flexera se desperdicia el 27\,\% del gasto cloud \cite{flexera2025}, y si Economicon ayuda a recuperar un tercio, el cliente ahorra el 9\,\% de lo que gasta. Los gastos típicos y el reparto de clientes entre planes son supuestos del equipo.
+La viabilidad económica se analiza con un caso de negocio sencillo: cuántos clientes necesita Economicon para cubrir sus costes. Se cobra un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €. Los costes son la infraestructura, 1.200 € al mes y dimensionada para hasta 100 clientes, y el desarrollo, 80 horas al mes de mantenimiento y evolución a 25 € la hora; suman 3.200 € al mes. Se comparan dos escenarios a un año: 20 clientes y 100 clientes.
 
 \begin{table}[htbp]
 \centering\small
-\caption{Planes de Economicon según el gasto cloud del cliente}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedleft\arraybackslash}p{0.24\linewidth}>{\raggedleft\arraybackslash}p{0.24\linewidth}>{\raggedleft\arraybackslash}p{0.24\linewidth}@{}}
+\caption{Caso de negocio de Economicon en un año, en euros}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.46\linewidth}>{\raggedleft\arraybackslash}p{0.22\linewidth}>{\raggedleft\arraybackslash}p{0.22\linewidth}@{}}
 \toprule
-\textbf{Plan} & \textbf{Gasto cloud típico} & \textbf{Ahorro estimado} & \textbf{Mensualidad} \\
+\textbf{Concepto} & \textbf{Conservador (20 clientes)} & \textbf{Optimista (100 clientes)} \\
 \midrule
-Básico & 300 € & 27 € & 10 € \\
-Estándar & 1.000 € & 90 € & 35 € \\
-Pro & 3.000 € & 270 € & 105 € \\
+Ingresos por despliegue (200 € por cliente) & 4.000 & 20.000 \\
+Ingresos por mensualidad (50 € durante 12 meses) & 12.000 & 60.000 \\
+Costes (3.200 € al mes) & 38.400 & 38.400 \\
+\textbf{Resultado} & \textbf{$-$22.400} & \textbf{41.600} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Los costes fijos son la infraestructura, 1.200 € al mes y dimensionada para hasta 100 clientes, y el desarrollo, 80 horas al mes de mantenimiento y evolución a 25 € la hora, lo que suma 3.200 € al mes. Con esos costes se comparan tres escenarios.
-
-\begin{table}[htbp]
-\centering\small
-\caption{Equilibrio del caso de negocio según el reparto de clientes}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.46\linewidth}>{\raggedleft\arraybackslash}p{0.16\linewidth}>{\raggedleft\arraybackslash}p{0.16\linewidth}>{\raggedleft\arraybackslash}p{0.16\linewidth}@{}}
-\toprule
-\textbf{Escenario} & \textbf{Ingreso medio por cliente (€/mes)} & \textbf{Clientes para el equilibrio} & \textbf{Resultado con 100 clientes (€/mes)} \\
-\midrule
-Conservador: 40\,\% Básico, 45\,\% Estándar, 15\,\% Pro & 35,5 & 91 & 350 \\
-Objetivo: 20\,\% Básico, 50\,\% Estándar, 30\,\% Pro & 51,0 & 63 & 1.900 \\
-Objetivo con mantenimiento de 40 h al mes & 51,0 & 44 & 2.900 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-El negocio es viable si al menos el 30\,\% de los clientes son del plan Pro y el mantenimiento se contiene en 40 horas al mes: bastan entonces 44 clientes. Con un reparto más pobre en clientes grandes, el equilibrio sube a 91, casi toda la capacidad de la infraestructura. Un precio único de 50 € simplificaría el cálculo, pero supondría cobrar a un cliente pequeño más que su propio ahorro.
+Con 20 clientes la plataforma no cubre sus costes, y con 100 sí. El punto de equilibrio está en unos 64 clientes con la mensualidad, o en 48 si se cuenta el pago de despliegue del primer año, ambos dentro de la capacidad de la infraestructura. Para el cliente, la mensualidad se compensa a partir de un gasto cloud de unos 550 € al mes: si Economicon le ayuda a recuperar un tercio del 27\,\% que, según Flexera, se desperdicia, ahorra el 9\,\% de su gasto \cite{flexera2025}. Por debajo de ese gasto, la mensualidad pesa demasiado frente al ahorro posible.
 
 \subsection{Impacto esperado}
 
