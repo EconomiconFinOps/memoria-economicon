@@ -40,26 +40,26 @@ El circuito completo, desde los datos de coste hasta el asistente, está constru
 Todo el entorno se levanta con un único comando de Docker Compose, una herramienta que arranca varios servicios a la vez: nueve servicios con proveedores simulados, y once al activar la IA. Se alimenta de un conjunto de datos público de Microsoft (FinOps Toolkit v14, con licencia MIT) servido por una API de Azure simulada, de modo que no necesita conectarse a una cuenta real.
 
 \subsubsection{Económica}
-La viabilidad económica se analiza con un caso de negocio sencillo para Economicon: cuánto ingresa frente a lo que cuesta mantener la plataforma. El modelo de ingresos es un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €. Los costes son los de infraestructura y los de IA, sin valorar el trabajo del equipo. Se comparan dos escenarios sobre un año con todos los clientes activos desde el primer mes: el conservador, con 10 clientes, y el optimista, con 40.
+La viabilidad económica se analiza con un caso de negocio sencillo: cuánto ingresa Economicon frente a lo que cuesta mantenerlo. Se cobra un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €. Los costes son la infraestructura, 1.200 € al mes y dimensionada para hasta 100 clientes, y el desarrollo, 730 horas al mes a 25 € la hora. Se comparan dos escenarios a un año: 20 clientes y 100 clientes.
 
 \begin{table}[htbp]
 \centering\small
 \caption{Caso de negocio de Economicon en un año, en euros}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.46\linewidth}>{\raggedleft\arraybackslash}p{0.22\linewidth}>{\raggedleft\arraybackslash}p{0.22\linewidth}@{}}
 \toprule
-\textbf{Concepto} & \textbf{Conservador (10 clientes)} & \textbf{Optimista (40 clientes)} \\
+\textbf{Concepto} & \textbf{Conservador (20 clientes)} & \textbf{Optimista (100 clientes)} \\
 \midrule
-Ingresos por despliegue (200 € por cliente) & 2.000 & 8.000 \\
-Ingresos por mensualidad (50 € durante 12 meses) & 6.000 & 24.000 \\
-Infraestructura (1.150 € al mes) & 13.800 & 13.800 \\
-IA (estimación de la arquitectura de referencia) & 33 & 33 \\
-\textbf{Resultado} & \textbf{$-$5.833} & \textbf{18.167} \\
-\textbf{Retorno sobre la inversión (ROI)} & \textbf{$-$42\,\%} & \textbf{131\,\%} \\
+Ingresos por despliegue (200 € por cliente) & 4.000 & 20.000 \\
+Ingresos por mensualidad (50 € durante 12 meses) & 12.000 & 60.000 \\
+Infraestructura (1.200 € al mes) & 14.400 & 14.400 \\
+Desarrollo (730 h al mes a 25 € la hora) & 219.000 & 219.000 \\
+\textbf{Resultado} & \textbf{$-$217.400} & \textbf{$-$153.400} \\
+\textbf{Retorno sobre la inversión (ROI)} & \textbf{$-$93\,\%} & \textbf{$-$66\,\%} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-El resultado depende casi por completo del número de clientes, porque la infraestructura es un coste fijo y la IA es despreciable frente a ella. Con una mensualidad de 50 € hacen falta unos 24 clientes activos para cubrir la infraestructura en régimen estable, y 18 en el primer año gracias al pago de despliegue. El intervalo de la estimación de infraestructura, de 1.117 a 1.486 € al mes, mueve ese punto de equilibrio entre 17 y 23 clientes en el primer año. La partida mayor es RabbitMQ gestionado, unos 769 USD al mes, por lo que es la primera candidata si se quiere bajar el punto de equilibrio. La estimación de IA es de 3,06 USD al mes y no son mediciones ni tarifas de DeepSeek ni de OpenRouter; el detalle de los supuestos está en Costes y supuestos.
+Con esta mensualidad, la plataforma no cubre el coste del desarrollo ni siquiera con la capacidad completa de la infraestructura. El desarrollo supone más del 90\,\% de los costes. Para igualar los 19.450 € mensuales de costes harían falta unos 390 clientes, casi cuatro veces la capacidad prevista, o una mensualidad de unos 195 € con 100 clientes.
 
 \subsection{Impacto esperado}
 
@@ -75,7 +75,7 @@ Los costes del proyecto se dividen en dos bloques: el de la inteligencia artific
 El chat usa el modelo DeepSeek V4.1 Flash a través de OpenRouter, un encaminador que dirige cada petición a un proveedor de modelos. El coste medido, contrastado con la facturación del proveedor, fue de unos 0,0006 USD por consulta, es decir, unos 0,06 USD por cada 100 consultas \cite{jup133-coste}. Las representaciones vectoriales de los textos (embeddings), de 1536 dimensiones, cuestan 0,02 USD por millón de unidades de texto \cite{adr-registro}. La decisión de arquitectura, aceptada el 4 de octubre de 2026, fija un techo de desarrollo de 10 USD al mes mediante claves de acceso revocables \cite{adr-registro}. El gasto real acumulado es mínimo: 0,0118 USD entre la medición de referencia de agosto y las comprobaciones posteriores \cite{adr-registro}, y unos 0,00016 USD la medición de referencia con representaciones reales \cite{jup070}. Los precios de los modelos cambian durante el día y entre proveedores, con un rango amplio entre puntos de acceso, por lo que se comprueban antes de cualquier gasto real.
 
 \subsubsection{Coste de infraestructura}
-El sistema se compone de nueve servicios con proveedores simulados y once al activar la IA, entre ellos las bases de datos relacional y vectorial, la cola de mensajes y la monitorización. Para la arquitectura de referencia en AWS, con redundancia, se estimó el 22 de octubre de 2026 un coste de unos 1.150 € al mes (1.289 USD), a 730 horas al mes y sin IVA ni capa gratuita \pendiente{ de fuente}. El consumo supuesto da un intervalo de 1.117 a 1.486 € al mes; no es un límite de factura ni una capacidad medida. La IA se estima aparte: 3,06 USD al mes, suponiendo 50 millones de unidades de texto de entrada, 5 millones de salida y 10 millones de representaciones vectoriales al mes con los modelos Nova Micro y Titan V2 de Amazon \pendiente{ de fuente}. Son supuestos de consumo, no mediciones ni tarifas de DeepSeek ni de OpenRouter, y quedan por debajo del coste de la infraestructura en cualquier caso. El caso de negocio usa estas cifras para ser coherente con la arquitectura de referencia.
+El sistema se compone de nueve servicios con proveedores simulados y once al activar la IA, entre ellos las bases de datos relacional y vectorial, la cola de mensajes y la monitorización. Para la arquitectura de referencia en AWS, con redundancia y preparada para hasta 100 clientes, se estimó el 22 de octubre de 2026 un coste de unos 1.200 € al mes, a 730 horas al mes y sin IVA ni capa gratuita. La IA se estima aparte, en unos 3 USD al mes con modelos de Amazon; no son mediciones ni tarifas de DeepSeek ni de OpenRouter, y no se incluye en el caso de negocio por ser despreciable.
 
 \subsection{Riesgos}
 
