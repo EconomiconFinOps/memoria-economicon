@@ -14,6 +14,12 @@ Este repositorio es la memoria del TFM. Varias personas redactan capítulos dist
 - Orden recomendado dentro de cada apartado: 1) por qué importa, en 2 a 4 frases; 2) la teoría mínima que necesita el lector; 3) cómo lo hemos resuelto; 4) resultados y límites, con remisión a h.
 - Comprueba en cada PR el número de páginas que muestra el CI.
 
+## Fuentes
+
+- Los capítulos describen la aplicación Economicon, cuyo código está en `EconomiconFinOps/tfm-economicon`, rama `develop`.
+- Para afirmar algo sobre la implementación (arquitectura, flujo, pruebas, despliegue), léelo en esa rama: código, `docs/` y `openspec/`. No uses otras ramas ni copias antiguas.
+- Si no tienes acceso al repo, pide al equipo el fichero o el dato concreto. Si no llega, marca el hueco con `\pendiente{}`. No describas la implementación de memoria.
+
 ## Qué se puede editar
 
 - **Tu capítulo**: el que te haya asignado el coordinador. Solo editas `capitulos/<letra>-*.tex`.
@@ -77,7 +83,7 @@ Al escribir o editar capítulos `.tex`, sigue el detalle de macros, etiquetas, t
 
 ## Flujo de trabajo
 
-- Este repo es solo la memoria y usa `main` como única rama de integración. Los capítulos describen el flujo del repo de la aplicación (`tfm-economicon`), que sí tiene rama `develop`: no lo "corrijas" aquí.
+- Este repo es solo la memoria y usa `main` como única rama de integración. El flujo de `develop` es el de `tfm-economicon` (ver Fuentes): no lo "corrijas" aquí.
 - Nunca hagas commit directo en `main`. Trabaja en una rama `capitulo-<letra>-<tema>` y abre PR a `main`.
 - Commits en español con prefijo de tipo, como el historial existente: `docs: ...`.
 - Antes de abrir la PR, cada hueco está resuelto o marcado con `\pendiente{}`.
