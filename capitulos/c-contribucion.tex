@@ -1,8 +1,34 @@
 \section{Contribución individual}\label{c-0}
 
-¿Quién ha hecho qué en Economicon? Un trabajo en equipo solo se evalúa de forma individual si queda claro qué construyó cada persona. Este apartado muestra lo que aportó cada miembro, cómo rotaron los cuatro roles y hasta dónde llega la evidencia. Los roles ---liderazgo, pairing (colaboración en la implementación, con coautoría), revisión y validación--- rotan en cada historia de trabajo, en una variante de la programación en pareja con rotación de roles, para que el conocimiento no se concentre y nadie revise ni valide su propio trabajo \cite{gobierno}. Cada área tiene además una persona responsable de coordinarla y de decidir sobre sus interfaces, para evitar contratos incompatibles que aparecen tarde, en la integración. Cada propuesta de cambio (pull request) declara quién ejerce cada rol, y un registro reproducible contrasta esas declaraciones con el tablero de tareas (Trello) y con la actividad en GitHub \cite{contribuciones}.
+Un trabajo en equipo solo se evalúa de forma individual si queda claro qué construyó cada persona. Este apartado defiende tres ideas. Primera: cada área del producto tuvo una persona responsable de coordinarla y de decidir sobre sus interfaces. Segunda: los roles de cada tarea rotaron, para que el conocimiento no se concentrara y nadie revisara ni validara su propio trabajo. Tercera: la aportación de cada miembro se puede contrastar con fuentes concretas, y sus límites se dicen una vez, al final.
 
-\subsection{Qué ha construido cada persona}\label{c-1}
+\subsection{Organización del trabajo}\label{c-1}
+
+Cada área tuvo una persona responsable de coordinarla. Esa persona decide sobre sus interfaces con el resto del sistema y resuelve las discrepancias entre quienes trabajan en ella. La razón es que, cuando varias personas modifican la misma interfaz sin un responsable, las diferencias acaban en contratos incompatibles que aparecen tarde, en la integración.
+
+Cada tarea reparte cuatro roles: liderazgo, pairing, revisión y validación. El liderazgo responde de la historia de principio a fin. El pairing colabora en la implementación, con coautoría. La revisión comprueba que el cambio es correcto y mantenible sin ser su autor. La validación comprueba con pruebas y evidencia que el resultado cumple los criterios de aceptación \cite{gobierno}. Los roles rotan entre historias. La práctica es una variante de la programación en pareja con rotación de roles, con segregación de funciones entre quien escribe, quien revisa y quien valida.
+
+El tablero del corte del 23 de octubre comprende 126 historias de trabajo, cada una con cuatro roles, es decir, 504 posiciones. Se reconocen 473; las 31 restantes no nombran a una persona y quedan como huecos \cite{observatorio}. Una asignación es planificación, no participación. La tabla~\ref{tab-c2} recoge lo planificado por rol y persona.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Asignaciones de rol por miembro en el corte del 23 de octubre. Una asignación es planificación, no participación.}\label{tab-c2}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.31}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.12}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.13}}@{}}
+\toprule
+\textbf{Rol} & \textbf{Qué cuenta} & \textbf{Alejandro Aguado} & \textbf{Víctor Méndez} & \textbf{Lucía Mateo} & \textbf{Paris Arcos} & \textbf{Sin resolver} \\
+\midrule
+Liderazgo & Responde de la historia: alcance, implementación y cierre & 30 & 30 & 32 & 27 & 7 \\
+Pairing & Colabora en la implementación y cuestiona las decisiones & 36 & 26 & 27 & 29 & 8 \\
+Revisión & Lee el cambio y comprueba que es correcto y mantenible, sin ser su autor & 21 & 31 & 36 & 30 & 8 \\
+Validación & Comprueba con pruebas y evidencia que el resultado cumple los criterios de aceptación & 32 & 30 & 26 & 30 & 8 \\
+\textbf{Total} & & \textbf{119} & \textbf{117} & \textbf{121} & \textbf{116} & \textbf{31} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El reparto no es uniforme. El tablero fija como objetivo entre 22 y 28 asignaciones por persona y rol, y solo cuatro de las dieciséis celdas lo cumplen. Es un margen de mejora del equilibrio.
+
+\subsection{Aportación individual y evidencia}\label{c-2}
 
 La tabla~\ref{tab-c1} resume la aportación principal de cada miembro; los párrafos siguientes la detallan.
 
@@ -21,35 +47,13 @@ Paris Arcos & Inteligencia artificial y seguridad: recuperación documental en t
 \end{tabular}
 \end{table}
 
-Alejandro Aguado construyó la base de datos de costes y la entrega continua, es decir, el despliegue automático de cada versión integrada: normalizó y cargó los costes de Azure, definió el contrato y las salvaguardas del asistente, empaquetó los servicios en contenedores Docker y montó el despliegue en un servidor privado. Sobre esa base añadió las consultas de gasto y de propiedad con evidencia y citas, los presupuestos, la cobertura de etiquetas, la selección de proveedor y modelos, la demostración reproducible, la integración del chat y la canalización de AWS.
+Alejandro Aguado construyó la base de datos de costes y la entrega continua, es decir, el despliegue automático de cada versión integrada. Normalizó y cargó los costes de Azure, definió el contrato y las salvaguardas del asistente, empaquetó los servicios en contenedores Docker y montó el despliegue en un servidor privado. Después añadió las consultas de gasto y de propiedad con evidencia y citas, los presupuestos, la cobertura de etiquetas, la selección de proveedor y modelos, la demostración reproducible, la integración del chat y la canalización de AWS.
 
-Víctor Méndez llevó la migración de la interfaz web a TypeScript, un lenguaje con tipado estático, desde el inventario hasta el cierre del proyecto, y con ella el sistema de estilos, el aviso de sesión caducada y la comprobación del recorrido completo en un navegador real. En el asistente aportó la explicación de anomalías, el panel de Grafana, herramienta de paneles de métricas, con los resultados de la evaluación, los reintentos acotados de la cola de ingesta, la etiqueta del selector de tema y los avisos de limitaciones de anomalías en español. También elaboró el registro de contribuciones en el que se apoya este apartado.
+Víctor Méndez llevó la migración de la interfaz web a TypeScript, un lenguaje con tipado estático, desde el inventario hasta el cierre. Con ella aportó el sistema de estilos, el aviso de sesión caducada y la comprobación del recorrido completo en un navegador real. En el asistente aportó la explicación de anomalías, el panel de Grafana (herramienta de paneles de métricas) con los resultados de la evaluación, los reintentos acotados de la cola de ingesta y los avisos de limitaciones de anomalías en español. También elaboró el registro de contribuciones en el que se apoya este apartado.
 
-Lucía Mateo construyó la observabilidad, es decir, la capacidad de medir y vigilar el sistema (registro con correlación, métricas, trazabilidad y alertas), el entorno local con Docker Compose y la recuperación semántica del asistente. Es autora de la detección de anomalías de coste y de su panel, de los datos sintéticos y la demostración, de la marca y el español en la interfaz, y de la evaluación del asistente: métricas, batería de referencia, robustez ante datos incompletos y reevaluaciones tras cada cambio, con los indicadores medibles para esta memoria y la reducción de los cortes de respuesta del chat. También definió los cuatro roles y el flujo de revisión.
+Lucía Mateo construyó la observabilidad, es decir, la capacidad de medir y vigilar el sistema: registro con correlación, métricas, trazabilidad y alertas. Aportó también el entorno local con Docker Compose y la recuperación semántica del asistente. Es autora de la detección de anomalías de coste y de su panel, de los datos sintéticos y la demostración, y de la evaluación del asistente: métricas, batería de referencia, robustez ante datos incompletos y reevaluaciones tras cada cambio. También definió los cuatro roles y el flujo de revisión.
 
-Paris Arcos construyó la recuperación documental en tres fases ---ingesta de archivos, fragmentación determinista y recuperación híbrida---, la integración de la pasarela que conecta con los modelos de lenguaje (LiteLLM y OpenRouter) y el modelo generativo único. En el producto aportó los indicadores de coste y el panel ejecutivo, el panel de salud, la presentación de la evaluación en Grafana, la autenticación de demostración con aislamiento por cliente, la gestión de secretos, la integración continua y la página pública de presentación.
-
-\subsection{Roles y propuestas de cambio}\label{c-2}
-
-El tablero del corte del 23 de octubre comprende 126 historias de trabajo, 79 de ellas ya en Hecho, es decir, 504 posiciones de rol posibles. Se reconocen 473; las 31 restantes no nombran a una persona, por lo que se dejan como huecos y no se reparten \cite{observatorio}. La tabla~\ref{tab-c2} recoge las asignaciones por rol.
-
-\begin{table}[htbp]
-\centering\small
-\caption{Asignaciones de rol por miembro en el corte del 23 de octubre. Una asignación es planificación, no participación.}\label{tab-c2}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.31}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.12}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.13}}@{}}
-\toprule
-\textbf{Rol} & \textbf{Qué cuenta} & \textbf{Alejandro Aguado} & \textbf{Víctor Méndez} & \textbf{Lucía Mateo} & \textbf{Paris Arcos} & \textbf{Sin resolver} \\
-\midrule
-Liderazgo & Responde de la historia: alcance, implementación y cierre & 30 & 30 & 32 & 27 & 7 \\
-Pairing & Colabora en la implementación y cuestiona las decisiones & 36 & 26 & 27 & 29 & 8 \\
-Revisión & Lee el cambio y comprueba que es correcto y mantenible, sin ser su autor & 21 & 31 & 36 & 30 & 8 \\
-Validación & Comprueba con pruebas y evidencia que el resultado cumple los criterios de aceptación & 32 & 30 & 26 & 30 & 8 \\
-\textbf{Total} & & \textbf{119} & \textbf{117} & \textbf{121} & \textbf{116} & \textbf{31} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-El reparto de la tabla no es uniforme: el tablero fija como objetivo entre 22 y 28 asignaciones por persona y rol, y solo cuatro de las dieciséis celdas lo cumplen. Es un margen de mejora del equilibrio, que la tabla refleja tal como está planificado.
+Paris Arcos construyó la recuperación documental en tres fases (ingesta de archivos, fragmentación determinista y recuperación híbrida) y la integración de la pasarela que conecta con los modelos de lenguaje (LiteLLM y OpenRouter). En el producto aportó los indicadores de coste y el panel ejecutivo, el panel de salud, la presentación de la evaluación en Grafana, la autenticación de demostración con aislamiento por cliente, la gestión de secretos, la integración continua y la página pública de presentación.
 
 La tabla~\ref{tab-c3} cuenta las propuestas de cambio integradas por cada miembro, es decir, las abiertas por esa persona y fusionadas en la rama principal con cualquier método de integración \cite{github-propuestas}.
 
@@ -69,6 +73,4 @@ Paris Arcos & 16 \\
 \end{tabular}
 \end{table}
 
-\subsection{Límites de la evidencia}\label{c-3}
-
-Estas cifras se leen con prudencia. Una asignación de rol es planificación y no participación, por eso la tabla~\ref{tab-c3} recoge lo efectivamente integrado. La autoría de una propuesta no equivale a trabajo en solitario, pero el pairing solo puede contrastarse donde se declaró: 29 de los 200 cambios individuales (commits) de la rama principal en el corte llevan una línea de coautoría que identifica a un miembro del equipo, y el resto del pairing consta en notas del tablero que el registro no importa \cite{contribuciones,github-propuestas}. Siete historias del cierre del producto mínimo viable (MVP), la versión mínima que demuestra el circuito completo, se cerraron por excepción de plazo, sin pairing ni aprobación humana, y no se atribuye a nadie trabajo ni aprobaciones que no constan \cite{contribuciones}. Los resultados de las comprobaciones automáticas y los archivos de pruebas y documentación son evidencia del equipo, no de una persona.
+Estas cifras tienen límites, que se dicen una vez. Una propuesta integrada no equivale a trabajo en solitario. La coautoría que identifica a un miembro del equipo consta en 29 de los 200 cambios individuales de la rama principal en el corte; el resto del pairing consta en notas del tablero que el registro no importa, y no se reconstruye \cite{contribuciones,github-propuestas}. Siete historias del cierre del producto mínimo viable (MVP), la versión mínima que demuestra el circuito completo, se cerraron por excepción de plazo, sin pairing ni aprobación humana, y no se atribuye a nadie trabajo ni aprobaciones que no constan \cite{contribuciones}. Las comprobaciones automáticas, las pruebas y la documentación son evidencia del equipo, no de una persona.
