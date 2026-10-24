@@ -1,25 +1,6 @@
 \section{Arquitectura técnica de la solución}\label{d-0}
 
-Economicon es una aplicación web que responde preguntas sobre los costes de Azure, y su arquitectura se rige por dos criterios. El primero es que cada cifra mostrada la calcule código determinista, y que el modelo de lenguaje solo redacte sobre evidencia ya verificada. El segundo es que cada cliente acceda únicamente a sus propios datos. Con esos criterios se organizan las capas, el camino de una pregunta y la entrada de datos, y la misma arquitectura se ofrece en dos formas de despliegue: un entorno local con Docker Compose y una alternativa en la nube sobre Amazon Web Services (AWS). La tabla~\ref{tab-d1} reúne las cifras de configuración que se citan después \cite{compose-final,arquitectura-develop}.
-
-\begin{table}[htbp]
-\centering\small
-\caption{Cifras de configuración de la arquitectura. Describen cómo está configurado el sistema, no resultados de medición.}\label{tab-d1}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.34}}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.16}}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.50}}@{}}
-\toprule
-\textbf{Medida} & \textbf{Valor} & \textbf{Qué cuenta} \\
-\midrule
-Servicios permanentes de Docker Compose & 10 & Contenedores que quedan en marcha; además hay 2 tareas de un solo uso que migran la base de datos y preparan el almacén de archivos \\
-Volúmenes persistentes & 6 & Datos que sobreviven a un reinicio; el perfil de inteligencia artificial (IA) añade un servicio de base de datos y un volumen más \\
-Intervalo de recogida de métricas & 15 s & Cada cuánto consulta Prometheus a los servicios \\
-Intentos de generación por respuesta & hasta 4 & Veces que la API repite la generación si el procesador rechaza la salida; la temperatura de cada intento es 0; 0,2; 0,4 y 0,6 \\
-Fragmentos entregados al modelo & hasta 4 & Fragmentos documentales por búsqueda, a una distancia vectorial no superior a 0,6 \\
-Dimensión de los vectores & 1.536 & Números que describen cada fragmento con el modelo de embeddings \\
-Techo de gasto en modelos & 10 USD al mes & Presupuesto máximo de desarrollo, aplicado mediante una clave virtual de la pasarela de modelos \\
-Pruebas de la plantilla de AWS & 12 + 8 & Pruebas con proveedores simulados de la plantilla Terraform y casos de enrutamiento de CloudFront; no hay plan real ejecutado \\
-\bottomrule
-\end{tabular}
-\end{table}
+Economicon es una aplicación web que responde preguntas sobre los costes de Azure, y su arquitectura se rige por dos criterios. El primero es que cada cifra mostrada la calcule código determinista, y que el modelo de lenguaje solo redacte sobre evidencia ya verificada. El segundo es que cada cliente acceda únicamente a sus propios datos. Con esos criterios se organizan las capas, el camino de una pregunta y la entrada de datos, y la misma arquitectura se ofrece en dos formas de despliegue: un entorno local con Docker Compose y una alternativa en la nube sobre Amazon Web Services (AWS) \cite{compose-final,arquitectura-develop}.
 
 \subsection{Visión por capas}\label{d-1}
 
@@ -43,7 +24,7 @@ FastAPI (Python) & API y procesador & Sus esquemas tipados validan cada entrada 
 RabbitMQ & Cola de trabajos & Entrega con confirmación y cola duradera: la ingesta continúa aunque el procesador se reinicie. Frente a una cola en la base de datos, separa carga y fallos; a cambio, hay que tolerar mensajes duplicados \cite{adr-arquitectura}. \\
 CockroachDB & Estado: usuarios, trabajos, conversaciones y costes & Habla SQL, compatible con PostgreSQL, de modo que la aplicación puede funcionar sobre PostgreSQL, como prevé la alternativa en la nube. No se afirma que lo supere. \\
 pgvector & Búsqueda por similitud de fragmentos & Extensión de PostgreSQL: un único motor filtra a la vez por cliente y por distancia, sin servicio vectorial dedicado. Calcula la distancia exacta, sin índice aproximado \cite{adr-arquitectura}. \\
-LiteLLM y OpenRouter & Acceso a los modelos & Concentran en un punto las claves, el techo de gasto y la política de privacidad, y permiten cambiar de modelo sin tocar el código \cite{adr-arquitectura}. \\
+LiteLLM y OpenRouter & Acceso a los modelos & Concentran en un punto las claves, el techo de gasto y la política de privacidad, y permiten cambiar de modelo sin tocar el código. El techo, de 10 USD al mes, es el presupuesto máximo de desarrollo y se aplica mediante una clave virtual de la pasarela \cite{adr-arquitectura}. \\
 MinIO & Almacén temporal de archivos subidos & Habla el protocolo S3 y mantiene los binarios fuera de la cola y de la base de datos \cite{guia-ingesta}. \\
 Prometheus y Grafana & Métricas, alertas y paneles & Estándares abiertos de observabilidad; Grafana presenta también los resultados de la evaluación. \\
 Docker Compose & Despliegue reproducible & Una orden levanta todo el sistema en un portátil o un servidor; no equivale a un orquestador de producción. \\
@@ -55,11 +36,11 @@ Docker Compose & Despliegue reproducible & Una orden levanta todo el sistema en 
 
 El asistente atiende cada pregunta por uno de dos caminos. Las consultas estructuradas ---gasto por dimensión, propiedad de los costes y explicación de una anomalía--- las resuelve el servidor con consultas a la base de datos y devuelve cifras exactas con su evidencia, sin intervención del modelo. Las preguntas abiertas recorren el chat con modelo de lenguaje, que se activa por configuración y que la demostración por defecto mantiene apagado \cite{compose-final}.
 
-En el chat con modelo (figura~\ref{fig-d2}), la API abre una operación asociada a la conversación y la envía al procesador por una red privada y con una firma que solo conocen ambos; el procesador comprueba en cada paso que la operación sigue siendo de esa persona. El servidor prepara una única búsqueda documental por intento, sin que la decida el modelo: la API combina similitud vectorial y búsqueda por palabras, fusiona ambas listas con Reciprocal Rank Fusion (RRF) y entrega unos pocos fragmentos suficientemente cercanos (tabla~\ref{tab-d1}). El modelo trabaja en dos llamadas, un plan privado de afirmaciones y fuentes y una respuesta final contrastada con ese plan, con un esquema fijo de resumen, métricas, recomendaciones, limitaciones y citas. El único modelo generativo es DeepSeek V4.1 Flash, servido por un solo proveedor, sin modelo de reserva y sin retención de datos \cite{adr-arquitectura,config-gateway}.
+En el chat con modelo (figura~\ref{fig-d2}), la API abre una operación asociada a la conversación y la envía al procesador por una red privada y con una firma que solo conocen ambos; el procesador comprueba en cada paso que la operación sigue siendo de esa persona. El servidor prepara una única búsqueda documental por intento, sin que la decida el modelo: la API combina similitud vectorial y búsqueda por palabras, fusiona ambas listas con Reciprocal Rank Fusion (RRF) y entrega unos pocos fragmentos suficientemente cercanos (número y umbral de distancia en la tabla~\ref{tab-e1}). El modelo trabaja en dos llamadas, un plan privado de afirmaciones y fuentes y una respuesta final contrastada con ese plan, con un esquema fijo de resumen, métricas, recomendaciones, limitaciones y citas. El único modelo generativo es DeepSeek V4.1 Flash, servido por un solo proveedor, sin modelo de reserva y sin retención de datos \cite{adr-arquitectura,config-gateway}.
 
 \figura{d2-chat}{Camino de una pregunta en el chat con modelo, con sus dos controles de validación.\label{fig-d2}}
 
-La respuesta pasa por dos controles. El procesador exige que cada salida cumpla el esquema; si la rechaza, la API repite la generación con una temperatura creciente para no repetir una salida defectuosa, hasta el máximo de intentos de la tabla~\ref{tab-d1}. Después, la API contrasta la respuesta con la evidencia autorizada: cada cifra financiera debe coincidir con la consulta de costes del servidor, y la que no coincide se omite y se sustituye por una limitación visible, igual que un segmento de interpretación vacío. Las demás incoherencias, como una fuente desconocida o un periodo distinto del consultado, terminan la operación como fallida sin mostrar la respuesta \cite{codigo-chat}. La calidad y la latencia se miden en h.
+La respuesta pasa por dos controles. El procesador exige que cada salida cumpla el esquema; si la rechaza, la API repite la generación con una temperatura creciente para no repetir una salida defectuosa, hasta el máximo de intentos de la tabla~\ref{tab-e1}. Después, la API contrasta la respuesta con la evidencia autorizada: cada cifra financiera debe coincidir con la consulta de costes del servidor, y la que no coincide se omite y se sustituye por una limitación visible, igual que un segmento de interpretación vacío. Las demás incoherencias, como una fuente desconocida o un periodo distinto del consultado, terminan la operación como fallida sin mostrar la respuesta \cite{codigo-chat}. La calidad y la latencia se miden en h.
 
 \subsection{Entrada de datos}\label{d-4}
 
@@ -67,11 +48,11 @@ Los costes de Azure se cargan con una herramienta del procesador que consulta un
 
 \subsection{Dos formas de despliegue}\label{d-5}
 
-Economicon se despliega de dos formas que comparten la misma arquitectura por capas: un entorno local con Docker Compose y una alternativa en la nube con servicios gestionados de AWS.
+Economicon se despliega de dos formas que comparten la misma arquitectura por capas, y cada una responde a un fin distinto. El entorno local, con Docker Compose, levanta el sistema completo con una orden y con datos simulados, sin credenciales de proveedor, y es la base de desarrollo y demostración. La alternativa en la nube traslada la misma arquitectura a servicios gestionados de AWS, que aportan copias de seguridad y alta disponibilidad, un proveedor de identidad externo y gestión de secretos.
 
 \subsubsection{Entorno local}
 
-Docker Compose levanta los servicios permanentes y las tareas de un solo uso que describe la tabla~\ref{tab-d1}, con sus volúmenes persistentes; el perfil de inteligencia artificial añade la pasarela y su base de datos. Prometheus recoge las métricas con el intervalo indicado en esa tabla y Grafana alerta de los fallos de ingesta \cite{compose-final,adr-arquitectura}.
+Docker Compose levanta los servicios permanentes y 2 tareas de un solo uso, que migran la base de datos y preparan el almacén de archivos, con 6 volúmenes persistentes que conservan los datos tras un reinicio; el perfil de inteligencia artificial añade la pasarela y su base de datos, con un volumen más. Prometheus recoge las métricas cada 15 s y Grafana alerta de los fallos de ingesta \cite{compose-final,adr-arquitectura}.
 
 \subsubsection{Alternativa en la nube: AWS}
 
@@ -101,7 +82,7 @@ Secretos de Compose & Secrets Manager, KMS e IAM & Claves cifradas y un rol de m
 \end{tabular}
 \end{table}
 
-Las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API, y API y procesador a bases y cola). La plantilla de Terraform se valida en local sin ejecutar un plan real, y el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. La aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock \cite{aws-referencia,aws-ensayo}.
+Las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API, y API y procesador a bases y cola). La plantilla de Terraform se valida en local sin ejecutar un plan real, con 12 pruebas con proveedores simulados y 8 casos de enrutamiento de CloudFront, y el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. La aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock \cite{aws-referencia,aws-ensayo}.
 
 \subsection{Alcance y límites}\label{d-6}
 
