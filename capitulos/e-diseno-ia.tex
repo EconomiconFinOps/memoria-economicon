@@ -10,11 +10,11 @@ Un asistente FinOps solo es útil si sus respuestas se pueden comprobar: una cif
 \toprule
 \textbf{Elemento} & \textbf{Elección} & \textbf{Qué significa} \\
 \midrule
-Representación del texto & text-embedding-3-small; 1.536 dimensiones & Cada pasaje se convierte en un vector comparable con el de la pregunta. El código admite además Titan de AWS, apagado por defecto. \cite{especificaciones,config-gateway,arquitectura-final} \\
-Fragmentación & Objetivo de 600 tokens; máximo de 800; solapamiento del 10\,\% & Un token es la unidad de texto que procesa el modelo. El corte respeta secciones, listas y tablas cuando caben. \cite{especificaciones} \\
+Representación del texto & text-embedding-3-small; 1.536 dimensiones & Sirve para comparar cada pasaje con la pregunta. El código admite además Titan de AWS, apagado por defecto. \cite{especificaciones,config-gateway,arquitectura-final} \\
+Fragmentación & Objetivo de 600 tokens; máximo de 800; solapamiento del 10\,\% & El corte respeta secciones, listas y tablas cuando caben. \cite{especificaciones} \\
 Recuperación por defecto & Distancia coseno $\leq$ 0,6; hasta 4 pasajes & La distancia coseno mide cuánto se parecen dos vectores (0 es idéntico); solo se admiten pasajes por debajo del umbral. \cite{arquitectura-final} \\
 Recuperación híbrida & Vectorial y por palabras, fusionadas por posición & Implementada y elegida en las campañas, pero apagada por defecto: requiere activarla y preparar un índice verificado. \cite{arquitectura-final,informe-rag} \\
-Reintentos de una respuesta rechazada & Hasta 4 intentos; temperatura 0; 0,2; 0,4; 0,6 & La temperatura regula cuánto varía el modelo; sube en cada reintento. Incluido en la versión final. \cite{cortes-medicion} \\
+Reintentos de una respuesta rechazada & Hasta 4 intentos; temperatura 0; 0,2; 0,4; 0,6 & La temperatura sube en cada reintento. Incluido en la versión final. \cite{cortes-medicion} \\
 Consultas de costes & SQL determinista, sin modelo & Propiedad, gasto y anomalías se calculan en el servidor y se devuelven con su evidencia. \cite{arquitectura-final} \\
 \bottomrule
 \end{tabular}
@@ -22,7 +22,7 @@ Consultas de costes & SQL determinista, sin modelo & Propiedad, gasto y anomalí
 
 \subsection{Un asistente con información de referencia}\label{e-1}
 
-FinOps\footnote{Práctica que une finanzas, tecnología y negocio para gestionar el gasto en la nube.} relaciona costes, decisiones y responsables. Un modelo de lenguaje puede explicar conceptos generales, pero no conoce los datos de un cliente ni las reglas de su organización. Economicon usa generación aumentada por recuperación, RAG\footnote{Retrieval-Augmented Generation: antes de redactar, el sistema busca la información pertinente y se la entrega al modelo.}: selecciona información autorizada del cliente y la incorpora a la petición, de modo que la respuesta pueda citar sus fuentes en lugar de depender de la memoria del modelo. \cite{especificaciones}
+FinOps relaciona costes, decisiones y responsables. Un modelo de lenguaje puede explicar conceptos generales, pero no conoce los datos de un cliente ni las reglas de su organización. Economicon usa RAG: antes de redactar, selecciona información autorizada del cliente y la incorpora a la petición, de modo que la respuesta pueda citar sus fuentes en lugar de depender de la memoria del modelo. \cite{especificaciones}
 
 El sistema separa dos tipos de pregunta. Las preguntas sobre costes ---cuánto gasta un proyecto, qué servicio ha crecido o por qué se marcó una anomalía--- se resuelven con consultas SQL en el servidor y devuelven las cifras exactas con su procedencia; ahí no interviene ningún modelo. Las preguntas abiertas pasan por el chat generativo, que recibe el resumen de costes verificado por el servidor y los pasajes documentales recuperados. La figura~\ref{fig-e1} muestra cómo se prepara el conocimiento y el ciclo de una respuesta. \cite{arquitectura-final}
 
@@ -32,13 +32,13 @@ El alcance cubre Azure con datos públicos de Microsoft FinOps Toolkit, servidos
 
 \subsection{Preparación del conocimiento}\label{e-2}
 
-La ingesta admite texto pegado y ficheros Markdown, TXT, DOCX, DOC y PDF, incluidos los escaneados. La extracción y el reconocimiento óptico de caracteres (OCR) se hacen dentro del sistema, aislados y con límites de páginas, tiempo y memoria. El fichero original se guarda de forma temporal en MinIO, un almacén de objetos, y se retira cuando el texto normalizado, los vectores y el estado del trabajo ya están guardados. Así, la recuperación y las citas no dependen de conservar el binario. \cite{arquitectura-final}
+La ingesta admite texto pegado y ficheros Markdown, TXT, DOCX, DOC y PDF, incluidos los escaneados. La extracción y el OCR se hacen dentro del sistema, aislados y con límites de páginas, tiempo y memoria. El fichero original se guarda de forma temporal en MinIO y se retira cuando el texto normalizado, los vectores y el estado del trabajo ya están guardados. Así, la recuperación y las citas no dependen de conservar el binario. \cite{arquitectura-final}
 
 Un fragmento (chunk) es la unidad de texto que se guarda y se recupera por separado. El algoritmo conserva secciones, listas, tablas y bloques de código cuando caben en el presupuesto de la tabla~\ref{tab-e1} y aplica cortes reproducibles cuando no caben, sin usar modelos para decidir dónde cortar. El solapamiento mantiene la continuidad entre fragmentos y queda registrado, de forma que el texto normalizado se puede reconstruir. \cite{especificaciones}
 
 \subsection{Representación y recuperación}\label{e-3}
 
-Un embedding es una representación numérica que permite comparar el significado de dos textos. PostgreSQL con la extensión pgvector actúa como base vectorial: guarda esas representaciones y devuelve los pasajes más próximos a la pregunta, siempre filtrados por tenant. Documentos y preguntas deben compartir el mismo espacio de representación ---modelo, proveedor, dimensión y preparación del texto---; cambiar de proveedor exige reindexar, nunca mezclar vectores. \cite{arquitectura-final}
+PostgreSQL con la extensión pgvector actúa como base vectorial: guarda los embeddings y devuelve los pasajes más próximos a la pregunta, siempre filtrados por tenant. Documentos y preguntas deben compartir el mismo espacio de representación ---modelo, proveedor, dimensión y preparación del texto---; cambiar de proveedor exige reindexar, nunca mezclar vectores. \cite{arquitectura-final}
 
 Para elegir la recuperación se compararon cuatro variantes acumulativas: A usaba fragmentos por caracteres y búsqueda solo vectorial; B introdujo la fragmentación estructural; C añadió título y sección a la representación; D sumó la búsqueda por palabras, útil cuando importan un nombre, una magnitud o un identificador literal. D combina ambas listas con Reciprocal Rank Fusion (RRF), que puntúa la posición de cada candidato sin mezclar escalas distintas. \cite{informe-rag}
 
@@ -48,6 +48,6 @@ Elegimos D porque obtuvo respuesta en todas las preguntas de su campaña y selec
 
 El chat generativo también se activa de forma explícita; en la configuración por defecto la interfaz no lo muestra. Cuando está activo, el modelo no decide si se busca ni qué se busca: el servidor prepara una única búsqueda por intento a partir de la pregunta y la ejecuta antes del primer borrador. El modelo recibe solo ese resultado y el resumen de costes del cliente; no ejecuta consultas ni accede a otros datos. \cite{arquitectura-final}
 
-La respuesta sigue un esquema estructurado ---campos con tipos y límites definidos--- y un prompt versionado, es decir, un conjunto de instrucciones identificado. Antes de guardarla, el servidor comprueba que cada cifra, periodo y cita se apoya en la evidencia autorizada. Si una cifra no se puede verificar, se omite con un aviso visible y se conserva el resto de la respuesta; si la salida no es válida, se reintenta con la variabilidad creciente de la tabla~\ref{tab-e1}. La conversación se recupera tras un fallo o una cancelación, y el historial largo se resume para acotar el contexto que recibe el modelo. \cite{cortes-medicion,especificaciones}
+La respuesta sigue un esquema estructurado ---campos con tipos y límites definidos--- y un prompt versionado. Antes de guardarla, el servidor comprueba que cada cifra, periodo y cita se apoya en la evidencia autorizada. Si una cifra no se puede verificar, se omite con un aviso visible y se conserva el resto de la respuesta; si la salida no es válida, se reintenta con la variabilidad creciente de la tabla~\ref{tab-e1}. La conversación se recupera tras un fallo o una cancelación, y el historial largo se resume para acotar el contexto que recibe el modelo. \cite{cortes-medicion,especificaciones}
 
 Las consultas de propiedad, gasto y anomalías todavía no están disponibles como herramientas que el modelo pueda invocar: se piden mediante formularios explícitos. Conectarlas al chat es el siguiente paso del diseño (apartado~\ref{i-0}). \cite{arquitectura-final}

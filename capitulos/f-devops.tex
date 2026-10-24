@@ -1,6 +1,6 @@
 \section{Integración con herramientas DevOps}\label{f-0}
 
-DevOps une desarrollo y operación para construir, probar, desplegar y observar cada versión. La tabla~\ref{tab-f1} relaciona las herramientas de Economicon con sus evidencias y límites.
+Este apartado describe las herramientas DevOps de Economicon. La tabla~\ref{tab-f1} relaciona cada una con sus evidencias y límites.
 
 \begin{table}[htbp]
 \centering\small
@@ -9,10 +9,10 @@ DevOps une desarrollo y operación para construir, probar, desplegar y observar 
 \toprule
 \textbf{Pieza} & \textbf{Qué hace} & \textbf{Qué acredita y qué no} \\
 \midrule
-Trazabilidad & Un mismo identificador de tarea en Trello, OpenSpec y GitHub & Relaciona alcance, requisitos, código y revisiones; una asignación no prueba participación. \cite{gobierno,continuidad} \\
-Integración continua (CI) & 9 trabajos técnicos en cada cambio, más la política de revisión en las PR & Que el código compila y supera sus pruebas automáticas; no arranca el sistema completo. \cite{ci-final} \\
+Trazabilidad & Un mismo identificador de tarea en Trello, OpenSpec (especificaciones versionadas) y GitHub & Relaciona alcance, requisitos, código y revisiones; una asignación no prueba participación. \cite{gobierno,continuidad} \\
+Integración continua & 9 trabajos técnicos en cada cambio, más la política de revisión en las pull requests & Que el código compila y supera sus pruebas automáticas; no arranca el sistema completo. \cite{ci-final} \\
 Contenedores & Docker Compose: 10 servicios de larga ejecución y 2 de inicialización; perfiles opcionales de IA y de demostración & Un entorno reproducible en cualquier máquina con Docker; no es una topología de producción. \cite{arquitectura-final} \\
-Despliegue continuo (CD) privado & Agente en el servidor propio que comprueba cada 5 minutos si hay versión elegible y la promueve tras 5 comprobaciones & Despliegue real en un entorno de validación con datos desechables y proveedores simulados. \cite{despliegue} \\
+Despliegue continuo privado & Agente en el servidor propio que comprueba cada 5 minutos si hay versión elegible y la promueve tras 5 comprobaciones & Despliegue real en un entorno de validación con datos desechables y proveedores simulados. \cite{despliegue} \\
 Ciclo en AWS & 2 pipelines manuales: creación y retirada de un entorno desechable & Código y pruebas sin conexión; nada desplegado en AWS en la versión final. \cite{aws-ensayo,arquitectura-final} \\
 Observabilidad & Prometheus cada 15 s; paneles y una alerta en Grafana & Diagnóstico técnico; sin receptor externo de alertas ni objetivos de servicio demostrados. \cite{monitorizacion,arquitectura-final} \\
 \bottomrule
@@ -21,14 +21,14 @@ Observabilidad & Prometheus cada 15 s; paneles y una alerta en Grafana & Diagnó
 
 \subsection{Flujo de trabajo y trazabilidad}\label{f-1}
 
-Trello fija alcance, responsables y estado; OpenSpec versiona requisitos y escenarios, y GitHub conserva código y revisiones. Las ramas cortas se integran mediante pull request (PR), una propuesta revisable, en develop; main contiene versiones estables. \cite{gobierno}
+Trello fija alcance, responsables y estado; OpenSpec versiona requisitos y escenarios, y GitHub conserva código y revisiones. Las ramas cortas se integran en develop mediante pull requests; main contiene versiones estables. \cite{gobierno}
 
 
-Se separan liderazgo, trabajo en pareja, revisión y validación; los dos últimos corresponden a personas distintas del autor. Varias integraciones finales usaron excepciones autorizadas por plazo, registrando lo no validado. Por ello tienen menos verificación independiente. \cite{continuidad}
+Las funciones de liderazgo, trabajo en pareja, revisión y validación se describen en el apartado~\ref{c-0}; los dos últimos corresponden a personas distintas del autor. Varias integraciones finales usaron excepciones autorizadas por plazo, registrando lo no validado. Por ello tienen menos verificación independiente. \cite{continuidad}
 
 \subsection{Integración continua}\label{f-2}
 
-La integración continua se ejecuta en GitHub Actions con cada envío de rama, con cada PR y bajo demanda, y el despliegue continuo la reutiliza como requisito. El frontend usa un archivo de bloqueo de versiones y el ciclo AWS tiene dependencias fijadas específicas; los servicios Python conservan también dependencias con versiones mínimas, por lo que no existe una resolución exacta global. Se comprueban trazabilidad, higiene, especificaciones, pruebas de los tres servicios Python, estilo, pruebas, construcción y tipos del frontend, y la página pública. Dos trabajos adicionales comprueban la aplicación sobre PostgreSQL y el ciclo AWS sin conexión a la nube. \cite{ci-final,dependencias-python}
+La integración continua se ejecuta en GitHub Actions con cada envío de rama, con cada pull request y bajo demanda, y el despliegue continuo la reutiliza como requisito. El frontend usa un archivo de bloqueo de versiones y el ciclo AWS tiene dependencias fijadas específicas; los servicios Python conservan también dependencias con versiones mínimas, por lo que no existe una resolución exacta global. Se comprueban trazabilidad, higiene, especificaciones, pruebas de los tres servicios Python, estilo, pruebas, construcción y tipos del frontend, y la página pública. Dos trabajos adicionales comprueban la aplicación sobre PostgreSQL y el ciclo AWS sin conexión a la nube. \cite{ci-final,dependencias-python}
 
 La CI comprueba la topología de Docker de forma estática, sin arrancar el sistema completo. Combina pruebas aisladas con una integración que levanta PostgreSQL y pgvector reales en un contenedor de servicio y ejecuta contratos de la aplicación. Otras pruebas que necesitan servicios externos se omiten y se documentan en ensayos aparte. Esa integración no invoca AWS; una CI correcta acredita las comprobaciones ejecutadas, no el funcionamiento integral del despliegue. \cite{ci-final,arquitectura-final}
 
@@ -42,14 +42,13 @@ Dos ensayos documentan el entorno: uno construyó el sistema y pasó la prueba d
 
 Una CI correcta declara elegible una versión de develop. El agente del servidor prepara una copia aislada y prueba salud, login, ingesta, facturación y cola antes de promoverla. Si falla, reactiva la versión anterior y sus volúmenes; no revierte migraciones ni restaura los datos retirados. El entorno usa datos desechables y proveedores simulados, con promociones registradas. \cite{despliegue}
 
-Para la defensa se prepararon dos pipelines manuales AWS, de creación y retirada, con servicios, autenticación y modelos nativos. Sus controles se prueban sin conexión a la cuenta; no hay despliegue de aplicación AWS acreditado. \cite{aws-ensayo,arquitectura-final}
 
 \subsection{Observabilidad}\label{f-5}
 
 Los logs JSON incluyen un identificador que acompaña a la petición y a la ingesta en cola. Prometheus recoge métricas y Grafana muestra latencias, errores, ingestas y consultas. La alerta de fallos de ingesta cuenta reintentos y no tiene receptor externo. \cite{convenciones,monitorizacion,arquitectura-final}
 
-Un segundo panel de Grafana reúne los resultados de la evaluación del asistente y los indicadores de la memoria, con el modelo declarado en cada ejecución. Cada cifra se regenera con un comando del repositorio (apartado~\ref{h-0}). \cite{panel-evaluacion}
+Un segundo panel de Grafana reúne los resultados de la evaluación del asistente y los indicadores de la memoria, con el modelo declarado en cada ejecución. Su regeneración se describe en el apartado~\ref{h-4}. \cite{panel-evaluacion}
 
 \subsection{Documentación y decisiones}\label{f-6}
 
-Los manuales describen la operación, las decisiones de arquitectura justifican alternativas y los informes conservan evidencia. Integrar una decisión no la ratifica: el modelo por defecto y el ciclo AWS siguen propuestos, pendientes del equipo. \cite{adr-registro,arquitectura-final}
+Los manuales describen la operación, las decisiones de arquitectura justifican alternativas y los informes conservan evidencia. Integrar una decisión no la ratifica. \cite{adr-registro,arquitectura-final}

@@ -10,9 +10,9 @@ Economicon no entrena modelos propios: usa modelos preentrenados a través de un
 \textbf{Ámbito} & \textbf{Dato o elección} & \textbf{Qué cuenta} \\
 \midrule
 Modelo de chat por defecto & DeepSeek V4.1 Flash; proveedor DeepInfra, 8 bits; sin ruta de reserva & Único generador de la configuración versionada; no certifica qué modelo respondió en cada llamada. \cite{config-gateway,arquitectura-final} \\
-Modelo de embeddings & text-embedding-3-small & Convierte texto en vectores para la recuperación; no genera respuestas. \cite{config-gateway} \\
+Modelo de embeddings & text-embedding-3-small & Genera los embeddings de la recuperación; no genera respuestas. \cite{config-gateway} \\
 Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Implementada y probada sin conexión; apagada por defecto y sin invocaciones reales. \cite{aws-ensayo} \\
-Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 frente a Flash con las mismas preguntas; valoración de un juez LLM, un modelo que puntúa respuestas. \cite{comparativa-modelos} \\
+Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 frente a Flash con las mismas preguntas; valoración de un juez IA. \cite{comparativa-modelos} \\
 Comparativa de coste & GLM-5.2: 0,1806 USD; Flash: 0,0392 USD & Las 28 operaciones de cada modelo, con los embeddings de las preguntas; sin la indexación inicial. \cite{comparativa-modelos} \\
 Coste facturado por consulta & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & Consultas de chat terminadas, contrastadas con la factura del proveedor; ventanas de medición distintas. \cite{jup130-coste,jup133-coste} \\
 Latencia histórica del banco & Percentil 95: 41,3 s antes del arreglo y 42,4 s tras él; objetivo de 10 s & Tiempo bajo el que quedan el 95\,\% de las operaciones completadas del banco de 28 preguntas. \cite{reevaluacion-modelo,banco28-tras} \\
@@ -22,7 +22,7 @@ Latencia histórica del banco & Percentil 95: 41,3 s antes del arreglo y 42,4 s 
 
 \subsection{Adaptación sin entrenamiento propio}\label{g-1}
 
-Un modelo preentrenado ha aprendido patrones del lenguaje antes de integrarse en la aplicación. Caben tres opciones: entrenarlo desde cero, ajustar sus pesos con datos propios (fine-tuning) o usarlo tal cual con instrucciones y contexto. Para el MVP\footnote{Producto mínimo viable: la versión más pequeña que permite comprobar la propuesta con usuarios.} se eligió la tercera, que concentra el esfuerzo en lo que diferencia a Economicon y evita mantener un ciclo propio de entrenamiento: las fuentes, los controles de la respuesta y el cálculo determinista de las cifras. El modelo de embeddings también se usa sin modificar. \cite{especificaciones,config-gateway}
+Para un modelo preentrenado caben tres opciones: entrenarlo desde cero, ajustar sus pesos con datos propios (fine-tuning) o usarlo tal cual con instrucciones y contexto. Para el MVP se eligió la tercera, que concentra el esfuerzo en lo que diferencia a Economicon y evita mantener un ciclo propio de entrenamiento: las fuentes, los controles de la respuesta y el cálculo determinista de las cifras. El modelo de embeddings también se usa sin modificar. \cite{especificaciones,config-gateway}
 
 \subsection{Ruta y condiciones de uso}\label{g-2}
 
@@ -34,12 +34,12 @@ Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativo
 
 \subsection{Cómo se eligió el modelo}\label{g-3}
 
-GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez LLM, y Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
+GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez IA, y Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
 
 Una evaluación posterior usó reglas automáticas y una revisora humana, con otros recursos y método de captura. Las últimas repeticiones en DockerDevelop usaron un único juez IA sobre las respuestas disponibles. Son procedimientos distintos, separados en el apartado~\ref{h-0}; sus puntuaciones no se suman ni demuestran superioridad general de un modelo. La ventaja de coste observada también procede de ventanas diferentes y no se atribuye sólo al modelo. \cite{reevaluacion-modelo,jup133-coste,juez-infra}
 
 \subsection{Latencia y margen de mejora}\label{g-4}
 
-El histórico de la tabla~\ref{tab-g1} supera el objetivo de latencia. Después se amplió el límite final y se midieron una demo y seis repeticiones en DockerDevelop, recogidas por separado en el apartado~\ref{h-0}. El tiempo hasta el estado terminal incluye reintentos y operaciones fallidas; no es la duración de una única llamada al modelo. Existen observaciones posteriores de tiempo y coste, pero falta una comparación controlada que aísle el efecto del límite, del modelo o de la infraestructura. Tampoco se dispone de tiempos fiables por etapa. \cite{campanas-infra,demo-final}
+El histórico de la tabla~\ref{tab-g1} supera el objetivo de latencia. Después se amplió el límite final y se midieron una demo y seis repeticiones en DockerDevelop, recogidas por separado en el apartado~\ref{h-0}. Falta una comparación controlada que aísle el efecto del límite, del modelo o de la infraestructura. \cite{campanas-infra,demo-final}
 
-Acotar la salida sin truncarla, reutilizar contexto con caché o probar otra ruta compatible con la política de privacidad son vías de ajuste por evaluar. La elección conserva una ventaja de coste observada y deja pendiente alcanzar el objetivo de tiempo. \cite{comparativa-modelos,reevaluacion-modelo}
+Las vías de ajuste, todavía sin evaluar, se recogen en el apartado~\ref{i-0}.
