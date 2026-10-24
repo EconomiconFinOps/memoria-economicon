@@ -6,27 +6,7 @@ Un trabajo en equipo solo se evalúa de forma individual si queda claro qué con
 
 Cada área tuvo una persona responsable de coordinarla y de decidir sobre sus interfaces con el resto del sistema. Cuando varias personas modifican la misma interfaz sin ese responsable, las diferencias acaban en contratos incompatibles que aparecen tarde, en la integración.
 
-Cada tarea reparte cuatro roles: liderazgo, pairing, revisión y validación. El liderazgo responde de la historia de principio a fin. El pairing colabora en la implementación, con coautoría. La revisión comprueba que el cambio es correcto y mantenible sin ser su autor. La validación comprueba con pruebas y evidencia que el resultado cumple los criterios de aceptación \cite{gobierno}. Los roles rotan entre historias, en una variante de la programación en pareja con rotación de roles, con segregación de funciones entre quien escribe, quien revisa y quien valida. Así el conocimiento no se concentra y nadie revisa ni valida su propio trabajo.
-
-Una fotografía del tablero de tareas\footnote{Las cifras de este apartado son una fotografía a fecha 23 de octubre y podrían variar.} recoge 126 historias de trabajo, cada una con cuatro roles, es decir, 504 posiciones. Se reconocen 473; las 31 restantes no nombran a una persona y quedan como huecos \cite{observatorio}. La tabla~\ref{tab-c2} recoge lo planificado por rol y persona.
-
-\begin{table}[htbp]
-\centering\small
-\caption{Asignaciones de rol por miembro. Una asignación es planificación, no participación.}\label{tab-c2}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.31}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.12}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.11}}>{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.13}}@{}}
-\toprule
-\textbf{Rol} & \textbf{Qué cuenta} & \textbf{Alejandro Aguado} & \textbf{Víctor Méndez} & \textbf{Lucía Mateo} & \textbf{Paris Arcos} & \textbf{Sin resolver} \\
-\midrule
-Liderazgo & Responde de la historia: alcance, implementación y cierre & 30 & 30 & 32 & 27 & 7 \\
-Pairing & Colabora en la implementación y cuestiona las decisiones & 36 & 26 & 27 & 29 & 8 \\
-Revisión & Lee el cambio y comprueba que es correcto y mantenible, sin ser su autor & 21 & 31 & 36 & 30 & 8 \\
-Validación & Comprueba con pruebas y evidencia que el resultado cumple los criterios de aceptación & 32 & 30 & 26 & 30 & 8 \\
-\textbf{Total} & & \textbf{119} & \textbf{117} & \textbf{121} & \textbf{116} & \textbf{31} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-El objetivo era un reparto equilibrado, no idéntico: entre 22 y 28 asignaciones por persona y rol. Cuatro de las dieciséis celdas están dentro de ese margen; el resto queda por encima o por debajo.
+Cada tarea reparte cuatro roles: liderazgo (responde de la historia de principio a fin), pairing (colabora en la implementación, con coautoría), revisión (comprueba que el cambio es correcto y mantenible sin ser su autor) y validación (comprueba con pruebas que el resultado cumple los criterios de aceptación) \cite{gobierno}. Los roles rotan entre historias, en una variante de la programación en pareja con rotación de roles, con segregación de funciones entre quien escribe, quien revisa y quien valida. Así el conocimiento no se concentra y nadie revisa ni valida su propio trabajo.
 
 \subsection{Aportación individual y evidencia}\label{c-2}
 
@@ -54,6 +34,26 @@ Víctor Méndez llevó la migración de la interfaz web a TypeScript, un lenguaj
 Lucía Mateo construyó la observabilidad, es decir, la capacidad de medir y vigilar el sistema: registro con correlación, métricas, trazabilidad y alertas. Aportó también el entorno local con Docker Compose y la recuperación semántica del asistente. Es autora de la detección de anomalías de coste y de su panel, y de la evaluación del asistente: métricas, batería de referencia, robustez ante datos incompletos y reevaluaciones tras cada cambio.
 
 Paris Arcos construyó la recuperación documental en tres fases (ingesta de archivos, fragmentación determinista y recuperación híbrida) y la integración de la pasarela que conecta con los modelos de lenguaje (LiteLLM y OpenRouter). Aportó también los indicadores de coste, el panel ejecutivo y la autenticación de demostración con aislamiento por cliente.
+
+El tablero de tareas asigna los cuatro roles a cada historia de trabajo. Una fotografía del tablero\footnote{Las cifras de este apartado son una fotografía a fecha 23 de octubre y podrían variar.} recoge 126 historias, es decir, 504 puestos de rol. En 473 consta quién los ejerce; en los 31 restantes el tablero no nombra a nadie \cite{observatorio}. La tabla~\ref{tab-c2} cuenta las asignaciones por rol y persona.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Asignaciones de rol por miembro. Una asignación es planificación, no participación.}\label{tab-c2}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.20}}>{\centering\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.16}}>{\centering\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.16}}>{\centering\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.16}}>{\centering\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.16}}>{\centering\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.16}}@{}}
+\toprule
+\textbf{Rol} & \textbf{Alejandro Aguado} & \textbf{Víctor Méndez} & \textbf{Lucía Mateo} & \textbf{Paris Arcos} & \textbf{No consta} \\
+\midrule
+Liderazgo & 30 & 30 & 32 & 27 & 7 \\
+Pairing & 36 & 26 & 27 & 29 & 8 \\
+Revisión & 21 & 31 & 36 & 30 & 8 \\
+Validación & 32 & 30 & 26 & 30 & 8 \\
+\textbf{Total} & \textbf{119} & \textbf{117} & \textbf{121} & \textbf{116} & \textbf{31} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El objetivo era un reparto equilibrado, no idéntico: entre 22 y 28 asignaciones por persona y rol. Cuatro de las dieciséis celdas están dentro de ese margen; el resto queda por encima o por debajo.
 
 La tabla~\ref{tab-c3} cuenta las propuestas de cambio integradas por cada miembro en la rama principal, con cualquier método de integración \cite{github-propuestas}.
 
