@@ -21,22 +21,22 @@ Observabilidad & Prometheus cada 15 s; paneles y una alerta en Grafana & Diagnó
 
 \subsection{Flujo de trabajo y trazabilidad}\label{f-1}
 
-Trello fija alcance, responsables y estado; OpenSpec versiona requisitos y escenarios, y GitHub conserva código y revisiones. Las ramas cortas se integran en develop mediante pull requests; main contiene versiones estables. \cite{gobierno}
+Trello fija alcance, responsables y estado; OpenSpec versiona requisitos y escenarios; GitHub conserva código y revisiones. Las ramas cortas se integran en develop mediante pull requests; main contiene versiones estables. \cite{gobierno}
 
 
 Las funciones de liderazgo, trabajo en pareja, revisión y validación se describen en el apartado~\ref{c-0}; los dos últimos corresponden a personas distintas del autor. Varias integraciones finales usaron excepciones autorizadas por plazo, registrando lo no validado. Por ello tienen menos verificación independiente. \cite{continuidad}
 
 \subsection{Integración continua}\label{f-2}
 
-La integración continua se ejecuta en GitHub Actions con cada envío de rama, con cada pull request y bajo demanda, y el despliegue continuo la reutiliza como requisito. El frontend usa un archivo de bloqueo de versiones y el ciclo AWS tiene dependencias fijadas específicas; los servicios Python conservan también dependencias con versiones mínimas, por lo que no existe una resolución exacta global. Se comprueban trazabilidad, higiene, especificaciones, pruebas de los tres servicios Python, estilo, pruebas, construcción y tipos del frontend, y la página pública. Dos trabajos adicionales comprueban la aplicación sobre PostgreSQL y el ciclo AWS sin conexión a la nube. \cite{ci-final,dependencias-python}
+La integración continua se ejecuta en GitHub Actions con cada envío de rama, con cada pull request y bajo demanda; el despliegue continuo la reutiliza como requisito. El frontend usa un archivo de bloqueo de versiones y el ciclo AWS tiene dependencias fijadas específicas; los servicios Python conservan también dependencias con versiones mínimas, por lo que no existe una resolución exacta global. Se comprueban trazabilidad, higiene, especificaciones, pruebas de los tres servicios Python, estilo, pruebas, construcción y tipos del frontend, y la página pública. Dos trabajos adicionales comprueban la aplicación sobre PostgreSQL y el ciclo AWS sin conexión a la nube. \cite{ci-final,dependencias-python}
 
 La CI comprueba la topología de Docker de forma estática, sin arrancar el sistema completo. Combina pruebas aisladas con una integración que levanta PostgreSQL y pgvector reales en un contenedor de servicio y ejecuta contratos de la aplicación. Otras pruebas que necesitan servicios externos se omiten y se documentan en ensayos aparte. Esa integración no invoca AWS; una CI correcta acredita las comprobaciones ejecutadas, no el funcionamiento integral del despliegue. \cite{ci-final,arquitectura-final}
 
 \subsection{Contenedores y entorno local}\label{f-3}
 
-Cuatro Dockerfiles empaquetan frontend, backend, processor y API de costes simulada. Docker Compose los conecta con CockroachDB, RabbitMQ, PostgreSQL con pgvector, MinIO, Prometheus y Grafana. Las imágenes base están fijadas por su huella (digest), y las aplicaciones se ejecutan sin privilegios de administrador y con comprobaciones de salud. El gateway de modelos de IA y su base de datos forman un perfil opcional, de modo que el sistema arranca completo sin credenciales de un proveedor externo. \cite{docker,arquitectura-final}
+Cuatro Dockerfiles empaquetan frontend, backend, processor y API de costes simulada. Docker Compose los conecta con CockroachDB, RabbitMQ, PostgreSQL con pgvector, MinIO, Prometheus y Grafana. Las imágenes base están fijadas por su huella (digest); las aplicaciones se ejecutan sin privilegios de administrador y con comprobaciones de salud. El gateway de modelos de IA y su base de datos forman un perfil opcional, de modo que el sistema arranca completo sin credenciales de un proveedor externo. \cite{docker,arquitectura-final}
 
-Dos ensayos documentan el entorno: uno construyó el sistema y pasó la prueba de humo ---un recorrido corto por salud, autenticación, ingesta y procesamiento--- en el servidor del equipo, y otro repitió la prueba en Docker Desktop, con un control negativo y la persistencia de datos tras reiniciar. Son entornos de ensayo, no una certificación de producción. \cite{docker}
+Dos ensayos documentan el entorno: uno construyó el sistema y pasó la prueba de humo ---un recorrido corto por salud, autenticación, ingesta y procesamiento--- en el servidor del equipo; otro repitió la prueba en Docker Desktop, con un control negativo y la persistencia de datos tras reiniciar. Son entornos de ensayo, no una certificación de producción. \cite{docker}
 
 \subsection{Despliegue continuo}\label{f-4}
 

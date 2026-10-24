@@ -34,7 +34,7 @@ Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativo
 
 \subsection{Cómo se eligió el modelo}\label{g-3}
 
-GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez IA, y Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
+GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez IA; Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
 
 Una evaluación posterior usó reglas automáticas y una revisora humana, con otros recursos y método de captura. Las últimas repeticiones en DockerDevelop usaron un único juez IA sobre las respuestas disponibles. Son procedimientos distintos, separados en el apartado~\ref{h-0}; sus puntuaciones no se suman ni demuestran superioridad general de un modelo. La ventaja de coste observada también procede de ventanas diferentes y no se atribuye sólo al modelo. \cite{reevaluacion-modelo,jup133-coste,juez-infra}
 
