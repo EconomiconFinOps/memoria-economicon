@@ -86,6 +86,8 @@ Secretos de Compose & Secrets Manager, KMS e IAM & Claves cifradas y un rol de m
 
 Las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API, y API y procesador a bases y cola). La plantilla de Terraform se valida en local sin ejecutar un plan real, con 12 pruebas con proveedores simulados y 8 casos de enrutamiento de CloudFront, y el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. La aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock \cite{aws-referencia,aws-ensayo}.
 
+\clearpage
+
 \subsection{Alcance y límites}\label{d-4}
 
 El sistema es una demostración con datos públicos, y su margen de mejora se concentra en tres áreas. En seguridad, CockroachDB se ejecuta sin cifrado ni credenciales, válido solo para una demostración local y con la seguridad por activar en producción, y la autenticación es de demostración, sin verificación en dos pasos, revocación de sesiones ni proveedor de identidad externo, que en la alternativa en la nube asume Cognito. En operación, Grafana alerta de los fallos de ingesta, pero no hay un receptor externo, como el correo, que los notifique, y todo corre en una máquina, sin alta disponibilidad, copia de seguridad del conjunto ni transacción única entre base de datos, índice y cola, por lo que se toleran reintentos y duplicados. En despliegue, la interfaz se sirve con la vista previa de Vite y no con un servidor de producción, y la alternativa en AWS es una arquitectura de referencia cuya aceptación es un objetivo por alcanzar.
