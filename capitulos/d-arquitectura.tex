@@ -2,13 +2,11 @@
 
 Economicon es una aplicación web que responde preguntas sobre los costes de Azure, y su arquitectura se rige por dos criterios. El primero es que cada cifra mostrada la calcule código determinista, y que el modelo de lenguaje solo redacte sobre evidencia ya verificada. El segundo es que cada cliente acceda únicamente a sus propios datos. Con esos criterios se organizan las capas, el camino de una pregunta y la entrada de datos, y la misma arquitectura se ofrece en dos formas de despliegue: un entorno local con Docker Compose y una alternativa en la nube sobre Amazon Web Services (AWS) \cite{compose-final,arquitectura-develop}.
 
-\subsection{Visión por capas}\label{d-1}
+\subsection{Capas y tecnologías}\label{d-1}
 
-Economicon se organiza en cinco capas: interfaz, API, cola y procesador, datos e inteligencia artificial, con la observabilidad como capa transversal. La interfaz web muestra costes, anomalías y el asistente. La API autentica a cada persona, separa los datos de cada cliente y calcula costes y anomalías; en cada petición comprueba la sesión y que la persona pertenece al cliente indicado, de modo que enviar el identificador de un cliente no concede acceso por sí solo. Una cola de mensajes y un procesador ejecutan en segundo plano la ingesta, es decir, la carga de costes y de documentos, y los datos se reparten entre una base transaccional, un índice de similitud entre documentos y un almacén de archivos. La inteligencia artificial pasa por una pasarela de modelos que concentra claves y límites de gasto antes de llegar al proveedor, y Prometheus y Grafana observan el conjunto (figura~\ref{fig-d1}) \cite{arquitectura-develop}.
+Economicon se organiza en cinco capas ---interfaz, API, cola y procesador, datos e inteligencia artificial--- con la observabilidad como capa transversal (figura~\ref{fig-d1}). La interfaz web muestra costes, anomalías y el asistente. La API autentica a cada persona, separa los datos de cada cliente y calcula costes y anomalías; en cada petición comprueba la sesión y que la persona pertenece al cliente indicado, de modo que enviar el identificador de un cliente no concede acceso por sí solo. La cola de mensajes y el procesador ejecutan en segundo plano la ingesta de costes y de documentos, y los datos se reparten entre una base transaccional, un índice de similitud y un almacén de archivos. La inteligencia artificial pasa por una pasarela que concentra claves y límites de gasto antes del proveedor, y Prometheus y Grafana observan el conjunto \cite{arquitectura-develop}.
 
 \figura{d1-componentes}{Componentes del sistema. Las líneas continuas son el flujo principal; las discontinuas, comunicaciones laterales o que dependen de la configuración.\label{fig-d1}}
-
-\subsection{Tecnologías y justificación}\label{d-2}
 
 La tabla~\ref{tab-d2} indica para qué se usa cada tecnología y por qué se eligió frente a la alternativa más habitual.
 
@@ -32,7 +30,11 @@ Docker Compose & Despliegue reproducible & Una orden levanta todo el sistema en 
 \end{tabular}
 \end{table}
 
-\subsection{Cómo responde el asistente}\label{d-3}
+\subsection{Flujos de datos}\label{d-2}
+
+Ambos flujos operan por cliente: la búsqueda filtra por cliente y los costes se guardan por cliente.
+
+\subsubsection{El camino de una pregunta}
 
 El asistente atiende cada pregunta por uno de dos caminos. Las consultas estructuradas ---gasto por dimensión, propiedad de los costes y explicación de una anomalía--- las resuelve el servidor con consultas a la base de datos y devuelve cifras exactas con su evidencia, sin intervención del modelo. Las preguntas abiertas recorren el chat con modelo de lenguaje, que se activa por configuración y que la demostración por defecto mantiene apagado \cite{compose-final}.
 
@@ -40,13 +42,13 @@ En el chat con modelo (figura~\ref{fig-d2}), la API abre una operación asociada
 
 \figura{d2-chat}{Camino de una pregunta en el chat con modelo, con sus dos controles de validación.\label{fig-d2}}
 
-La respuesta pasa por dos controles. El procesador exige que cada salida cumpla el esquema; si la rechaza, la API repite la generación con una temperatura creciente para no repetir una salida defectuosa, hasta el máximo de intentos de la tabla~\ref{tab-e1}. Después, la API contrasta la respuesta con la evidencia autorizada: cada cifra financiera debe coincidir con la consulta de costes del servidor, y la que no coincide se omite y se sustituye por una limitación visible, igual que un segmento de interpretación vacío. Las demás incoherencias, como una fuente desconocida o un periodo distinto del consultado, terminan la operación como fallida sin mostrar la respuesta \cite{codigo-chat}. La calidad y la latencia se miden en h.
+La respuesta pasa por dos controles. El procesador exige que cada salida cumpla el esquema; si la rechaza, la API repite la generación con una temperatura creciente, hasta el máximo de intentos de la tabla~\ref{tab-e1}. Después, la API contrasta la respuesta con la evidencia autorizada: cada cifra financiera debe coincidir con la consulta de costes del servidor, y la que no coincide se omite y se sustituye por una limitación visible, igual que un segmento de interpretación vacío. Las demás incoherencias, como una fuente desconocida o un periodo distinto del consultado, terminan la operación como fallida sin mostrar la respuesta \cite{codigo-chat}. La calidad y la latencia se miden en h.
 
-\subsection{Entrada de datos}\label{d-4}
+\subsubsection{Entrada de datos}
 
 Los costes de Azure se cargan con una herramienta del procesador que consulta una API de Azure simulada, con un conjunto público porque no hay cuenta real, los normaliza a importes decimales exactos y los guarda por cliente. Los documentos entran como texto o como archivo (Markdown, TXT, DOCX, DOC y PDF, digital o escaneado con reconocimiento óptico de caracteres local). El navegador sube el original a MinIO con una dirección firmada de vida corta; el procesador extrae su texto en un entorno aislado, lo divide en fragmentos estructurales y guarda en pgvector un vector por fragmento, calculado con text-embedding-3-small. El original se elimina cuando el texto está a salvo \cite{guia-ingesta,adr-arquitectura}.
 
-\subsection{Dos formas de despliegue}\label{d-5}
+\subsection{Dos formas de despliegue}\label{d-3}
 
 Economicon se despliega de dos formas que comparten la misma arquitectura por capas, y cada una responde a un fin distinto. El entorno local, con Docker Compose, levanta el sistema completo con una orden y con datos simulados, sin credenciales de proveedor, y es la base de desarrollo y demostración. La alternativa en la nube traslada la misma arquitectura a servicios gestionados de AWS, que aportan copias de seguridad y alta disponibilidad, un proveedor de identidad externo y gestión de secretos.
 
@@ -56,7 +58,7 @@ Docker Compose levanta los servicios permanentes y 2 tareas de un solo uso, que 
 
 \subsubsection{Alternativa en la nube: AWS}
 
-La alternativa documentada traslada la arquitectura a servicios gestionados de AWS (figura~\ref{fig-d3}). El acceso empieza en Amazon Route 53 (DNS) y CloudFront, protegido por un cortafuegos web (WAF) y un certificado (ACM); la interfaz es un sitio estático en un S3 privado al que solo llega CloudFront, y Amazon Cognito gestiona el inicio de sesión con el estándar OIDC. Las peticiones a la API llegan, sin caché, a un balanceador interno dentro de una red privada virtual (VPC) con subredes privadas en varias zonas de disponibilidad. Allí, ECS Fargate ejecuta la API, el procesador y el simulador de la API de Azure, junto a Amazon MQ (RabbitMQ) y dos bases RDS PostgreSQL, una operativa y otra con pgvector. Fuera de la VPC quedan Amazon Bedrock (modelos de generación y de embeddings), S3 (documentos y datasets), Secrets Manager, KMS e IAM (secretos, claves y permisos) y CloudWatch (registros, métricas y alarmas) \cite{aws-referencia}.
+La figura~\ref{fig-d3} recoge la arquitectura en AWS. El acceso empieza en Route 53 (DNS) y CloudFront, protegido por un cortafuegos web (WAF) y un certificado (ACM); la interfaz es un sitio estático en un S3 privado al que solo llega CloudFront, y Cognito gestiona el inicio de sesión con OIDC. Las peticiones a la API llegan, sin caché, a un balanceador interno de una red privada virtual (VPC) con subredes privadas en varias zonas de disponibilidad, donde ECS Fargate ejecuta la API, el procesador y el simulador de la API de Azure, junto a Amazon MQ y dos bases RDS PostgreSQL, una operativa y otra con pgvector. Bedrock, S3, Secrets Manager, KMS, IAM y CloudWatch quedan fuera de la VPC \cite{aws-referencia}.
 
 \figura{d3-aws}{Arquitectura de referencia en AWS. Las líneas continuas son el flujo principal y las conexiones con los datos; las discontinuas, la protección del acceso, los secretos y la observabilidad.\label{fig-d3}}
 
@@ -84,17 +86,8 @@ Secretos de Compose & Secrets Manager, KMS e IAM & Claves cifradas y un rol de m
 
 Las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API, y API y procesador a bases y cola). La plantilla de Terraform se valida en local sin ejecutar un plan real, con 12 pruebas con proveedores simulados y 8 casos de enrutamiento de CloudFront, y el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. La aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock \cite{aws-referencia,aws-ensayo}.
 
-\subsection{Alcance y límites}\label{d-6}
+\subsection{Alcance y límites}\label{d-4}
 
-Es una demostración con datos públicos, con un margen de mejora identificado:
-
-\begin{itemize}
-\item CockroachDB se ejecuta sin cifrado ni credenciales, válido solo para una demostración local; en producción habría que activar su seguridad.
-\item La autenticación es de demostración: sin verificación en dos pasos, revocación de sesiones ni proveedor de identidad externo, que en la alternativa en la nube asume Cognito.
-\item Grafana alerta de los fallos de ingesta, pero no hay un receptor externo, como el correo, que los notifique.
-\item Todo corre en una máquina: no hay alta disponibilidad, copia de seguridad del conjunto ni transacción única entre base de datos, índice y cola, por lo que se toleran reintentos y duplicados.
-\item La interfaz se sirve con la vista previa de Vite y no con un servidor de producción.
-\item La alternativa en AWS es una arquitectura de referencia cuya aceptación es un objetivo por alcanzar.
-\end{itemize}
+El sistema es una demostración con datos públicos, y su margen de mejora se concentra en tres áreas. En seguridad, CockroachDB se ejecuta sin cifrado ni credenciales, válido solo para una demostración local y con la seguridad por activar en producción, y la autenticación es de demostración, sin verificación en dos pasos, revocación de sesiones ni proveedor de identidad externo, que en la alternativa en la nube asume Cognito. En operación, Grafana alerta de los fallos de ingesta, pero no hay un receptor externo, como el correo, que los notifique, y todo corre en una máquina, sin alta disponibilidad, copia de seguridad del conjunto ni transacción única entre base de datos, índice y cola, por lo que se toleran reintentos y duplicados. En despliegue, la interfaz se sirve con la vista previa de Vite y no con un servidor de producción, y la alternativa en AWS es una arquitectura de referencia cuya aceptación es un objetivo por alcanzar.
 
 Se puede afirmar que el sistema recorre de extremo a extremo el camino del dato de coste a la respuesta citada, con cifras verificadas por el servidor y datos separados por cliente; su calidad, su latencia y su coste se evalúan en h.
