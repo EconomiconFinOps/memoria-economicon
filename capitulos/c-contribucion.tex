@@ -4,7 +4,7 @@ Un trabajo en equipo solo se evalúa de forma individual si queda claro qué con
 
 \subsection{Áreas y responsables}\label{c-1}
 
-El producto se dividió en cuatro áreas. Cada una tuvo una persona responsable de coordinarla y de decidir sobre sus interfaces con el resto del sistema. Cuando varias personas modifican la misma interfaz sin ese responsable, las diferencias acaban en contratos incompatibles que aparecen tarde, en la integración. La tabla~\ref{tab-c1} recoge cada área y su responsable; los párrafos siguientes detallan lo que construyó cada persona.
+El producto se dividió en cuatro áreas. Cada una tuvo una persona responsable de coordinarla y de decidir sobre sus interfaces con el resto del sistema. Sin ese responsable, las diferencias entre quienes tocan una misma interfaz acaban en contratos incompatibles que aparecen tarde, en la integración. La tabla~\ref{tab-c1} recoge cada área y su responsable; los párrafos siguientes detallan lo que construyó cada persona.
 
 \begin{table}[htbp]
 \centering\small
@@ -23,17 +23,17 @@ Inteligencia artificial y seguridad & Paris Arcos \\
 
 Alejandro Aguado normalizó y cargó los costes de Azure, definió el contrato y las salvaguardas del asistente, empaquetó los servicios en contenedores Docker y montó el despliegue en un servidor privado. Después añadió las consultas de gasto con evidencia, los presupuestos y la integración del chat.
 
-Víctor Méndez llevó la migración de la interfaz web a TypeScript, un lenguaje con tipado estático, desde el inventario hasta el cierre, con el sistema de estilos y la comprobación del recorrido completo en un navegador real. En el asistente aportó la explicación de anomalías, el panel de Grafana (herramienta de paneles de métricas) con los resultados de la evaluación y los reintentos acotados de la cola de ingesta. También elaboró el registro de contribuciones en el que se apoya este apartado.
+Víctor Méndez llevó la migración de la interfaz web a TypeScript, un lenguaje con tipado estático, desde el inventario hasta el cierre, con el sistema de estilos y la prueba del recorrido completo en un navegador real. En el asistente aportó la explicación de anomalías, el panel de Grafana (herramienta de paneles de métricas) con los resultados de la evaluación y los reintentos acotados de la cola de ingesta. También elaboró el registro de contribuciones en el que se apoya este apartado.
 
-Lucía Mateo construyó la observabilidad, es decir, la capacidad de medir y vigilar el sistema: registro con correlación, métricas, trazabilidad y alertas. Aportó también el entorno local con Docker Compose y la recuperación semántica del asistente. Es autora de la detección de anomalías de coste y de su panel, y de la evaluación del asistente: métricas, batería de referencia, robustez ante datos incompletos y reevaluaciones tras cada cambio.
+Lucía Mateo construyó la observabilidad, la capacidad de medir y vigilar el sistema: registro con correlación, métricas, trazabilidad y alertas. Aportó también el entorno local con Docker Compose y la recuperación semántica del asistente. Es autora de la detección de anomalías de coste y de su panel, y de la evaluación del asistente: métricas, batería de referencia, robustez ante datos incompletos y reevaluaciones tras cada cambio.
 
 Paris Arcos construyó la recuperación documental en tres fases (ingesta de archivos, fragmentación determinista y recuperación híbrida) y la integración de la pasarela que conecta con los modelos de lenguaje (LiteLLM y OpenRouter). Aportó también los indicadores de coste, el panel ejecutivo y la autenticación de demostración con aislamiento por cliente.
 
 \subsection{Tareas y roles rotativos}\label{c-2}
 
-Cada tarea reparte cuatro roles: liderazgo (responde de la historia de principio a fin), pairing (colabora en la implementación, con coautoría), revisión (comprueba que el cambio es correcto y mantenible sin ser su autor) y validación (comprueba con pruebas que el resultado cumple los criterios de aceptación) \cite{gobierno}. Los roles rotan entre historias, en una variante de la programación en pareja con rotación de roles, con segregación de funciones entre quien escribe, quien revisa y quien valida. Así el conocimiento no se concentra y nadie revisa ni valida su propio trabajo.
+Cada tarea reparte cuatro roles: liderazgo (responde de la historia de principio a fin), pairing (colabora en la implementación, con coautoría), revisión (comprueba que el cambio es correcto y mantenible sin ser su autor) y validación (comprueba con pruebas que el resultado cumple los criterios de aceptación) \cite{gobierno}. Los roles rotan entre historias, en una variante de la programación en pareja con rotación de roles y con segregación de funciones. Así el conocimiento no se concentra y nadie revisa ni valida su propio trabajo.
 
-El tablero de tareas asigna los cuatro roles a cada historia de trabajo. Una fotografía del tablero\footnote{Las cifras de este apartado son una fotografía a fecha 23 de octubre y podrían variar.} recoge 126 historias, es decir, 504 puestos de rol. En 473 consta quién los ejerce; en los 31 restantes el tablero no nombra a nadie \cite{observatorio}. La tabla~\ref{tab-c2} cuenta las asignaciones por rol y persona.
+El tablero asigna los cuatro roles a cada historia. Una fotografía del tablero\footnote{Las cifras de este apartado son una fotografía a fecha 23 de octubre y podrían variar.} recoge 126 historias, es decir, 504 puestos de rol. En 473 consta quién los ejerce; en los 31 restantes el tablero no nombra a nadie \cite{observatorio}. La tabla~\ref{tab-c2} cuenta las asignaciones por rol y persona.
 
 \begin{table}[htbp]
 \centering\small
@@ -55,7 +55,7 @@ El objetivo era un reparto equilibrado, no idéntico: entre 22 y 28 asignaciones
 
 \subsection{Pull requests fusionadas}\label{c-3}
 
-Lo que el equipo entrega al producto llega por pull requests: una pull request es una propuesta de cambio que otra persona revisa antes de incorporarla al código. Por eso la revisión de cada cambio queda registrada, y es el rastro que permite comprobar quién aportó qué. La tabla~\ref{tab-c3} cuenta las que cada miembro abrió y se fusionaron en la rama principal, con cualquier método de integración \cite{github-propuestas}.
+El equipo entrega el producto por pull requests: propuestas de cambio que otra persona revisa antes de incorporarlas al código. Esa revisión queda registrada y permite comprobar quién aportó qué. La tabla~\ref{tab-c3} cuenta las que cada miembro abrió y se fusionaron en la rama principal, con cualquier método de integración \cite{github-propuestas}.
 
 \begin{table}[htbp]
 \centering\small
@@ -73,4 +73,4 @@ Paris Arcos & 16 \\
 \end{tabular}
 \end{table}
 
-Estas cifras tienen límites. Una pull request fusionada no equivale a trabajo en solitario, y el pairing solo consta cuando se declaró: la coautoría aparece en 29 de los 200 cambios individuales de la rama principal, y el resto no se reconstruye \cite{contribuciones,github-propuestas}. Siete historias del cierre del producto mínimo viable (MVP), la versión mínima que demuestra el circuito completo, se cerraron por excepción de plazo, sin pairing ni aprobación humana, y no se atribuye a nadie trabajo ni aprobaciones que no constan \cite{contribuciones}. Las comprobaciones automáticas y la documentación son evidencia del equipo, no de una persona.
+Estas cifras tienen límites. Una pull request fusionada no equivale a trabajo en solitario, y el pairing solo consta cuando se declaró: la coautoría aparece en 29 de los 200 cambios individuales de la rama principal, y el resto no se reconstruye \cite{contribuciones,github-propuestas}. Siete historias del cierre del producto mínimo viable (MVP, la versión mínima que demuestra el circuito completo) se cerraron por excepción de plazo, sin pairing ni aprobación humana, y no se atribuye a nadie trabajo ni aprobaciones que no constan \cite{contribuciones}. Las comprobaciones automáticas y la documentación son evidencia del equipo, no de una persona.
