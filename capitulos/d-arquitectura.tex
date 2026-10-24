@@ -1,6 +1,6 @@
 \section{Arquitectura técnica de la solución}\label{d-0}
 
-Economicon separa lo que calcula el código de lo que redacta el modelo de lenguaje. Las cifras salen de código determinista y el modelo se limita a redactar sobre evidencia ya verificada; además, cada cliente accede solo a sus propios datos. De ese modo las cifras son comprobables y los datos de un cliente quedan separados de los de los demás. Estas dos decisiones ordenan la arquitectura: sus capas y tecnologías, el camino de una pregunta, la entrada de datos y las dos formas de despliegue, un entorno local con Docker Compose y una alternativa en la nube sobre Amazon Web Services (AWS). El apartado termina con el alcance y los límites. La tabla~\ref{tab-d1} reúne las cifras de configuración que se citan después \cite{compose-final,arquitectura-develop}.
+Economicon es una aplicación web que responde preguntas sobre los costes de Azure, y su arquitectura se rige por dos criterios. El primero es que cada cifra mostrada la calcule código determinista, y que el modelo de lenguaje solo redacte sobre evidencia ya verificada. El segundo es que cada cliente acceda únicamente a sus propios datos. Con esos criterios se organizan las capas, el camino de una pregunta y la entrada de datos, y la misma arquitectura se ofrece en dos formas de despliegue: un entorno local con Docker Compose y una alternativa en la nube sobre Amazon Web Services (AWS). La tabla~\ref{tab-d1} reúne las cifras de configuración que se citan después \cite{compose-final,arquitectura-develop}.
 
 \begin{table}[htbp]
 \centering\small
