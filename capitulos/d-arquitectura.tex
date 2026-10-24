@@ -71,11 +71,11 @@ La tabla~\ref{tab-d3} recoge qué sustituye a cada pieza local y por qué.
 \toprule
 \textbf{En la versión local} & \textbf{En AWS} & \textbf{Por qué este cambio} \\
 \midrule
-Interfaz servida con la vista previa de Vite & S3 privado y CloudFront & Sirve la interfaz con certificado y sin servidor propio; CloudFront es el único acceso al almacén. \\
-API, procesador y simulador en Compose & ECS Fargate y balanceador interno & Contenedores sin gestionar servidores ni direcciones públicas; el balanceador solo es alcanzable desde CloudFront. \\
-RabbitMQ & Amazon MQ para RabbitMQ & Conserva el protocolo: productores y consumidores no cambian, algo que no ocurriría con la cola SQS de AWS. \\
+Interfaz servida con la vista previa de Vite & S3 privado y CloudFront & Con certificado y sin servidor propio; CloudFront es el único acceso al almacén. \\
+API, procesador y simulador en Compose & ECS Fargate y balanceador interno & Sin gestionar servidores ni direcciones públicas; el balanceador solo es alcanzable desde CloudFront. \\
+RabbitMQ & Amazon MQ para RabbitMQ & Conserva el protocolo: productores y consumidores no cambian, a diferencia de la cola SQS de AWS. \\
 CockroachDB y pgvector & Dos bases RDS PostgreSQL & Copias de seguridad y alta disponibilidad gestionadas; separar la base vectorial de la operativa aísla su consumo, a mayor coste. Exige adaptar el SQL propio de CockroachDB. \\
-LiteLLM y OpenRouter & Amazon Bedrock & Los modelos se invocan dentro de la cuenta, con permisos IAM; cambiar de modelo obliga a repetir la evaluación y a reindexar todo el corpus. \\
+LiteLLM y OpenRouter & Amazon Bedrock & Modelos invocados dentro de la cuenta con permisos IAM; cambiar de modelo obliga a repetir la evaluación y reindexar todo el corpus. \\
 Autenticación de demostración & Amazon Cognito & Proveedor de identidad externo; la API sigue resolviendo los clientes autorizados de cada persona. \\
 MinIO & S3 & Mismo protocolo, sin servidor que mantener. \\
 Prometheus y Grafana & CloudWatch & Registros, métricas y alarmas gestionados. \\
