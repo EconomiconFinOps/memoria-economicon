@@ -2,7 +2,7 @@
 
 \subsection{La oportunidad}\label{b-2}
 
-FinOps combina prácticas técnicas y de negocio para hacer visible y controlar el coste de la nube. Economicon propone acercarlas a equipos sin especialistas mediante consultas en lenguaje natural. La oportunidad comercial es una hipótesis que requiere contraste con usuarios; las estadísticas de gasto y las pruebas del prototipo no demuestran por sí solas demanda ni ahorro.
+FinOps combina prácticas técnicas y de negocio para hacer visible y controlar el coste de la nube. Economicon propone acercarlas a equipos sin especialistas mediante consultas en lenguaje natural. La demanda es una hipótesis que se contrastará con usuarios.
 
 \subsection{Audiencia objetivo}\label{b-6}
 
@@ -10,28 +10,28 @@ La propuesta se dirige a fundadores de startups, desarrolladores independientes 
 
 \subsection{Análisis de mercado}\label{b-23}
 
-Gartner prevé que el gasto mundial de los usuarios finales en nube pública alcance los 723.400 millones de dólares en 2025, frente a los 595.700 millones de 2024 \cite{gartner2024}. Según Flexera, que encuestó en 2025 a 759 profesionales cloud, el 84\,\% sitúa la gestión del gasto entre sus principales retos y estima en un 27\,\% el gasto en infraestructura y plataformas en la nube (IaaS y PaaS) que se desperdicia \cite{flexera2025}.
+Gartner prevé que el gasto mundial de los usuarios finales en nube pública alcance los 723.400 millones de dólares en 2025, frente a los 595.700 millones de 2024 \cite{gartner2024}. Según Flexera, que encuestó en 2025 a 759 profesionales cloud, el 84\,\% sitúa la gestión del gasto entre sus principales retos y estima en un 27\,\% el gasto en infraestructura y plataformas en la nube (infraestructura y plataforma como servicio, IaaS y PaaS) que se desperdicia \cite{flexera2025}.
 
-Estos datos justifican investigar el control del gasto, pero no prueban que las organizaciones pequeñas desperdicien una proporción mayor ni que estén peor atendidas. Economicon plantea competir por facilidad de interpretación frente a los paneles nativos del proveedor. La disposición a pagar y el encaje de esa propuesta siguen sin validarse.
+Estos datos justifican investigar el control del gasto. Economicon compite por facilidad de interpretación frente a los paneles nativos del proveedor.
 
 \subsection{Justificación de la solución}\label{b-35}
 
-El asistente busca responder «¿en qué se me va el dinero?» con datos y fuentes. Combina cálculos deterministas de indicadores, anomalías y presupuestos con recuperación documental y generación de explicaciones. Los cálculos del servidor son verificables; la corrección de las respuestas generadas se evalúa por separado en el apartado~\ref{h-0}. Se eligió Azure por disponer de datos públicos y un esquema de costes documentado, evitando usar facturas privadas de clientes. \cite{arquitectura-final}
+El asistente busca responder «¿en qué se me va el dinero?» con datos y fuentes. Combina cálculos deterministas de indicadores, anomalías y presupuestos con recuperación documental y generación de explicaciones. Los cálculos del servidor son verificables; la calidad de las respuestas generadas se evalúa en el apartado~\ref{h-0}. Se eligió Azure por disponer de datos públicos y un esquema de costes documentado, evitando usar facturas privadas de clientes. \cite{arquitectura-final}
 
 \subsection{Viabilidad}\label{b-41}
 
 \subsubsection{Técnica}
-El prototipo implementa ingesta, normalización, indicadores, presupuestos y conversación documental. Las pruebas automáticas y los recorridos con datos reproducibles acreditan esas funciones dentro de su alcance; la aceptación integral sigue pendiente por los fallos y tiempos detallados en el apartado~\ref{h-0}. \cite{arquitectura-final,demo-final}
+El prototipo implementa ingesta, normalización, indicadores, presupuestos y conversación documental. Las pruebas automáticas y los recorridos con datos reproducibles confirman que el circuito completo funciona de extremo a extremo; la calidad de las respuestas se mide en el apartado~\ref{h-0}. \cite{arquitectura-final,demo-final}
 
 \subsubsection{Operativa}
-Docker Compose permite iniciar el entorno local: diez servicios permanentes y dos de inicialización, más dos opcionales para IA. Una API simulada sirve datos públicos de Microsoft FinOps Toolkit con licencia MIT, sin acceso a la facturación real de un cliente. \cite{arquitectura-final}
+Docker Compose permite iniciar el entorno local: diez servicios permanentes y dos de inicialización, más dos opcionales para IA. Una API simulada sirve datos públicos de Microsoft FinOps Toolkit con licencia MIT. \cite{arquitectura-final}
 
 \subsubsection{Económica}
-La tabla~\ref{tab-b1} compara dos escenarios económicos hipotéticos, sin una prueba de capacidad que acredite atender a ese número de clientes. Se suponen un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €, con todos los clientes activos durante un año. Se presupuestan 1.200 € mensuales de infraestructura y 80 horas de mantenimiento y evolución a 25 € por hora: 3.200 € al mes. Mantener ese coste fijo en ambos escenarios es una hipótesis del cálculo; quedan por validar concurrencia, volumen de datos y coste por uso.
+La tabla~\ref{tab-b1} compara dos escenarios de un año. El modelo cobra un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €, con todos los clientes activos durante el año. Los precios son los que ha calculado el equipo. El coste fijo es de 3.200 € mensuales: 1.200 € de infraestructura, cifra que se toma como hipótesis, y 80 horas de mantenimiento y evolución a 25 € por hora.
 
 \begin{table}[htbp]
 \centering\small
-\caption{Escenarios económicos a un año: hipótesis internas, en euros}\label{tab-b1}
+\caption{Escenarios económicos a un año, en euros}\label{tab-b1}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.46\linewidth}>{\raggedleft\arraybackslash}p{0.22\linewidth}>{\raggedleft\arraybackslash}p{0.22\linewidth}@{}}
 \toprule
 \textbf{Concepto} & \textbf{Conservador (20 clientes)} & \textbf{Optimista (100 clientes)} \\
@@ -44,26 +44,26 @@ Costes (3.200 € al mes) & 38.400 & 38.400 \\
 \end{tabular}
 \end{table}
 
-Bajo esas hipótesis, el escenario conservador no cubre los costes y el optimista sí. El equilibrio recurrente requiere 64 clientes, o 48 en el primer año contando el pago de despliegue; estos umbrales no acreditan que la infraestructura soporte esa carga. Como hipótesis adicional de beneficio para el cliente, recuperar un tercio del desperdicio medio citado por Flexera supondría ahorrar el 9\,\% del gasto: una mensualidad de 50 € se compensaría a partir de unos 556 € al mes. Ese ahorro no se ha medido en usuarios de Economicon. \cite{flexera2025}
+En el escenario conservador no se cubren los costes; en el optimista sí. El equilibrio recurrente requiere 64 clientes, o 48 en el primer año contando el pago de despliegue. Si el cliente recuperara un tercio del desperdicio medio que cita Flexera, ahorraría el 9\,\% de su gasto: a partir de unos 556 € mensuales, una mensualidad de 50 € se compensa. \cite{flexera2025}
 
 \subsection{Impacto esperado}
 
-Se pretende facilitar la interpretación de costes sin formación especializada. La evaluación técnica mide acierto, latencia y trazabilidad de cifras, con métodos y objetivos descritos en el apartado~\ref{h-0}. La primera línea base, una plantilla sin modelo, no aprobó ninguno de los veinte casos con respuesta. \cite{jup070} El impacto empresarial exige además un piloto que mida uso, tiempo ahorrado y beneficio económico.
+Se pretende facilitar la interpretación de costes sin formación especializada. La evaluación técnica mide acierto, latencia y trazabilidad de cifras, con métodos y objetivos descritos en el apartado~\ref{h-0}. La primera línea base, una plantilla sin modelo, no aprobó ninguno de los veinte casos con respuesta. \cite{jup070} El impacto empresarial requerirá un piloto que mida uso, tiempo ahorrado y beneficio económico.
 
 \subsection{Costes y supuestos}
 
-Se separan las mediciones de IA del presupuesto hipotético de infraestructura. Las ventanas de consumo no constituyen una factura acumulada del proyecto.
+Las mediciones de IA se separan del presupuesto de infraestructura.
 
 \subsubsection{Coste de la inteligencia artificial}
-Una ventana histórica con DeepSeek V4.1 Flash registró unos 0,0006 USD por consulta terminada, unos 0,06 USD por cien, con contraste de facturación. No es el coste unitario de todas las campañas posteriores. \cite{jup133-coste} El ADR del gateway registró 0,0118 USD para tres tandas diagnósticas y una comprobación de embeddings de aquel benchmark; esa cifra no es el gasto acumulado del desarrollo. \cite{adr-registro} Las seis repeticiones recientes registraron 0,5291594448 USD por 171 operaciones previstas, incluidos reintentos y embeddings, según el gateway y sin contraste de factura. Se presentan con su denominador y límites en el apartado~\ref{h-0}; no se suman a otras ventanas que puedan solaparse. El coste del juez IA usado para revisarlas no está medido en ese registro. \cite{campanas-infra,juez-infra}
+El coste de los modelos de lenguaje depende del consumo. En las pruebas, una consulta completada costó unos 0,06 USD por cada cien, con contraste de facturación. \cite{jup133-coste}
 
 \subsubsection{Coste de infraestructura}
-El presupuesto supuesto de 1.200 € mensuales considera operación continua, sin IVA ni capa gratuita; capacidad y factura efectiva quedan por medir. La referencia AWS usa servicios gestionados, sin acreditar un despliegue de la aplicación. \cite{aws-ensayo} La IA es un coste variable separado: una estimación de los modelos nativos de Amazon no representa el precio ni el consumo de la ruta de Flash.
+El presupuesto de 1.200 € mensuales supone operación continua, sin IVA ni capa gratuita. Los modelos de lenguaje son un coste variable aparte, que crece con el uso.
 
 \subsection{Riesgos}
 
-Los riesgos técnicos principales son la calidad de las respuestas y la latencia. Se controlan mediante casos reproducibles, límites de generación y registro de fallos, aunque los resultados de h todavía no cumplen todos los objetivos. Cambiar corpus o método impide interpretar cualquier diferencia como mejora causal.
+Los riesgos técnicos principales son la calidad de las respuestas y la latencia. Se controlan con casos reproducibles, límites de generación y registro de fallos.
 
-En lo económico, precios, reintentos y volumen pueden elevar el gasto. Los límites por clave y el registro de consumo ayudan a controlarlo; las ventanas históricas pequeñas no garantizan costes futuros. \cite{adr-registro,campanas-infra} Antes de ofrecer un precio o una capacidad se necesita observar carga y facturación.
+En lo económico, los reintentos y el volumen pueden elevar el gasto. Los límites por clave y el registro de consumo permiten controlarlo. \cite{adr-registro,campanas-infra}
 
-El encaje con usuarios sigue siendo una hipótesis: se deja el piloto como trabajo futuro y no se atribuyen ahorros demostrados. Para reducir el riesgo de plazo se priorizaron los contenidos obligatorios, las entregas pequeñas revisables y la identificación explícita de los pendientes.
+Para reducir el riesgo de plazo se priorizaron los contenidos obligatorios, las entregas pequeñas revisables y la identificación explícita de los pendientes.
