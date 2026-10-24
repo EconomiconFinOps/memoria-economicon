@@ -10,7 +10,7 @@
 \LoadClass[a4paper,11pt]{article}
 
 \RequirePackage{iftex}
-\RequirePackage[spanish,es-noquoting]{babel}
+\RequirePackage[spanish,es-noquoting,es-tabla]{babel}
 \RequirePackage{fontspec}
 \RequirePackage[a4paper,margin=2cm,headheight=14pt]{geometry}
 \RequirePackage{microtype}
