@@ -6,7 +6,7 @@ Economicon es una aplicación web que responde preguntas sobre los costes de Azu
 
 Economicon se organiza en cinco capas ---interfaz, API, cola y procesador, datos e inteligencia artificial--- con la observabilidad como capa transversal (figura~\ref{fig-d1}). La interfaz web muestra costes, anomalías y el asistente. La API autentica a cada persona, separa los datos de cada cliente y calcula costes y anomalías; en cada petición comprueba la sesión y que la persona pertenece al cliente indicado, de modo que enviar el identificador de un cliente no concede acceso por sí solo. La cola de mensajes y el procesador ejecutan en segundo plano la ingesta de costes y de documentos, y los datos se reparten entre una base transaccional, un índice de similitud y un almacén de archivos. La inteligencia artificial pasa por una pasarela que concentra claves y límites de gasto antes del proveedor, y Prometheus y Grafana observan el conjunto \cite{arquitectura-develop}.
 
-\figura{d1-componentes}{Componentes del sistema. Las líneas continuas son el flujo principal; las discontinuas, comunicaciones laterales o que dependen de la configuración.\label{fig-d1}}
+\begin{figure}[htbp]\centering\includegraphics[width=\linewidth,height=0.34\textheight,keepaspectratio]{figuras/d1-componentes.png}\caption{Componentes del sistema. Las líneas continuas son el flujo principal; las discontinuas, comunicaciones laterales o que dependen de la configuración.\label{fig-d1}}\end{figure}
 
 La tabla~\ref{tab-d2} indica para qué se usa cada tecnología y por qué se eligió frente a la alternativa más habitual.
 
@@ -40,7 +40,7 @@ El asistente atiende cada pregunta por uno de dos caminos. Las consultas estruct
 
 En el chat con modelo (figura~\ref{fig-d2}), la API abre una operación asociada a la conversación y la envía al procesador por una red privada y con una firma que solo conocen ambos; el procesador comprueba en cada paso que la operación sigue siendo de esa persona. El servidor prepara una única búsqueda documental por intento, sin que la decida el modelo: la API combina similitud vectorial y búsqueda por palabras, fusiona ambas listas con Reciprocal Rank Fusion (RRF) y entrega unos pocos fragmentos suficientemente cercanos (número y umbral de distancia en la tabla~\ref{tab-e1}). El modelo trabaja en dos llamadas, un plan privado de afirmaciones y fuentes y una respuesta final contrastada con ese plan, con un esquema fijo de resumen, métricas, recomendaciones, limitaciones y citas. El único modelo generativo es DeepSeek V4.1 Flash, servido por un solo proveedor, sin modelo de reserva y sin retención de datos \cite{adr-arquitectura,config-gateway}.
 
-\figura{d2-chat}{Camino de una pregunta en el chat con modelo, con sus dos controles de validación.\label{fig-d2}}
+\begin{figure}[htbp]\centering\includegraphics[width=\linewidth,height=0.34\textheight,keepaspectratio]{figuras/d2-chat.png}\caption{Camino de una pregunta en el chat con modelo, con sus dos controles de validación.\label{fig-d2}}\end{figure}
 
 La respuesta pasa por dos controles. El procesador exige que cada salida cumpla el esquema; si la rechaza, la API repite la generación con una temperatura creciente, hasta el máximo de intentos de la tabla~\ref{tab-e1}. Después, la API contrasta la respuesta con la evidencia autorizada: cada cifra financiera debe coincidir con la consulta de costes del servidor, y la que no coincide se omite y se sustituye por una limitación visible, igual que un segmento de interpretación vacío. Las demás incoherencias, como una fuente desconocida o un periodo distinto del consultado, terminan la operación como fallida sin mostrar la respuesta \cite{codigo-chat}. La calidad y la latencia se miden en h.
 
@@ -60,7 +60,7 @@ Docker Compose levanta los servicios permanentes y 2 tareas de un solo uso, que 
 
 La figura~\ref{fig-d3} recoge la arquitectura en AWS. El acceso empieza en Route 53 (DNS) y CloudFront, protegido por un cortafuegos web (WAF) y un certificado (ACM); la interfaz es un sitio estático en un S3 privado al que solo llega CloudFront, y Cognito gestiona el inicio de sesión con OIDC. Las peticiones a la API llegan, sin caché, a un balanceador interno de una red privada virtual (VPC) con subredes privadas en varias zonas de disponibilidad, donde ECS Fargate ejecuta la API, el procesador y el simulador de la API de Azure, junto a Amazon MQ y dos bases RDS PostgreSQL, una operativa y otra con pgvector. Bedrock, S3, Secrets Manager, KMS, IAM y CloudWatch quedan fuera de la VPC \cite{aws-referencia}.
 
-\figura{d3-aws}{Arquitectura de referencia en AWS. Las líneas continuas son el flujo principal y las conexiones con los datos; las discontinuas, la protección del acceso, los secretos y la observabilidad.\label{fig-d3}}
+\begin{figure}[htbp]\centering\includegraphics[width=0.9\linewidth,height=0.34\textheight,keepaspectratio]{figuras/d3-aws.png}\caption{Arquitectura de referencia en AWS. Las líneas continuas son el flujo principal y las conexiones con los datos; las discontinuas, la protección del acceso, los secretos y la observabilidad.\label{fig-d3}}\end{figure}
 
 La tabla~\ref{tab-d3} recoge qué sustituye a cada pieza local y por qué.
 
