@@ -27,7 +27,7 @@ El prototipo implementa ingesta, normalización, indicadores, presupuestos y con
 Docker Compose permite iniciar el entorno local: diez servicios permanentes y dos de inicialización, más dos opcionales para IA. Una API simulada sirve datos públicos de Microsoft FinOps Toolkit con licencia MIT, sin acceso a la facturación real de un cliente. \cite{arquitectura-final}
 
 \subsubsection{Económica}
-La tabla~\ref{tab-b1} compara dos escenarios económicos hipotéticos, sin una prueba de capacidad que acredite atender a ese número de clientes. Se suponen un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €, con todos los clientes activos durante un año. Se presupuestan 1.200 € mensuales de infraestructura y 80 horas de mantenimiento y evolución a 25 € por hora: 3.200 € al mes. Mantener ese coste fijo en ambos escenarios es una hipótesis del cálculo; quedan por validar concurrencia, volumen de datos y coste por uso.
+La tabla~\ref{tab-b1} compara dos escenarios económicos hipotéticos. Se suponen un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €, con todos los clientes activos durante un año. Se presupuestan 1.200 € mensuales de infraestructura, cifra que se toma como hipótesis para 100 clientes hasta que una medición de carga la confirme, y 80 horas de mantenimiento y evolución a 25 € por hora: 3.200 € al mes. Mantener ese coste fijo en ambos escenarios es una hipótesis del cálculo; quedan por validar concurrencia, volumen de datos y coste por uso.
 
 \begin{table}[htbp]
 \centering\small
@@ -44,7 +44,7 @@ Costes (3.200 € al mes) & 38.400 & 38.400 \\
 \end{tabular}
 \end{table}
 
-Bajo esas hipótesis, el escenario conservador no cubre los costes y el optimista sí. El equilibrio recurrente requiere 64 clientes, o 48 en el primer año contando el pago de despliegue; estos umbrales no acreditan que la infraestructura soporte esa carga. Como hipótesis adicional de beneficio para el cliente, recuperar un tercio del desperdicio medio citado por Flexera supondría ahorrar el 9\,\% del gasto: una mensualidad de 50 € se compensaría a partir de unos 556 € al mes. Ese ahorro no se ha medido en usuarios de Economicon. \cite{flexera2025}
+Bajo esas hipótesis, el escenario conservador no cubre los costes y el optimista sí. El equilibrio recurrente requiere 64 clientes, o 48 en el primer año contando el pago de despliegue. Como hipótesis adicional de beneficio para el cliente, recuperar un tercio del desperdicio medio citado por Flexera supondría ahorrar el 9\,\% del gasto: una mensualidad de 50 € se compensaría a partir de unos 556 € al mes. Ese ahorro no se ha medido en usuarios de Economicon. \cite{flexera2025}
 
 \subsection{Impacto esperado}
 
@@ -58,12 +58,12 @@ Se separan las mediciones de IA del presupuesto hipotético de infraestructura. 
 Una ventana histórica con DeepSeek V4.1 Flash registró unos 0,0006 USD por consulta terminada, unos 0,06 USD por cien, con contraste de facturación. No es el coste unitario de todas las campañas posteriores. \cite{jup133-coste} El ADR del gateway registró 0,0118 USD para tres tandas diagnósticas y una comprobación de embeddings de aquel benchmark; esa cifra no es el gasto acumulado del desarrollo. \cite{adr-registro} Las seis repeticiones recientes registraron 0,5291594448 USD por 171 operaciones previstas, incluidos reintentos y embeddings, según el gateway y sin contraste de factura. Se presentan con su denominador y límites en el apartado~\ref{h-0}; no se suman a otras ventanas que puedan solaparse. El coste del juez IA usado para revisarlas no está medido en ese registro. \cite{campanas-infra,juez-infra}
 
 \subsubsection{Coste de infraestructura}
-El presupuesto supuesto de 1.200 € mensuales considera operación continua, sin IVA ni capa gratuita; capacidad y factura efectiva quedan por medir. La referencia AWS usa servicios gestionados, sin acreditar un despliegue de la aplicación. \cite{aws-ensayo} La IA es un coste variable separado: una estimación de los modelos nativos de Amazon no representa el precio ni el consumo de la ruta de Flash.
+El presupuesto supuesto de 1.200 € mensuales considera operación continua, sin IVA ni capa gratuita; la factura efectiva queda por medir. La referencia AWS usa servicios gestionados, sin acreditar un despliegue de la aplicación. \cite{aws-ensayo} La IA es un coste variable separado: una estimación de los modelos nativos de Amazon no representa el precio ni el consumo de la ruta de Flash.
 
 \subsection{Riesgos}
 
 Los riesgos técnicos principales son la calidad de las respuestas y la latencia. Se controlan mediante casos reproducibles, límites de generación y registro de fallos, aunque los resultados de h todavía no cumplen todos los objetivos. Cambiar corpus o método impide interpretar cualquier diferencia como mejora causal.
 
-En lo económico, precios, reintentos y volumen pueden elevar el gasto. Los límites por clave y el registro de consumo ayudan a controlarlo; las ventanas históricas pequeñas no garantizan costes futuros. \cite{adr-registro,campanas-infra} Antes de ofrecer un precio o una capacidad se necesita observar carga y facturación.
+En lo económico, precios, reintentos y volumen pueden elevar el gasto. Los límites por clave y el registro de consumo ayudan a controlarlo; las ventanas históricas pequeñas no garantizan costes futuros. \cite{adr-registro,campanas-infra} Antes de ofrecer un precio se necesita observar la facturación real.
 
 El encaje con usuarios sigue siendo una hipótesis: se deja el piloto como trabajo futuro y no se atribuyen ahorros demostrados. Para reducir el riesgo de plazo se priorizaron los contenidos obligatorios, las entregas pequeñas revisables y la identificación explícita de los pendientes.
