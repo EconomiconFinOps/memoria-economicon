@@ -1,6 +1,6 @@
 \section{Arquitectura técnica de la solución}\label{d-0}
 
-¿Cómo está construido Economicon y por qué se eligió cada pieza? Un asistente que explica los costes de la nube solo es útil si sus cifras son fiables y los datos de cada cliente quedan separados de los de los demás. Por eso las cifras las calcula código determinista y el modelo de lenguaje se limita a redactar sobre evidencia ya verificada. El apartado recorre las capas y las tecnologías, el camino de una pregunta y la entrada de datos, y cierra con el despliegue, la alternativa en la nube y los límites. La tabla~\ref{tab-d1} reúne las cifras de configuración que se citan después \cite{compose-final,arquitectura-develop}.
+Un asistente que explica los costes de la nube solo es útil si sus cifras son fiables y los datos de cada cliente quedan separados de los de los demás. Por eso las cifras las calcula código determinista y el modelo de lenguaje se limita a redactar sobre evidencia ya verificada. El apartado recorre las capas y las tecnologías, el camino de una pregunta y la entrada de datos; presenta las dos formas de despliegue, un entorno local con Docker Compose y una alternativa en la nube sobre Amazon Web Services (AWS); y cierra con el alcance y los límites. La tabla~\ref{tab-d1} reúne las cifras de configuración que se citan después \cite{compose-final,arquitectura-develop}.
 
 \begin{table}[htbp]
 \centering\small
@@ -65,15 +65,19 @@ La respuesta pasa por dos controles. El procesador exige que cada salida cumpla 
 
 Los costes de Azure se cargan con una herramienta del procesador que consulta una API de Azure simulada, con un conjunto público porque no hay cuenta real, los normaliza a importes decimales exactos y los guarda por cliente. Los documentos entran como texto o como archivo (Markdown, TXT, DOCX, DOC y PDF, digital o escaneado con reconocimiento óptico de caracteres local). El navegador sube el original a MinIO con una dirección firmada de vida corta; el procesador extrae su texto en un entorno aislado, lo divide en fragmentos estructurales y guarda en pgvector un vector por fragmento, calculado con text-embedding-3-small. El original se elimina cuando el texto está a salvo \cite{guia-ingesta,adr-arquitectura}.
 
-\subsection{Despliegue local}\label{d-5}
+\subsection{Dos formas de despliegue}\label{d-5}
+
+Economicon se despliega de dos formas que comparten la misma arquitectura por capas: un entorno local con Docker Compose y una alternativa en la nube con servicios gestionados de AWS.
+
+\subsubsection{Entorno local}
 
 Docker Compose levanta los servicios permanentes y las tareas de un solo uso que describe la tabla~\ref{tab-d1}, con sus volúmenes persistentes; el perfil de inteligencia artificial añade la pasarela y su base de datos. Prometheus recoge las métricas con el intervalo indicado en esa tabla y Grafana alerta de los fallos de ingesta \cite{compose-final,adr-arquitectura}.
 
-\subsection{Alternativa en la nube: AWS}\label{d-6}
+\subsubsection{Alternativa en la nube: AWS}
 
-La alternativa documentada traslada la misma arquitectura a servicios gestionados de Amazon Web Services (AWS), con la misma lógica por capas (figura~\ref{fig-d3}). El acceso empieza en Amazon Route 53 (DNS) y en CloudFront, protegida por un cortafuegos web (WAF) y un certificado (ACM); la interfaz es un sitio estático en un almacén S3 privado al que solo llega CloudFront, y Amazon Cognito gestiona el inicio de sesión con el estándar OIDC. Las peticiones a la API llegan, sin caché, a un balanceador de carga interno dentro de una red privada virtual (VPC) con subredes privadas en varias zonas de disponibilidad. Ahí se ejecutan, como contenedores gestionados (ECS Fargate), la API, el procesador y el simulador de la API de Azure, junto a un servicio gestionado de RabbitMQ (Amazon MQ) y dos bases PostgreSQL gestionadas (RDS), una operativa y otra con pgvector. Fuera de la red privada quedan los servicios regionales: Amazon Bedrock aporta los modelos de generación y de embeddings, S3 guarda documentos y datasets, Secrets Manager, KMS e IAM gestionan secretos, claves y permisos, y CloudWatch recoge registros, métricas y alarmas \cite{aws-referencia}.
+La alternativa documentada traslada la arquitectura a servicios gestionados de AWS (figura~\ref{fig-d3}). El acceso empieza en Amazon Route 53 (DNS) y en CloudFront, protegida por un cortafuegos web (WAF) y un certificado (ACM); la interfaz es un sitio estático en un almacén S3 privado al que solo llega CloudFront, y Amazon Cognito gestiona el inicio de sesión con el estándar OIDC. Las peticiones a la API llegan, sin caché, a un balanceador de carga interno dentro de una red privada virtual (VPC) con subredes privadas en varias zonas de disponibilidad. Ahí se ejecutan, como contenedores gestionados (ECS Fargate), la API, el procesador y el simulador de la API de Azure, junto a un servicio gestionado de RabbitMQ (Amazon MQ) y dos bases PostgreSQL gestionadas (RDS), una operativa y otra con pgvector. Fuera de la red privada quedan los servicios regionales: Amazon Bedrock aporta los modelos de generación y de embeddings, S3 guarda documentos y datasets, Secrets Manager, KMS e IAM gestionan secretos, claves y permisos, y CloudWatch recoge registros, métricas y alarmas \cite{aws-referencia}.
 
-\figura{d3-aws}{Arquitectura de referencia en AWS, no desplegada. Las líneas continuas son el flujo principal y las conexiones con los datos; las discontinuas, la protección del acceso, los secretos y la observabilidad.\label{fig-d3}}
+\figura{d3-aws}{Arquitectura de referencia en AWS. Las líneas continuas son el flujo principal y las conexiones con los datos; las discontinuas, la protección del acceso, los secretos y la observabilidad.\label{fig-d3}}
 
 La tabla~\ref{tab-d3} recoge qué sustituye a cada pieza local y por qué.
 
@@ -97,9 +101,9 @@ Secretos de Compose & Secrets Manager, KMS e IAM & Claves cifradas y un rol de m
 \end{tabular}
 \end{table}
 
-Las tareas no tienen dirección pública y las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API, y API y procesador a bases y cola). Cognito identifica a la persona, pero la autorización por cliente sigue en la API, que filtra cada consulta, la vectorial incluida. La plantilla de Terraform se valida en local sin ejecutar un plan real, y el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. Ninguna pieza se ha desplegado: la aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock, pero su aceptación en AWS es un objetivo por alcanzar \cite{aws-referencia,aws-ensayo}.
+Las tareas no tienen dirección pública y las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API, y API y procesador a bases y cola). Cognito identifica a la persona, pero la autorización por cliente sigue en la API, que filtra cada consulta, la vectorial incluida. La plantilla de Terraform se valida en local sin ejecutar un plan real, y el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. La aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock \cite{aws-referencia,aws-ensayo}.
 
-\subsection{Alcance y límites}\label{d-7}
+\subsection{Alcance y límites}\label{d-6}
 
 Es una demostración con datos públicos, con un margen de mejora identificado:
 
@@ -109,6 +113,7 @@ Es una demostración con datos públicos, con un margen de mejora identificado:
 \item Grafana alerta de los fallos de ingesta, pero no hay un receptor externo, como el correo, que los notifique.
 \item Todo corre en una máquina: no hay alta disponibilidad, copia de seguridad del conjunto ni transacción única entre base de datos, índice y cola, por lo que se toleran reintentos y duplicados.
 \item La interfaz se sirve con la vista previa de Vite y no con un servidor de producción.
+\item La alternativa en AWS es una arquitectura de referencia cuya aceptación es un objetivo por alcanzar.
 \end{itemize}
 
 Se puede afirmar que el sistema recorre de extremo a extremo el camino del dato de coste a la respuesta citada, con cifras verificadas por el servidor y datos separados por cliente; su calidad, su latencia y su coste se evalúan en h.
