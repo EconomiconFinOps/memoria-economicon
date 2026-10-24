@@ -4,13 +4,13 @@ Un asistente que explica costes debe acertar, citar sus fuentes, responder a tie
 
 \subsection{Qué se evalúa y cómo}\label{h-1}
 
-La generación aumentada por recuperación (RAG) se evalúa por recuperación, respuesta y citas. El banco contiene 28 preguntas: 20 con respuesta, 6 que exigen pedir información y 2 que requieren abstenerse. Un caso aprueba sólo si cumple todas sus comprobaciones: reglas automáticas y juicios sobre la respuesta, atribuidos al evaluador de cada campaña. \cite{jup070}
+El RAG se evalúa por recuperación, respuesta y citas. El banco contiene 28 preguntas: 20 con respuesta, 6 que exigen pedir información y 2 que requieren abstenerse. Un caso aprueba sólo si cumple todas sus comprobaciones: reglas automáticas y juicios sobre la respuesta, atribuidos al evaluador de cada campaña. \cite{jup070}
 
 La robustez añade 29 casos: 13 con datos intactos y 16 con defectos en etiquetas, reparto de costes, indicadores, ámbito o anomalías. Se exige identificar el defecto sin inventar un resultado. \cite{robustez-tras}
 
 Los objetivos son aprobar el 80\,\% de preguntas con respuesta, cumplir el 90\,\% de reglas objetivas, no dar cifras sin rastro en casos críticos y terminar el 95\,\% de las conversaciones en diez segundos. El primero está pendiente de ratificación del equipo; los restantes se fijaron al elegir el gateway. \cite{jup070,adr-registro}
 
-El histórico usó un ordenador local, chat generativo, cuatro documentos y datos sintéticos: una pasada y una revisora por campaña. Las repeticiones en DockerDevelop se revisaron con un único juez IA, sin revisión humana independiente. \cite{banco28,banco28-tras,reevaluacion-modelo,juez-infra}
+El histórico usó un ordenador local, chat generativo, cuatro documentos y datos sintéticos: una pasada y una revisora por campaña. \cite{banco28,banco28-tras,reevaluacion-modelo,juez-infra}
 
 \subsection{Resultados técnicos}\label{h-2}
 
@@ -36,10 +36,10 @@ Percentil 95 de latencia total & --- & 41,3 s & 42,4 s & 10 s: por alcanzar \\
 \end{table}
 
 \subsubsection{Lo que funciona}
-No hubo errores HTTP de servidor en el banco histórico, pero una operación quedó bloqueada. Las citas apuntaban a fragmentos recuperados, sin certificar su corrección semántica. El instrumento declara no aplicable el esquema porque no recibe la salida estructurada; la marca favorable de captura no acredita ese contrato. La recuperación posterior acertó en los casos evaluables, con una captura distinta que impide comparación directa. \cite{banco28-tras}
+No hubo errores de servidor en el banco histórico, pero una operación quedó bloqueada. Las citas apuntaban a fragmentos recuperados, sin certificar su corrección semántica. El instrumento declara no aplicable el esquema porque no recibe la salida estructurada; la marca favorable de captura no acredita ese contrato. La recuperación posterior acertó en los casos evaluables, con una captura distinta que impide comparación directa. \cite{banco28-tras}
 
 \subsubsection{Dónde hay margen de mejora}
-Ningún corte histórico fue aceptado. Aprobar comprobaciones sueltas es menos exigente que aprobar casos completos: las valoraciones juzgadas son mejores que las objetivas. La comparación por juez LLM del apartado~\ref{g-0} empleó otro método y no sustituye estos resultados. \cite{comparativa-modelos}
+Ningún corte histórico fue aceptado. Aprobar comprobaciones sueltas es menos exigente que aprobar casos completos: las valoraciones juzgadas son mejores que las objetivas. La comparación por juez IA del apartado~\ref{g-3} empleó otro método y no sustituye estos resultados. \cite{comparativa-modelos}
 
 Antes del arreglo, la mitad de los casos fallidos lo fue sólo por el lector numérico, aun con cuentas correctas. Falta cuantificar ese efecto en el histórico posterior. \pendiente{ revisión numérica} \cite{reevaluacion-modelo}
 
@@ -60,15 +60,15 @@ Prohibiciones incumplidas & 0 de 55 & 0 de 64 & 0 de 59 \\
 \end{tabular}
 \end{table}
 
-Las prohibiciones concretas evaluadas se cumplieron, sin demostrar ausencia general de alucinaciones. Tras el arreglo se resolvieron reparto y ámbito; etiquetas e indicadores fueron parciales y anomalías quedó bloqueado. Falta revisar manualmente los fallos del lector numérico de ese corte. \pendiente{ revisión del corte histórico} \cite{robustez-antes,robustez-tras}
+Las prohibiciones concretas evaluadas se cumplieron. Tras el arreglo se resolvieron reparto y ámbito; etiquetas e indicadores fueron parciales y anomalías quedó bloqueado. Falta revisar manualmente los fallos del lector numérico de ese corte. \pendiente{ revisión del corte histórico} \cite{robustez-antes,robustez-tras}
 
 \subsubsection{El tiempo}
-El p95 histórico supera cuatro veces el objetivo y no se descompone de forma fiable por etapa. DockerDevelop aporta otras observaciones, sin medir AWS ni aislar el efecto de la infraestructura. \cite{banco28-tras,campanas-infra}
+El percentil 95 histórico supera cuatro veces el objetivo y no se descompone de forma fiable por etapa. Las repeticiones posteriores aportan otras observaciones, sin medir AWS ni aislar el efecto de la infraestructura. \cite{banco28-tras,campanas-infra}
 
 \subsubsection{Qué se corrigió}
-El arreglo de los cortes reintenta con temperatura creciente, omite cifras no verificadas con un aviso visible y recupera la conversación. En su batería propia, de 14 preguntas repetidas cuatro veces, los fallos bajaron de más de un tercio a uno de 56; permanecen frases incompletas al omitir cifras. \cite{cortes-medicion}
+El arreglo descrito en el apartado~\ref{e-4} redujo los fallos: en su batería propia, de 14 preguntas repetidas cuatro veces, bajaron de más de un tercio a uno de 56. Permanecen frases incompletas al omitir cifras. \cite{cortes-medicion}
 
-El límite final pasó a 10.000 tokens. En una demo separada se cumplieron cuatro de cinco rúbricas; su checklist registró 27 conformes, 2 fallidas y 1 no evaluada, con aceptación desfavorable. Faltó investigación por servicio y recurso y apareció una afirmación global sin apoyo. El rechazo de una acción no permitida terminó bien al tercer intento, en 120,955 s, tras truncado y cierre prematuro. Fue revisión por agente, sin acreditar estabilidad ni validación humana independiente. \cite{demo-final}
+El límite final pasó a 10.000 tokens. En una demo separada se cumplieron cuatro de cinco rúbricas; su lista de comprobación registró 27 conformes, 2 fallidas y 1 no evaluada, con aceptación desfavorable. Faltó investigación por servicio y recurso y apareció una afirmación global sin apoyo. El rechazo de una acción no permitida terminó bien al tercer intento, en 120,955 s, tras truncado y cierre prematuro. Fue una revisión automática por un agente de IA, sin acreditar estabilidad ni validación humana independiente. \cite{demo-final}
 
 \subsubsection{Repeticiones posteriores en DockerDevelop}
 La tabla~\ref{tab-h3} recoge tres repeticiones de cada batería con límite final de 10.000 tokens: 171 operaciones previstas, 158 respuestas disponibles y 13 bloqueadas. Un único juez IA revisó cada respuesta disponible, sin generar sustitutas. Los estados de caso combinan su juicio con el lector numérico original y sus falsos negativos conocidos; no son una puntuación semántica pura. Ninguna campaña está aceptada. \cite{campanas-infra,juez-infra}
@@ -78,7 +78,7 @@ La tabla~\ref{tab-h3} recoge tres repeticiones de cada batería con límite fina
 \caption{Repeticiones posteriores: resultados provisionales por ejecución}\label{tab-h3}
 \begin{tabular}{@{}p{0.18\linewidth}p{0.13\linewidth}p{0.23\linewidth}p{0.14\linewidth}p{0.17\linewidth}@{}}
 \toprule
-\textbf{Batería y repetición} & \textbf{Respuestas / previstas} & \textbf{Casos conformes / fallidos / bloqueados} & \textbf{p95 total (s)} & \textbf{Coste (USD)} \\
+\textbf{Batería y repetición} & \textbf{Respuestas / previstas} & \textbf{Casos conformes / fallidos / bloqueados} & \textbf{Percentil 95 total (s)} & \textbf{Coste (USD)} \\
 \midrule
 Banco 28 · 1 & 27 / 28 & 13 / 14 / 1 & 144,177 & 0,089582 \\
 Banco 28 · 2 & 25 / 28 & 8 / 17 / 3 & 148,796 & 0,087941 \\
@@ -90,7 +90,7 @@ Robustez 29 · 3 & 28 / 29 & 7 / 21 / 1 & 62,960 & 0,074371 \\
 \end{tabular}
 \end{table}
 
-Los tiempos llegan hasta el estado terminal, incluyen reintentos y operaciones fallidas, y excluyen la espera de conciliación contable. No son duraciones de una sola llamada ni se promedian para obtener un p95 conjunto. Los costes, redondeados en la tabla, suman 0,5291594448 USD desde los importes originales: registro liquidado del gateway con embeddings y reintentos, no factura ni gasto acumulado del proyecto. El coste del juez IA no está medido en ese registro. \cite{campanas-infra,juez-infra}
+Los tiempos llegan hasta el estado terminal, incluyen reintentos y operaciones fallidas, y excluyen la espera de conciliación contable. No son duraciones de una sola llamada ni se promedian para obtener un percentil 95 conjunto. Los costes, redondeados en la tabla, suman 0,5291594448 USD desde los importes originales: registro liquidado del gateway con embeddings y reintentos, no factura ni gasto acumulado del proyecto. \cite{campanas-infra,juez-infra}
 
 El juez puntuó 720 criterios aplicables: 618 conformes y 102 fallidos, sobre las respuestas disponibles, no sobre las operaciones bloqueadas. La configuración declara el modelo y la fuente conserva huellas de imágenes y corpus, pero no acredita la versión exacta de producto desplegada. Cambiaron segmentación y método respecto al histórico; falta una comparación controlada que aísle el efecto del límite, del modelo o de la infraestructura. Las distancias, tiempos por etapa y otros datos ausentes permanecen sin medir. \cite{juez-infra,campanas-infra}
 
