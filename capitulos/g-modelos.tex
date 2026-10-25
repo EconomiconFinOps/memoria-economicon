@@ -1,6 +1,6 @@
 \section{Uso de modelos preentrenados}\label{g-0}
 
-Economicon no entrena modelos propios: usa modelos preentrenados a través de un gateway y los guía con instrucciones y contexto. La elección importa porque determina el coste por consulta, el tiempo de respuesta y dónde viajan los datos del cliente. Este apartado explica por qué se descartó entrenar, por qué ruta se accede a los modelos, cómo se eligió el modelo y qué se puede afirmar sobre su coste y su latencia. La tabla~\ref{tab-g1} resume los datos clave. \cite{config-gateway,aws,comparativa-modelos,evaluacion}
+Economicon no entrena modelos propios: usa modelos preentrenados a través de un gateway y los guía con instrucciones y contexto. La elección importa porque determina el coste por consulta, el tiempo de respuesta y dónde viajan los datos del cliente. Este apartado explica por qué se descartó entrenar, por qué ruta se accede a los modelos, cómo se eligió el modelo y qué se puede afirmar sobre su coste y su latencia. La tabla~\ref{tab-g1} resume los datos clave. \cite{config-gateway,aws,comparativa-modelos,evaluacion,coste-chat}
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -10,11 +10,12 @@ Economicon no entrena modelos propios: usa modelos preentrenados a través de un
 \textbf{Ámbito} & \textbf{Dato o elección} & \textbf{Qué cuenta} \\
 \midrule
 Modelo de chat por defecto & DeepSeek V4.1 Flash; proveedor DeepInfra, 8 bits; sin ruta de reserva & Único generador; no certifica qué modelo respondió en cada llamada. \\
-Modelo de embeddings & text-embedding-3-small & Genera los embeddings de la recuperación. \\
+Modelo de embeddings & text-embedding-3-small & Configurado en las evaluaciones; el ejemplo local usa embeddings simulados. \\
 Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Probada sin conexión; apagada por defecto, sin invocaciones reales. \\
 Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 y Flash con las mismas preguntas; lo valora un juez IA (otro modelo de lenguaje). \\
 Comparativa de coste & GLM-5.2: 0,1806 USD; Flash: 0,0392 USD & 28 operaciones por modelo, con los embeddings de las preguntas y sin la indexación inicial. \\
-Coste facturado por consulta & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & Consultas terminadas, contrastadas con la factura; ventanas de medición distintas. \\
+Coste facturado por llamada & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & Media por llamada al modelo; ventanas distintas: 100 llamadas GLM y 73 Flash. No es una operación completa. \\
+Coste histórico por operación & Flash: unos 0,0011 USD & Operaciones completas de la campaña histórica; informado por el servidor, no facturado por operación. \\
 Latencia en el entorno desplegado & Percentil 95 por repetición: de 63,0 a 238,1 s (6 repeticiones); objetivo de 10 s & Hasta el estado terminal, con reintentos y fallos, en DockerDevelop (entorno de desarrollo desplegado en un servidor Docker compartido); no es una sola llamada. \\
 Latencia histórica del banco & Percentil 95: 41,3 s antes del arreglo y 42,4 s tras él & Medida en un ordenador local, sobre 28 operaciones completadas antes del arreglo y 27 después. \\
 \bottomrule
@@ -35,7 +36,7 @@ Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativo
 
 \subsection{Cómo se eligió el modelo}\label{g-3}
 
-GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez IA; Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. Con Flash una consulta terminada costó unos 0,0006 USD; como ilustración, mil consultas al mes de un cliente supondrían unos 0,6 USD, muy por debajo de la mensualidad de 50 € del caso de negocio (apartado~\ref{b-0}). El coste del modelo, por tanto, no es el factor que limita el precio; la latencia sí es el límite principal del capítulo. La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
+GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez IA; Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. El coste facturado mide llamadas al modelo, no conversaciones completas. Proyectar el gasto mensual exige contar las dos fases por intento, reintentos y embeddings; la tabla~\ref{tab-g1} separa esas unidades y sus fuentes. La latencia es el límite principal medido del capítulo. \cite{coste-chat} La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
 
 Las evaluaciones posteriores usaron otros procedimientos, separados en el apartado~\ref{h-0}: reglas automáticas con una revisora humana y, en las últimas repeticiones, un único juez IA. Sus puntuaciones no se suman ni demuestran superioridad general de un modelo, y la ventaja de coste procede de ventanas de medición distintas, por lo que no se atribuye solo al modelo. \cite{evaluacion}
 
