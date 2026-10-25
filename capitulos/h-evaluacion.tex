@@ -6,7 +6,7 @@ Un asistente que redacta sobre costes no se puede dar por bueno por inspección.
 
 Se siguen seis familias de métricas técnicas: exactitud de la respuesta, relevancia de la recuperación, fundamento de citas y cifras, latencia, robustez de la salida y disponibilidad. A ellas se suman tres de negocio (tiempo ahorrado, cobertura del gasto asignado y ahorro potencial), cuyos objetivos son hipótesis de piloto. \cite{panel}
 
-Todas se consultan en el panel de Grafana «Asistente y evidencia», con cinco secciones: negocio y fiabilidad de los datos; calidad y robustez del asistente; recuperación documental y citas; coste y rendimiento del chat; y salud técnica y diagnóstico. Cada métrica tiene su panel en la sección que le corresponde, con el modelo declarado y su procedencia. El panel es el lugar donde se verifican todas las cifras; la memoria recoge solo las principales.
+Todas se consultan en el panel de Grafana «Asistente y evidencia»\footnote{Accesible en \url{https://economicon.danteinferno.es/grafana/}.}, con cinco secciones: negocio y fiabilidad de los datos; calidad y robustez del asistente; recuperación documental y citas; coste y rendimiento del chat; y salud técnica y diagnóstico. Cada métrica tiene su panel en la sección que le corresponde, con el modelo declarado y su procedencia. El panel es el lugar donde se verifican todas las cifras; la memoria recoge solo las principales.
 
 Las mediciones de calidad usan dos bancos: el de 28 preguntas, con 20 que exigen respuesta, 6 que exigen pedir información y 2 que exigen abstenerse, y una batería de robustez de 29 casos, en la que 16 tienen un defecto que el sistema debe señalar sin inventar un resultado. Un caso aprueba solo si cumple todas sus comprobaciones. Los objetivos son aprobar el 80\,\% de las preguntas con respuesta, cumplir el 90\,\% de las reglas objetivas, no dar cifras sin rastro en casos críticos y terminar el 95\,\% de las conversaciones en diez segundos. \cite{evaluacion,adr}
 
@@ -23,7 +23,7 @@ En la recuperación, el documento correcto apareció en 19 de 19 casos evaluable
 \begin{table}[htbp]
 \centering\small
 \caption{Banco de 28 preguntas en cuatro mediciones}\label{tab-h1}
-\begin{tabular}{@{}p{0.27\linewidth}p{0.13\linewidth}p{0.18\linewidth}p{0.2\linewidth}p{0.14\linewidth}@{}}
+\begin{tabular}{@{}p{0.25\linewidth}p{0.13\linewidth}p{0.18\linewidth}p{0.2\linewidth}p{0.14\linewidth}@{}}
 \toprule
 \textbf{Qué cuenta} & \textbf{Plantilla sin modelo} & \textbf{DeepSeek V4.1 Flash, antes del arreglo} & \textbf{DeepSeek V4.1 Flash, tras el arreglo} & \textbf{Objetivo} \\
 \midrule
