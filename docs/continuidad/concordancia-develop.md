@@ -26,6 +26,8 @@ Fuentes exactas del corte:
 
 Las fuentes del cuerpo mantienen enlaces de lectura sin hashes conforme a las reglas del repositorio; esta nota fija el corte reproducible. A/C/I, tablas históricas deH, VERSION y entregas publicadas se conservan. Compilación integrada no disponible por restricciones de ejecución Windows; usar CI LuaLaTeX/biber y comprobar el artefacto. Sin nuevas campañas, inferencias, cambios de producto, despliegues o mensajes a terceros.
 
+Publicada la [PR34](https://github.com/EconomiconFinOps/memoria-economicon/pull/34) como borrador a `main`. Revisión documental independiente sin defectos materiales; corregida una cita duplicada. Verificación estructural actual:60etiquetas únicas,23claves bibliográficas,75citas con destino, cero marcadores pendientes; tablas históricasH idénticas y `git diff --check` conforme. Compilación y recuento final del PDF pendientes; no se atribuye todavía aceptación visual ni merge.
+
 Lo que sigue conserva el antecedente del23/10; sus estados de PR13 no son un estado actual de publicación. La integración posterior de PR13 está confirmada en el historial de main.
 
 Encargo del 23/10/2026 desde HAL, chat `01a1270c-e332-7462-9c90-706d49ade92c`: corregir los ocho puntos pendientes del segundo informe y abrir una PR en el repositorio de memoria. La autorización comprende los capítulos y referencias afectados; no incluye nuevas campañas, despliegues ni merge.
