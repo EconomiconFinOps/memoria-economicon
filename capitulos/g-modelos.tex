@@ -11,7 +11,7 @@ Economicon no entrena modelos propios: usa modelos preentrenados a través de un
 \midrule
 Modelo de chat por defecto & DeepSeek V4.1 Flash; proveedor DeepInfra, 8 bits; sin ruta de reserva & Único generador; no certifica qué modelo respondió en cada llamada. \\
 Modelo de embeddings & text-embedding-3-small & Configurado en las evaluaciones; el ejemplo local usa embeddings simulados. \\
-Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Probada sin conexión; apagada por defecto, sin invocaciones reales. \\
+Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Probada sin conexión; apagada por defecto, sin mediciones en esta memoria. \\
 Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 y Flash con las mismas preguntas; lo valora un juez IA (otro modelo de lenguaje). \\
 Comparativa de coste & GLM-5.2: 0,1806 USD; Flash: 0,0392 USD & 28 operaciones por modelo, con los embeddings de las preguntas y sin la indexación inicial. \\
 Coste facturado medio & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & GLM-5.2, media por consulta de chat terminada (100 consultas); Flash, media por llamada al modelo (73 llamadas). Son ventanas y unidades distintas, no comparables entre sí. \\
@@ -32,7 +32,7 @@ Las peticiones al modelo pasan por el gateway LiteLLM y por OpenRouter, que las 
 
 Como los datos del cliente viajan al proveedor en cada consulta, la configuración exige retención cero de datos (ZDR, Zero Data Retention), excluye a los proveedores que recopilan los datos de las peticiones y desactiva el cambio automático de proveedor ante un fallo. La cuantización a 8 bits representa los parámetros del modelo con menor precisión para abaratar la inferencia. Son condiciones configuradas, no una atestación externa de cada llamada.
 
-Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativos de la nube, sin pasar por el gateway. El código y sus controles están probados sin conexión, pero no se ha invocado ningún modelo de AWS, así que esta memoria no aporta mediciones de esa ruta. \cite{aws}
+Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativos de la nube, sin pasar por el gateway. El código y sus controles están probados sin conexión, y esta memoria no aporta mediciones de esa ruta. \cite{aws}
 
 \subsection{Cómo se eligió el modelo}\label{g-3}
 
