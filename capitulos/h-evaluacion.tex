@@ -50,11 +50,7 @@ En la batería de robustez de 29 casos se hicieron tres mediciones. Con GLM-5.2 
 
 \subsection{El tiempo de respuesta}\label{h-4}
 
-El tiempo es el mayor déficit medido. En el banco de 28 preguntas, el percentil 95\footnote{Valor por debajo del cual se sitúa el 95\,\% de las conversaciones medidas.} fue de 41,3 s con DeepSeek V4.1 Flash antes del arreglo y de 42,4 s después, más de cuatro veces el objetivo de 10 s. Esa medición se hizo en el ordenador local y es sensible a la infraestructura: incluye el arranque en frío, la cola y el validador, no solo la llamada al modelo.
-
-En las seis repeticiones de la quinta medición, el percentil 95 de cada repetición osciló entre 63 y 238 s. De 171 operaciones previstas, 158 dieron respuesta y 13 quedaron bloqueadas. En la sexta medición, para los 44 casos comunes, la mediana fue de 12,0 s y el percentil 95 de 49,5 s; en la referencia formada por las tres primeras repeticiones de esos mismos casos, la mediana era de 20,1 s y el percentil 95 de 148,8 s.
-
-Los tiempos llegan hasta el estado terminal, incluyen reintentos y operaciones fallidas, y excluyen la espera de conciliación contable. No son duraciones de una sola llamada, no se promedian para obtener un percentil conjunto y no se descomponen por etapa de forma fiable. Los casos combinan el juicio de un único juez IA\footnote{Modelo de lenguaje que puntúa las respuestas según la rúbrica. No sustituye al juicio humano.} con el lector numérico original y sus falsos negativos conocidos; no son una puntuación semántica pura.
+El tiempo es el mayor déficit medido. En el banco de 28 preguntas, el percentil 95\footnote{Valor por debajo del cual se sitúa el 95\,\% de las conversaciones medidas.} fue de 41,3 s con DeepSeek V4.1 Flash antes del arreglo y de 42,4 s después, más de cuatro veces el objetivo de 10 s. Se midió en el ordenador local, que incluye el arranque en frío y la cola, así que debe repetirse en la infraestructura definitiva. En las seis repeticiones de la quinta medición, el percentil 95 de cada una osciló entre 63 y 238 s. En la última medición, con los 44 casos comunes, la mediana fue de 12,0 s y el percentil 95 de 49,5 s.
 
 \subsection{El coste de la inteligencia artificial}\label{h-5}
 
@@ -62,4 +58,4 @@ El coste de los modelos no es el factor limitante. La tabla~\ref{tab-g1} separa 
 
 \subsection{Qué se puede afirmar}\label{h-6}
 
-Las mediciones demuestran recorridos observados y trazabilidad de citas en una muestra pequeña. El modelo actual está clasificado con incidencias. Las seis repeticiones y la medición final son provisionales, con bloqueos y un único juez IA; la medición final añade una lectura de calidad por agentes, sin revisión humana. La comparación entre la quinta y la sexta medición describe lo observado, pero no es causal, porque el arnés, la carga y el número de repeticiones difieren. No acreditan ausencia general de cifras inventadas, superioridad de un modelo, mejora causal del arreglo ni comportamiento con clientes reales. \cite{evaluacion}
+Las mediciones demuestran recorridos observados y trazabilidad de citas en una muestra pequeña. El modelo actual está clasificado con incidencias. Las seis repeticiones y la medición final son provisionales, con bloqueos y un único juez IA\footnote{Modelo de lenguaje que puntúa las respuestas según la rúbrica. No sustituye al juicio humano.}; la medición final añade una lectura de calidad por agentes, sin revisión humana. La comparación entre la quinta y la sexta medición describe lo observado, pero no es causal, porque el arnés, la carga y el número de repeticiones difieren. No acreditan ausencia general de cifras inventadas, superioridad de un modelo, mejora causal del arreglo ni comportamiento con clientes reales. \cite{evaluacion}
