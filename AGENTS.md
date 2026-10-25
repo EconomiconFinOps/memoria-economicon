@@ -20,6 +20,7 @@ Este repositorio es la memoria del TFM. Varias personas redactan capítulos dist
 - Los capítulos describen la aplicación Economicon, cuyo código está en `EconomiconFinOps/tfm-economicon`, rama `develop`.
 - Para afirmar algo sobre la implementación (arquitectura, flujo, pruebas, despliegue), léelo en esa rama: código, `docs/` y `openspec/`. No uses otras ramas ni copias antiguas.
 - Si no tienes acceso al repo, pide al equipo el fichero o el dato concreto. Si no llega, marca el hueco con `\pendiente{}`. No describas la implementación de memoria.
+- Excepción: si la persona responsable de esa parte del proyecto confirma un dato que aún no consta en `develop` (por ejemplo, las direcciones del despliegue en AWS), puede afirmarse limitándose a lo que confirma. Se cita como comunicación del equipo y se sustituye por la fuente del repositorio en cuanto exista. No vale para cifras: toda cifra sigue necesitando fuente.
 
 ## Qué se puede editar
 
