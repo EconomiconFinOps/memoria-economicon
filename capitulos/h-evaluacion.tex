@@ -1,24 +1,24 @@
 \section{Métricas y evaluación de la solución}\label{h-0}
 
-Un asistente que redacta sobre costes no se puede dar por bueno por inspección. Cada afirmación de esta memoria sobre su calidad, su tiempo o su coste procede de una medición con definición y población conocidas. Este apartado explica qué se mide, presenta las mediciones en el orden en que se hicieron y dice qué sostienen. La tabla~\ref{tab-h1} recoge las cifras del banco de preguntas.
+Un asistente que redacta sobre costes no se puede dar por bueno por inspección. Cada afirmación de esta memoria sobre su calidad, su tiempo o su coste procede de una medición con población conocida, que se presenta en el orden en que se hizo. La tabla~\ref{tab-h1} recoge las cifras del banco de preguntas.
 
 \subsection{Qué se mide y cómo se ve}\label{h-1}
 
 Se siguen seis familias de métricas técnicas: exactitud de la respuesta, relevancia de la recuperación, fundamento de citas y cifras, latencia, robustez de la salida y disponibilidad. A ellas se suman tres de negocio (tiempo ahorrado, cobertura del gasto asignado y ahorro potencial), cuyos objetivos son hipótesis de piloto. \cite{panel}
 
-Todas se consultan en el panel de Grafana «Asistente y evidencia», con cinco secciones: negocio y fiabilidad de los datos; calidad y robustez del asistente; recuperación documental y citas; coste y rendimiento del chat; y salud técnica y diagnóstico. Cada métrica tiene su panel en la sección que le corresponde, con el modelo declarado y su procedencia. La sección de calidad incluye el bloque de evolución entre la quinta y la sexta medición. Este capítulo recoge las cifras principales; el panel es el lugar donde se verifican todas, y la memoria no reproduce cada uno de sus paneles.
+Todas se consultan en el panel de Grafana «Asistente y evidencia», con cinco secciones: negocio y fiabilidad de los datos; calidad y robustez del asistente; recuperación documental y citas; coste y rendimiento del chat; y salud técnica y diagnóstico. Cada métrica tiene su panel en la sección que le corresponde, con el modelo declarado y su procedencia. El panel es el lugar donde se verifican todas las cifras; la memoria recoge solo las principales.
 
 Las mediciones de calidad usan dos bancos: el de 28 preguntas, con 20 que exigen respuesta, 6 que exigen pedir información y 2 que exigen abstenerse, y una batería de robustez de 29 casos, en la que 16 tienen un defecto que el sistema debe señalar sin inventar un resultado. Un caso aprueba solo si cumple todas sus comprobaciones. Los objetivos son aprobar el 80\,\% de las preguntas con respuesta, cumplir el 90\,\% de las reglas objetivas, no dar cifras sin rastro en casos críticos y terminar el 95\,\% de las conversaciones en diez segundos. \cite{evaluacion,adr}
 
-Las mediciones se hicieron en este orden. La primera es la plantilla sin modelo, que sirve de línea base del instrumento. La segunda usó el modelo con el que arrancó el chat, GLM-5.2\footnote{Modelo de lenguaje con el que arrancó el chat. Se sustituyó por DeepSeek V4.1 Flash tras la comparación del apartado~\ref{g-3}.}. La tercera usó DeepSeek V4.1 Flash\footnote{Modelo de lenguaje que usa el chat desde el cambio.}, antes de un arreglo en el producto\footnote{Cambio que reintenta las respuestas que el validador de salida rechaza y evita que una sola regla incumplida anule toda la respuesta.}. La cuarta repite ese modelo tras el arreglo; en el banco de 28 preguntas se volvieron a puntuar las mismas operaciones. La quinta son seis repeticiones de las dos baterías en el entorno de contenedores de desarrollo (DockerDevelop)\footnote{Entorno de contenedores de desarrollo. Sus resultados no equivalen al acceso público del producto.}, con el modelo actual. La sexta es una medición final de tiempos y calidad: una repetición de los 44 casos comunes a la quinta, más la campaña completa de 50 operaciones. Ninguna de estas mediciones está aceptada.
+Las mediciones se hicieron en este orden. La primera es la plantilla sin modelo, que sirve de línea base del instrumento. La segunda usó el modelo con el que arrancó el chat, GLM-5.2\footnote{Sustituido por DeepSeek V4.1 Flash tras la comparación del apartado~\ref{g-3}.}. La tercera usó DeepSeek V4.1 Flash, el modelo actual, antes de un arreglo en el producto\footnote{Reintenta las respuestas que el validador de salida rechaza, para que una sola regla incumplida no anule toda la respuesta.}. La cuarta repite ese modelo tras el arreglo. La quinta son seis repeticiones de las dos baterías en el entorno de contenedores de desarrollo (DockerDevelop). La sexta es una medición final de tiempos y calidad, con una repetición de los 44 casos comunes a la quinta y la campaña completa de 50 operaciones. Ninguna de estas mediciones está aceptada.
 
 \subsection{Lo que funciona}\label{h-2}
 
 Se cumple el objetivo de no dar cifras sin rastro en casos críticos: tras el arreglo no hubo ninguna, y antes hubo una, no crítica. Las citas apuntaban siempre a un fragmento recuperado, sin certificar su corrección semántica.
 
-Lo que calcula el código determinista también funciona. El detector de anomalías marcó 5 episodios y los 5 eran eventos reales; encontró los 5 eventos detectables de los 7 inyectados, porque los otros dos no lo son por diseño. El retraso hasta la detección fue de 0 días, esperable por la construcción del conjunto, y la reconciliación de los datos de coste no mostró diferencias en 3 pares cliente-divisa. Son datos sintéticos: demuestran coherencia interna, no la integridad de facturas reales. El detector no detecta picos desde cero ni servicios nuevos, porque exige una semana de referencia positiva. \cite{evaluacion}
+Lo que calcula el código determinista también funciona. El detector de anomalías marcó 5 episodios, todos reales, y encontró los 5 eventos detectables de los 7 inyectados en datos sintéticos. \cite{evaluacion}
 
-En la recuperación, el documento correcto apareció en 19 de 19 casos evaluables tras el arreglo, frente a 8 de 20 antes. El método de captura de los fragmentos cambió a la vez, así que esa diferencia no se atribuye al arreglo. En la medición con el modelo actual no hubo errores de servidor en el banco de 28 preguntas. En la última medición aparecen un error HTTP 520 y un fallo HTTP 413 con capturas grandes, que sigue abierto.
+En la recuperación, el documento correcto apareció en 19 de 19 casos evaluables tras el arreglo, frente a 8 de 20 antes. El método de captura cambió a la vez, así que esa diferencia no se atribuye al arreglo. En la última medición aparece un error HTTP 413 con capturas grandes, que sigue abierto.
 
 \begin{table}[htbp]
 \centering\small
@@ -46,7 +46,7 @@ En la última medición, para los 44 casos comunes, la mediana fue de 12,0 s y e
 
 Antes del arreglo, 9 de los 18 casos fallidos lo fueron solo por el lector numérico automático, aunque las cuentas eran correctas. Ese lector produce falsos negativos conocidos, y sigue presente en las mediciones: en la robustez, 5 casos fallan solo por esa comprobación.
 
-En la batería de robustez de 29 casos se hicieron tres mediciones. Con GLM-5.2 se aprobaron 7 casos de 24 evaluados (29,2\,\%), con 5 bloqueados. Con DeepSeek V4.1 Flash, antes del arreglo, 7 de 28 (25,0\,\%), con 1 bloqueado. Con el mismo modelo tras el arreglo, 15 de 25 (60,0\,\%), con 4 bloqueados. Estas mediciones no son comparables entre sí: cambiaron el modelo, los recursos del chat, el método de recogida y la muestra evaluada, y en la última también el arreglo. Las prohibiciones concretas se cumplieron en todas, con cero incumplimientos (0 de 55 y 0 de 64). Tras el arreglo se resolvieron reparto y ámbito; etiquetas e indicadores fueron parciales y las anomalías siguieron bloqueadas.
+En la batería de robustez de 29 casos, las tres mediciones dieron 7 aprobados de 24 evaluados con GLM-5.2 (29,2\,\%), 7 de 28 con DeepSeek V4.1 Flash antes del arreglo (25,0\,\%) y 15 de 25 tras él (60,0\,\%). No son comparables entre sí, porque cambiaron el modelo, los recursos del chat, el método de recogida y la muestra. Las prohibiciones concretas se cumplieron en todas.
 
 \subsection{El tiempo de respuesta}\label{h-4}
 
@@ -54,7 +54,7 @@ El tiempo es el mayor déficit medido. En el banco de 28 preguntas, tras el arre
 
 \subsection{El coste de la inteligencia artificial}\label{h-5}
 
-El coste de los modelos no es el factor limitante. La tabla~\ref{tab-g1} separa llamadas y operaciones. En la ventana contrastada, de 75 llamadas (73 con DeepSeek V4.1 Flash y 2 con GLM-5.2), la estimación y la factura difirieron menos de un 1\,\%; no es una factura por conversación. Las seis repeticiones sumaron unos 0,53 USD en el registro liquidado del gateway, con embeddings y reintentos incluidos; no es factura ni gasto acumulado del proyecto. Por llamada al modelo, el coste pasó de 0,0026 USD con GLM-5.2 a 0,0006 USD con DeepSeek V4.1 Flash; esa diferencia no se atribuye solo al modelo, porque las ventanas y la contabilidad son distintas. \cite{coste-chat,evaluacion}
+El coste de los modelos no es el factor limitante. La tabla~\ref{tab-g1} separa llamadas y operaciones. En las 75 llamadas contrastadas con la factura, la estimación difirió menos de un 1\,\%. Las seis repeticiones sumaron unos 0,53 USD en el registro del gateway, con embeddings y reintentos incluidos. \cite{coste-chat,evaluacion}
 
 \subsection{Qué se puede afirmar}\label{h-6}
 
