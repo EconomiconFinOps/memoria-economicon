@@ -124,6 +124,6 @@
     \vfill
     {\color{tinta} Alejandro Aguado \;·\; Paris Arcos \;·\; Lucía Mateo \;·\; Víctor Méndez\par}
     \vspace{0.4cm}
-    {\small\color{gris} Trabajo Fin de Máster \;·\; Entrega prevista: octubre de 2026\par}
+    {\small\color{gris} Trabajo Fin de Máster \;·\; Entrega: octubre de 2026\par}
     \vspace*{1cm}
   \end{titlepage}}
