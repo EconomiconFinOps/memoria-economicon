@@ -14,7 +14,7 @@ Modelo de embeddings & text-embedding-3-small & Configurado en las evaluaciones;
 Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Probada sin conexión; apagada por defecto, sin invocaciones reales. \\
 Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 y Flash con las mismas preguntas; lo valora un juez IA (otro modelo de lenguaje). \\
 Comparativa de coste & GLM-5.2: 0,1806 USD; Flash: 0,0392 USD & 28 operaciones por modelo, con los embeddings de las preguntas y sin la indexación inicial. \\
-Coste facturado por llamada & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & Media por llamada al modelo; ventanas distintas: 100 llamadas GLM y 73 Flash. No es una operación completa. \\
+Coste facturado medio & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & GLM-5.2, media por consulta de chat terminada (100 consultas); Flash, media por llamada al modelo (73 llamadas). Son ventanas y unidades distintas, no comparables entre sí. \\
 Coste histórico por operación & Flash: unos 0,0011 USD & Operaciones completas de la campaña histórica; informado por el servidor, no facturado por operación. \\
 Latencia en el entorno desplegado & Percentil 95 por repetición: de 63,0 a 238,1 s (6 repeticiones); objetivo de 10 s & Hasta el estado terminal, con reintentos y fallos, en DockerDevelop (entorno de desarrollo desplegado en un servidor Docker compartido); no es una sola llamada. \\
 Latencia histórica del banco & Percentil 95: 41,3 s antes del arreglo y 42,4 s tras él & Medida en un ordenador local, sobre 28 operaciones completadas antes del arreglo y 27 después. \\
