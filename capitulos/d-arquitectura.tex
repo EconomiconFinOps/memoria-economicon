@@ -54,7 +54,11 @@ Economicon se despliega de dos formas que comparten la misma arquitectura por ca
 
 \subsubsection{Entorno local}
 
-Docker Compose levanta 11 servicios permanentes, incluida la página pública, y 2 tareas de un solo uso, que migran la base de datos y preparan el almacén de archivos, con 6 volúmenes persistentes que conservan los datos tras un reinicio; el perfil de inteligencia artificial añade la pasarela y su base de datos, con un volumen más. Prometheus recoge las métricas cada 15 s y Grafana alerta de los fallos de ingesta. \cite{despliegue}
+Docker Compose levanta 11 servicios permanentes, incluida la página pública, y 2 tareas de un solo uso, que migran la base de datos y preparan el almacén de archivos, con 6 volúmenes persistentes que conservan los datos tras un reinicio; el perfil de inteligencia artificial añade la pasarela y su base de datos, con un volumen más. Prometheus recoge las métricas cada 15 s y Grafana alerta de los fallos de ingesta. \cite{despliegue} Las direcciones del entorno figuran en el recuadro siguiente.
+
+\recuadro{\textbf{Entorno local}\\
+Aplicación: \textbf{\url{https://demo-jupiter.danteinferno.es/}}\\
+Panel de Grafana: \textbf{\url{https://demo-jupiter.danteinferno.es/grafana/}}}
 
 \subsubsection{Alternativa en la nube: AWS}
 
@@ -84,14 +88,11 @@ Secretos de Compose & Secrets Manager, KMS e IAM & Claves cifradas y un rol de m
 \end{tabular}
 \end{table}
 
-Las bases y el broker solo admiten conexiones de los grupos de seguridad autorizados. La referencia Terraform tiene 14 pruebas con proveedores simulados y la preparación inicial del controlador, otra; no crean infraestructura real. La CI prueba además el enrutamiento de CloudFront y la monitorización en contenedores aislados. El repositorio prepara un ciclo manual de creación y retirada y admite PostgreSQL, Cognito y Bedrock por configuración. Las direcciones de los entornos publicados figuran en el recuadro siguiente. \cite{aws,ci-integracion}
+Las bases y el broker solo admiten conexiones de los grupos de seguridad autorizados. La referencia Terraform tiene 14 pruebas con proveedores simulados y la preparación inicial del controlador, otra; no crean infraestructura real. La CI prueba además el enrutamiento de CloudFront y la monitorización en contenedores aislados. El repositorio prepara un ciclo manual de creación y retirada y admite PostgreSQL, Cognito y Bedrock por configuración. Las direcciones del entorno publicado en AWS figuran en el recuadro siguiente. \cite{aws,ci-integracion}
 
 \recuadro{\textbf{Entorno en AWS}\\
 Aplicación: \textbf{\url{https://economicon.danteinferno.es/}}\\
-Panel de Grafana: \textbf{\url{https://economicon.danteinferno.es/grafana/}}\\[4pt]
-\textbf{Entorno local}\\
-Aplicación: \textbf{\url{https://demo-jupiter.danteinferno.es/}}\\
-Panel de Grafana: \textbf{\url{https://demo-jupiter.danteinferno.es/grafana/}}}
+Panel de Grafana: \textbf{\url{https://economicon.danteinferno.es/grafana/}}}
 
 \subsection{Alcance y límites}\label{d-4}
 
