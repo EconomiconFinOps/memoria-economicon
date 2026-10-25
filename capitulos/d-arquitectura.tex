@@ -22,7 +22,7 @@ FastAPI (Python) & API y procesador & Sus esquemas tipados validan cada entrada 
 RabbitMQ & Cola de trabajos & Entrega con confirmación y cola duradera: la ingesta continúa aunque el procesador se reinicie. Frente a una cola en la base de datos, separa carga y fallos; a cambio, hay que tolerar mensajes duplicados. \\
 CockroachDB & Estado: usuarios, trabajos, conversaciones y costes & Habla SQL, compatible con PostgreSQL, de modo que la aplicación puede funcionar sobre PostgreSQL, como prevé la alternativa en la nube. No se afirma que lo supere. \\
 pgvector & Búsqueda por similitud de fragmentos & Extensión de PostgreSQL: un único motor filtra a la vez por cliente y por distancia, sin servicio vectorial dedicado. Calcula la distancia exacta, sin índice aproximado. \\
-LiteLLM y OpenRouter & Acceso a los modelos & Concentran en un punto las claves, el techo de gasto y la política de privacidad y permiten cambiar de modelo sin tocar el código. El techo, de 10 USD al mes, es el presupuesto máximo de desarrollo y se aplica mediante una clave virtual de la pasarela. \\
+LiteLLM y OpenRouter & Acceso a los modelos & Concentran en un punto las claves, el techo de gasto y la política de privacidad y permiten cambiar de modelo sin tocar el código. La credencial del proveedor solo la conoce la pasarela y los servicios usan claves virtuales, con un techo de 10 USD al mes que no es el gasto total del proyecto. \\
 MinIO & Almacén temporal de archivos subidos & Habla el protocolo S3 y mantiene los binarios fuera de la cola y de la base de datos. \\
 Prometheus y Grafana & Métricas, alertas y paneles & Estándares abiertos de observabilidad; Grafana presenta también los resultados de la evaluación. \\
 Docker Compose & Despliegue reproducible & Una orden levanta todo el sistema en un portátil o un servidor; no equivale a un orquestador de producción. \\
@@ -75,7 +75,7 @@ Interfaz servida con la vista previa de Vite & S3 privado y CloudFront & Con cer
 API, procesador y simulador en Compose & ECS Fargate y balanceador interno & Sin gestionar servidores ni direcciones públicas; el balanceador solo es alcanzable desde CloudFront. \\
 RabbitMQ & Amazon MQ para RabbitMQ & Conserva el protocolo: productores y consumidores no cambian, a diferencia de la cola SQS de AWS. \\
 CockroachDB y pgvector & Dos bases RDS PostgreSQL & Copias de seguridad y alta disponibilidad gestionadas; separar la base vectorial de la operativa aísla su consumo, a mayor coste. Exige adaptar el SQL propio de CockroachDB. \\
-LiteLLM y OpenRouter & Amazon Bedrock & Modelos invocados dentro de la cuenta con permisos IAM; cambiar de modelo obliga a repetir la evaluación y reindexar todo el corpus. \\
+LiteLLM y OpenRouter & Amazon Bedrock & Modelos invocados dentro de la cuenta con permisos IAM; pasar a Bedrock obliga a repetir la evaluación y, al cambiar los embeddings, a reindexar el corpus. \\
 Autenticación de demostración & Amazon Cognito & Proveedor de identidad externo; la API sigue resolviendo los clientes autorizados de cada persona. \\
 MinIO & S3 & Mismo protocolo, sin servidor que mantener. \\
 Prometheus y Grafana & ECS Fargate y CloudWatch & Conserva paneles y métricas; Grafana usa RDS para metadatos y evaluaciones. CloudWatch recoge logs y señales de infraestructura. \\

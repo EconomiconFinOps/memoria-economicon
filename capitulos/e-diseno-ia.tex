@@ -3,7 +3,7 @@
 Una respuesta sobre costes solo sirve para decidir gasto si se puede comprobar. Este apartado explica qué conocimiento prepara Economicon, cómo lo recupera y qué controles aplica antes de mostrar una respuesta. La tabla~\ref{tab-e1} resume las decisiones; su calidad se evalúa en el apartado~\ref{h-0}. \cite{config-gateway,especificaciones,arquitectura,informe-rag,evaluacion}
 \subsection{El modelo redacta sobre evidencia}\label{e-1}
 
-Un modelo de lenguaje no conoce los datos de un cliente. Por eso Economicon recupera antes de redactar la información autorizada del cliente y la incorpora a la petición, de modo que la respuesta pueda citar sus fuentes en lugar de depender de la memoria del modelo; es el enfoque RAG descrito en el apartado~\ref{a-0}. Las preguntas sobre costes se resuelven en el servidor, sin modelo (apartado~\ref{d-0}); aquí se tratan las abiertas, que reciben el resumen de costes verificado y los pasajes recuperados (figura~\ref{fig-e1}). \cite{especificaciones}
+Un modelo de lenguaje no conoce los datos de un cliente. Por eso Economicon recupera antes de redactar la información autorizada del cliente y la incorpora a la petición, de modo que la respuesta pueda citar sus fuentes en lugar de depender de la memoria del modelo; es el enfoque RAG descrito en el apartado~\ref{a-0}. Las consultas estructuradas de costes se resuelven en el servidor, sin modelo (apartado~\ref{d-0}); aquí se tratan las abiertas, que reciben el resumen de costes verificado y los pasajes recuperados (figura~\ref{fig-e1}). \cite{especificaciones}
 
 \begin{table}[htbp]
 \centering\small
