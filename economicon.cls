@@ -120,7 +120,7 @@
     \vspace{2.2cm}
     {\titulos\bfseries\fontsize{26}{30}\selectfont\color{tinta} Memoria del proyecto\par}
     \vspace{0.5cm}
-    {\titulos\large\color{violeta} Asistente FinOps para Azure --- Propuesta\par}
+    {\titulos\large\color{violeta} Asistente FinOps para Azure\par}
     \vfill
     {\color{tinta} Alejandro Aguado \;·\; Paris Arcos \;·\; Lucía Mateo \;·\; Víctor Méndez\par}
     \vspace{0.4cm}
