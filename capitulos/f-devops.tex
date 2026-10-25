@@ -51,3 +51,5 @@ Un segundo panel de Grafana reúne los resultados de la evaluación del asistent
 \subsection{Documentación y decisiones}\label{f-6}
 
 Los manuales describen la operación, las decisiones de arquitectura justifican alternativas y los informes conservan evidencia. Integrar una decisión no la ratifica. \cite{adr}
+
+La memoria tiene además un repositorio independiente. Su flujo de GitHub Actions compila el documento y la bibliografía con LuaLaTeX y biber, adjunta el PDF a las pull requests y, al integrar cambios en main, guarda la versión declarada si todavía no existe. Automatiza la entrega documental de forma independiente del despliegue de la aplicación. \cite{ci-memoria}
