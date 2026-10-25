@@ -4,7 +4,9 @@ Un asistente que redacta sobre costes no se puede dar por bueno por inspección.
 
 \subsection{Qué se mide y cómo se ve}\label{h-1}
 
-Las mediciones se consultan en el panel de Grafana «Asistente y evidencia», con cinco secciones: negocio y fiabilidad de los datos; calidad y robustez del asistente; recuperación documental y citas; coste y rendimiento del chat; y salud técnica y diagnóstico. La sección de calidad incluye el bloque de evolución entre la quinta y la sexta medición. Los tres indicadores de negocio (tiempo ahorrado, cobertura del gasto asignado y ahorro potencial) tienen objetivos que son hipótesis de piloto. \cite{panel}
+Se siguen seis familias de métricas técnicas: exactitud de la respuesta, relevancia de la recuperación, fundamento de citas y cifras, latencia, robustez de la salida y disponibilidad. A ellas se suman tres de negocio (tiempo ahorrado, cobertura del gasto asignado y ahorro potencial), cuyos objetivos son hipótesis de piloto. \cite{panel}
+
+Todas se consultan en el panel de Grafana «Asistente y evidencia», con cinco secciones: negocio y fiabilidad de los datos; calidad y robustez del asistente; recuperación documental y citas; coste y rendimiento del chat; y salud técnica y diagnóstico. Cada métrica tiene su panel en la sección que le corresponde, con el modelo declarado y su procedencia. La sección de calidad incluye el bloque de evolución entre la quinta y la sexta medición. Este capítulo recoge las cifras principales; el panel es el lugar donde se verifican todas, y la memoria no reproduce cada uno de sus paneles.
 
 Las mediciones de calidad usan dos bancos: el de 28 preguntas, con 20 que exigen respuesta, 6 que exigen pedir información y 2 que exigen abstenerse, y una batería de robustez de 29 casos, en la que 16 tienen un defecto que el sistema debe señalar sin inventar un resultado. Un caso aprueba solo si cumple todas sus comprobaciones. Los objetivos son aprobar el 80\,\% de las preguntas con respuesta, cumplir el 90\,\% de las reglas objetivas, no dar cifras sin rastro en casos críticos y terminar el 95\,\% de las conversaciones en diez segundos. \cite{evaluacion,adr}
 
