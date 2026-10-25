@@ -12,7 +12,7 @@ Un modelo de lenguaje no conoce los datos de un cliente. Por eso Economicon recu
 \toprule
 \textbf{Elemento} & \textbf{Elección} & \textbf{Qué significa} \\
 \midrule
-Representación del texto & text-embedding-3-small; 1.536 dimensiones & Un embedding es un vector numérico (aquí, de 1.536 números) que representa el significado de un texto; permite comparar cada pasaje con la pregunta. El código admite además Titan de AWS, apagado por defecto. \\
+Representación del texto & text-embedding-3-small; 1.536 dimensiones & Un embedding es un vector numérico (aquí, de 1.536 números) que representa el significado de un texto; permite comparar cada pasaje con la pregunta. El código admite además Titan, el modelo de embeddings de AWS, apagado por defecto. \\
 Fragmentación & Objetivo de 600 tokens; máximo de 800; solapamiento del 10\,\% & Un token es la unidad en que el modelo divide el texto, aproximadamente una palabra o parte de ella. El corte respeta secciones, listas y tablas cuando caben. \\
 Recuperación del chat & 4 pasajes primarios; umbral coseno 0,6; hasta 20 candidatos & La distancia mide similitud (0 es idéntico). El umbral filtra la selección semántica; vecinos y pasajes prioritarios amplían el contexto, acotado también por tokens. \\
 Recuperación híbrida (variante D) & Vectorial y por palabras, fusionadas por posición & Opción elegida tras comparar cuatro variantes. \\
