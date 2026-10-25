@@ -2,15 +2,15 @@
 
 \subsection{Logros frente a los objetivos}\label{i-1}
 
-Economicon implementa ingesta y normalización de gasto, indicadores, anomalías y conversación documental, con separación por cliente, construcción y despliegue automatizados. El servidor calcula los agregados; la generación puede contener errores, como muestra h. Grafana presenta informes con procedencia y límites. \cite{arquitectura-final,panel-evaluacion}
+Economicon implementa ingesta y normalización de gasto, indicadores, anomalías y conversación documental, con separación por cliente, construcción y despliegue automatizados. El servidor calcula los agregados; la generación puede contener errores, como muestra h. Grafana presenta informes con procedencia y límites.
 
-El alcance demostrado usa datos públicos y sintéticos y una API Azure simulada. Recuperación híbrida, chat generativo y ciclo AWS están implementados, pero requieren activación o ejecución específica. Su uso con una organización real no está probado. \cite{arquitectura-final,aws-ensayo}
+El alcance demostrado usa datos públicos y sintéticos y una API Azure simulada. Recuperación híbrida, chat generativo y ciclo AWS están implementados, pero requieren activación o ejecución específica. Su uso con una organización real no está probado.
 
 \subsection{Lecciones y límites}\label{i-2}
 
-Superar pruebas técnicas no basta para aceptar el asistente. Hay citas trazables, pero también fallos de criterio, bloqueos y latencia excesiva.  \cite{banco28-tras,campanas-infra,juez-infra,demo-final}
+Superar pruebas técnicas no basta para aceptar el asistente. Hay citas trazables, pero también fallos de criterio, bloqueos y latencia excesiva. 
 
-El histórico y las seis repeticiones usan métodos distintos y cambiar varias condiciones a la vez impide aislar causas. integrar por excepción tampoco equivale a revisión cruzada completa. \cite{reevaluacion-modelo,juez-infra,continuidad}
+El histórico y las seis repeticiones usan métodos distintos y cambiar varias condiciones a la vez impide aislar causas. integrar por excepción tampoco equivale a revisión cruzada completa.
 
 \subsection{Trabajo futuro}\label{i-3}
 
@@ -18,13 +18,13 @@ El histórico y las seis repeticiones usan métodos distintos y cambiar varias c
 Se probará con usuarios y datos reales, comprobando permisos, aislamiento e impacto económico. Las repeticiones existentes se complementarán con revisión humana independiente y mediciones en el entorno elegido, variando una condición cada vez.
 
 \subsubsection{Herramientas para el modelo y tiempo de respuesta}
-Se ofrecerán al modelo consultas autorizadas de gasto, propiedad y anomalías, sin generar SQL. Para reducir latencia se estudiarán salidas acotadas sin truncado, caché de contexto y recuperación híbrida con su índice preparado. \cite{arquitectura-final}
+Se ofrecerán al modelo consultas autorizadas de gasto, propiedad y anomalías, sin generar SQL. Para reducir latencia se estudiarán salidas acotadas sin truncado, caché de contexto y recuperación híbrida con su índice preparado.
 
 \subsubsection{Una referencia predictiva para las anomalías}
-La regla actual compara dos semanas: exige un aumento superior al 20\,\% y a 100 unidades monetarias diarias. No distingue crecimiento normal de salto inesperado. Se comparará regresión lineal con modelos estacionales y no supervisados, usando un histórico de semanas o meses todavía inexistente y evaluando precisión y explicabilidad. \cite{detector-anomalias,jup130-anomalias}
+La regla actual compara dos semanas: exige un aumento superior al 20\,\% y a 100 unidades monetarias diarias. No distingue crecimiento normal de salto inesperado. Se comparará regresión lineal con modelos estacionales y no supervisados, usando un histórico de semanas o meses todavía inexistente y evaluando precisión y explicabilidad. \cite{detector-anomalias}
 
 \subsubsection{Detección periódica y avisos}
-La detección actual es manual y guarda episodios por cliente, moneda y servicio. Se añadirá ejecución periódica, apagada por defecto y coordinada con la carga de costes. Antes de avisar en la aplicación o Grafana se definirán frecuencia, duplicados y condiciones de envío. \cite{detector-anomalias}
+La detección actual es manual y guarda episodios por cliente, moneda y servicio. Se añadirá ejecución periódica, apagada por defecto y coordinada con la carga de costes. Antes de avisar en la aplicación o Grafana se definirán frecuencia, duplicados y condiciones de envío.
 
 \subsubsection{Despliegue en la nube}
-El ciclo desechable en AWS está preparado. Ejecutarlo permitirá medir la ruta con modelos nativos y comparar coste y latencia con la configuración actual. \cite{aws-ensayo}
+El ciclo desechable en AWS está preparado. Ejecutarlo permitirá medir la ruta con modelos nativos y comparar coste y latencia con la configuración actual.

@@ -1,46 +1,46 @@
 \section{Uso de modelos preentrenados}\label{g-0}
 
-Economicon no entrena modelos propios: usa modelos preentrenados a través de un gateway y los guía con instrucciones y contexto. La elección importa porque determina el coste por consulta, el tiempo de respuesta y dónde viajan los datos del cliente. Este apartado explica por qué se descartó entrenar, por qué ruta se accede a los modelos, cómo se eligió el modelo y qué se puede afirmar sobre su coste y su latencia. La tabla~\ref{tab-g1} resume los datos clave.
+Economicon no entrena modelos propios: usa modelos preentrenados a través de un gateway y los guía con instrucciones y contexto. La elección importa porque determina el coste por consulta, el tiempo de respuesta y dónde viajan los datos del cliente. Este apartado explica por qué se descartó entrenar, por qué ruta se accede a los modelos, cómo se eligió el modelo y qué se puede afirmar sobre su coste y su latencia. La tabla~\ref{tab-g1} resume los datos clave. \cite{config-gateway,aws,comparativa-modelos,evaluacion}
 
 \begin{table}[!htbp]
-\centering\small
+\centering\footnotesize
 \caption{Configuración de la versión final y evidencias de la elección}\label{tab-g1}
 \begin{tabular}{@{}p{0.22\linewidth}p{0.3\linewidth}p{0.4\linewidth}@{}}
 \toprule
 \textbf{Ámbito} & \textbf{Dato o elección} & \textbf{Qué cuenta} \\
 \midrule
-Modelo de chat por defecto & DeepSeek V4.1 Flash; proveedor DeepInfra, 8 bits; sin ruta de reserva & Único generador de la configuración versionada; no certifica qué modelo respondió en cada llamada. \cite{config-gateway,arquitectura-final} \\
-Modelo de embeddings & text-embedding-3-small & Genera los embeddings de la recuperación; no genera respuestas. \cite{config-gateway} \\
-Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Implementada y probada sin conexión; apagada por defecto y sin invocaciones reales. \cite{aws-ensayo} \\
-Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 frente a Flash con las mismas preguntas; valoración de un juez IA, es decir, otro modelo de lenguaje que puntúa las respuestas. \cite{comparativa-modelos} \\
-Comparativa de coste & GLM-5.2: 0,1806 USD; Flash: 0,0392 USD & Las 28 operaciones de cada modelo, con los embeddings de las preguntas; sin la indexación inicial. \cite{comparativa-modelos} \\
-Coste facturado por consulta & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & Consultas de chat terminadas, contrastadas con la factura del proveedor; ventanas de medición distintas. \cite{jup130-coste,jup133-coste} \\
-Latencia en el entorno desplegado & Percentil 95 por repetición: de 63,0 a 238,1 s en seis repeticiones; objetivo de 10 s & Tiempo hasta el estado terminal, con reintentos y operaciones fallidas, en DockerDevelop, el entorno de desarrollo desplegado en un servidor Docker compartido; no es la duración de una sola llamada. \cite{campanas-infra} \\
-Latencia histórica del banco & Percentil 95: 41,3 s antes del arreglo y 42,4 s tras él & Medida en un ordenador local. Tiempo bajo el que quedan el 95\,\% de las operaciones completadas del banco de 28 preguntas: 28 operaciones antes del arreglo y 27 después. \cite{reevaluacion-modelo,banco28-tras} \\
+Modelo de chat por defecto & DeepSeek V4.1 Flash; proveedor DeepInfra, 8 bits; sin ruta de reserva & Único generador; no certifica qué modelo respondió en cada llamada. \\
+Modelo de embeddings & text-embedding-3-small & Genera los embeddings de la recuperación. \\
+Alternativa nativa en AWS & Amazon Nova Micro y Titan V2 & Probada sin conexión; apagada por defecto, sin invocaciones reales. \\
+Comparativa de contenido & 27 de 28 respuestas aceptables con cada modelo & GLM-5.2 y Flash con las mismas preguntas; lo valora un juez IA (otro modelo de lenguaje). \\
+Comparativa de coste & GLM-5.2: 0,1806 USD; Flash: 0,0392 USD & 28 operaciones por modelo, con los embeddings de las preguntas y sin la indexación inicial. \\
+Coste facturado por consulta & GLM-5.2: 0,0026 USD; Flash: 0,0006 USD & Consultas terminadas, contrastadas con la factura; ventanas de medición distintas. \\
+Latencia en el entorno desplegado & Percentil 95 por repetición: de 63,0 a 238,1 s (6 repeticiones); objetivo de 10 s & Hasta el estado terminal, con reintentos y fallos, en DockerDevelop (entorno de desarrollo desplegado en un servidor Docker compartido); no es una sola llamada. \\
+Latencia histórica del banco & Percentil 95: 41,3 s antes del arreglo y 42,4 s tras él & Medida en un ordenador local, sobre 28 operaciones completadas antes del arreglo y 27 después. \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Adaptación sin entrenamiento propio}\label{g-1}
 
-Para un modelo preentrenado caben tres opciones: entrenarlo desde cero, ajustar sus pesos con datos propios (fine-tuning) o usarlo tal cual con instrucciones y contexto. Para el MVP se eligió la tercera, que concentra el esfuerzo en lo que diferencia a Economicon y evita mantener un ciclo propio de entrenamiento: las fuentes, los controles de la respuesta y el cálculo determinista de las cifras. El modelo de embeddings también se usa sin modificar. \cite{especificaciones,config-gateway}
+Para un modelo preentrenado caben tres opciones: entrenarlo desde cero, ajustar sus pesos con datos propios (fine-tuning) o usarlo tal cual con instrucciones y contexto. Para el MVP se eligió la tercera, que concentra el esfuerzo en lo que diferencia a Economicon y evita mantener un ciclo propio de entrenamiento: las fuentes, los controles de la respuesta y el cálculo determinista de las cifras. El modelo de embeddings también se usa sin modificar. \cite{config-gateway}
 
 \subsection{Ruta y condiciones de uso}\label{g-2}
 
-Las peticiones al modelo pasan por el gateway LiteLLM y por OpenRouter, que las encamina al proveedor (apartado~\ref{d-0}). La aplicación solo conoce un alias estable, de modo que cambiar de modelo es un cambio de configuración y no de código. \cite{config-gateway,adr-registro}
+Las peticiones al modelo pasan por el gateway LiteLLM y por OpenRouter, que las encamina al proveedor (apartado~\ref{d-0}). La aplicación solo conoce un alias estable, de modo que cambiar de modelo es un cambio de configuración y no de código. \cite{config-gateway}
 
-Como los datos del cliente viajan al proveedor en cada consulta, la configuración exige retención cero de datos (ZDR, Zero Data Retention), excluye a los proveedores que recopilan los datos de las peticiones y desactiva el cambio automático de proveedor ante un fallo. La cuantización a 8 bits representa los parámetros del modelo con menor precisión para abaratar la inferencia. Son condiciones configuradas, no una atestación externa de cada llamada. \cite{config-gateway}
+Como los datos del cliente viajan al proveedor en cada consulta, la configuración exige retención cero de datos (ZDR, Zero Data Retention), excluye a los proveedores que recopilan los datos de las peticiones y desactiva el cambio automático de proveedor ante un fallo. La cuantización a 8 bits representa los parámetros del modelo con menor precisión para abaratar la inferencia. Son condiciones configuradas, no una atestación externa de cada llamada.
 
-Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativos de la nube, sin pasar por el gateway. El código y sus controles están probados sin conexión, pero no se ha invocado ningún modelo de AWS, así que esta memoria no aporta mediciones de esa ruta. \cite{aws-ensayo}
+Para el ensayo en AWS se implementó una ruta alternativa con los modelos nativos de la nube, sin pasar por el gateway. El código y sus controles están probados sin conexión, pero no se ha invocado ningún modelo de AWS, así que esta memoria no aporta mediciones de esa ruta. \cite{aws}
 
 \subsection{Cómo se eligió el modelo}\label{g-3}
 
 GLM-5.2 fue el primer modelo del chat. Para sustituirlo se compararon GLM-5.2 y DeepSeek V4.1 Flash con las mismas preguntas, el mismo corpus y el mismo contexto. Ambos obtuvieron casi todas las respuestas aceptables según el juez IA; Flash costó menos de la cuarta parte; GLM-5.2 necesitó menos reintentos y tuvo tiempos más regulares. Pesó el coste, porque la calidad observada era equivalente. Con Flash una consulta terminada costó unos 0,0006 USD; como ilustración, mil consultas al mes de un cliente supondrían unos 0,6 USD, muy por debajo de la mensualidad de 50 € del caso de negocio (apartado~\ref{b-0}). El coste del modelo, por tanto, no es el factor que limita el precio; la latencia sí es el límite principal del capítulo. La valoración del juez describe aquella muestra y no sustituye una validación humana. \cite{comparativa-modelos}
 
-Las evaluaciones posteriores usaron otros procedimientos, separados en el apartado~\ref{h-0}: reglas automáticas con una revisora humana y, en las últimas repeticiones, un único juez IA. Sus puntuaciones no se suman ni demuestran superioridad general de un modelo, y la ventaja de coste procede de ventanas de medición distintas, por lo que no se atribuye solo al modelo. \cite{reevaluacion-modelo,jup133-coste,juez-infra}
+Las evaluaciones posteriores usaron otros procedimientos, separados en el apartado~\ref{h-0}: reglas automáticas con una revisora humana y, en las últimas repeticiones, un único juez IA. Sus puntuaciones no se suman ni demuestran superioridad general de un modelo, y la ventaja de coste procede de ventanas de medición distintas, por lo que no se atribuye solo al modelo. \cite{evaluacion}
 
 \subsection{Latencia y margen de mejora}\label{g-4}
 
-Las latencias de la tabla~\ref{tab-g1} quedan por encima del objetivo. La histórica se midió en local y las repeticiones posteriores en DockerDevelop, ya con el límite final ampliado, se alejan más aún, y sus tiempos incluyen reintentos y operaciones fallidas; ambas se recogen por separado en el apartado~\ref{h-0}. Falta una comparación controlada que aísle el efecto del límite, del modelo o de la infraestructura. \cite{campanas-infra,demo-final}
+Las latencias de la tabla~\ref{tab-g1} quedan por encima del objetivo. La histórica se midió en local y las repeticiones posteriores en DockerDevelop, ya con el límite final ampliado, se alejan más aún, y sus tiempos incluyen reintentos y operaciones fallidas; ambas se recogen por separado en el apartado~\ref{h-0}. Falta una comparación controlada que aísle el efecto del límite, del modelo o de la infraestructura. \cite{evaluacion}
 
 Las vías de ajuste, todavía sin evaluar, se recogen en el apartado~\ref{i-0}.

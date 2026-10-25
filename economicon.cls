@@ -53,7 +53,7 @@
   BoldFont=*-Bold, BoldItalicFont=*-BoldOblique, Scale=0.85]
 \setstretch{1.08}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.5em}
+\setlength{\parskip}{0.35em}
 \emergencystretch=2em
 
 % ---- Titulos ------------------------------------------------------------
@@ -69,7 +69,7 @@
 \titlespacing*{\section}{0pt}{2em}{0.8em}
 \titlespacing*{\subsection}{0pt}{1.4em}{0.4em}
 \let\oldsection\section
-\renewcommand{\section}{\needspace{8\baselineskip}\oldsection}
+\renewcommand{\section}{\needspace{4\baselineskip}\oldsection}
 
 % ---- Cabecera y pie -----------------------------------------------------
 \pagestyle{fancy}

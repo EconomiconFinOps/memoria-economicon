@@ -1,17 +1,17 @@
 \section{Arquitectura técnica de la solución}\label{d-0}
 
-Economicon es una aplicación web que responde preguntas sobre los costes de Azure y su arquitectura se rige por dos criterios. El primero es que cada cifra mostrada la calcule código determinista y que el modelo de lenguaje solo redacte sobre evidencia ya verificada. El segundo es que cada cliente acceda únicamente a sus propios datos. Con esos criterios se organizan las capas, el camino de una pregunta y la entrada de datos. La misma arquitectura se ofrece en dos formas de despliegue: un entorno local con Docker Compose y una alternativa en la nube sobre Amazon Web Services (AWS) \cite{compose-final,arquitectura-develop}.
+Economicon es una aplicación web que responde preguntas sobre los costes de Azure y su arquitectura se rige por dos criterios. El primero es que cada cifra mostrada la calcule código determinista y que el modelo de lenguaje solo redacte sobre evidencia ya verificada. El segundo es que cada cliente acceda únicamente a sus propios datos. Con esos criterios se organizan las capas, el camino de una pregunta y la entrada de datos. La misma arquitectura se ofrece en dos formas de despliegue: un entorno local con Docker Compose y una alternativa en la nube sobre Amazon Web Services (AWS). \cite{arquitectura}
 
 \subsection{Capas y tecnologías}\label{d-1}
 
-Economicon se organiza en cinco capas ---interfaz, API, cola y procesador, datos e inteligencia artificial--- con la observabilidad como capa transversal (figura~\ref{fig-d1}). La interfaz web muestra costes, anomalías y el asistente. La API autentica a cada persona, separa los datos de cada cliente y calcula costes y anomalías; en cada petición comprueba la sesión y que la persona pertenece al cliente indicado, de modo que enviar el identificador de un cliente no concede acceso por sí solo. La cola de mensajes y el procesador ejecutan en segundo plano la ingesta de costes y de documentos; los datos se reparten entre una base transaccional, un índice de similitud y un almacén de archivos. La inteligencia artificial pasa por una pasarela que concentra claves y límites de gasto antes del proveedor; Prometheus y Grafana observan el conjunto \cite{arquitectura-develop}.
+Economicon se organiza en cinco capas ---interfaz, API, cola y procesador, datos e inteligencia artificial--- con la observabilidad como capa transversal (figura~\ref{fig-d1}). La interfaz web muestra costes, anomalías y el asistente. La API autentica a cada persona, separa los datos de cada cliente y calcula costes y anomalías; en cada petición comprueba la sesión y que la persona pertenece al cliente indicado, de modo que enviar el identificador de un cliente no concede acceso por sí solo. La cola de mensajes y el procesador ejecutan en segundo plano la ingesta de costes y de documentos; los datos se reparten entre una base transaccional, un índice de similitud y un almacén de archivos. La inteligencia artificial pasa por una pasarela que concentra claves y límites de gasto antes del proveedor; Prometheus y Grafana observan el conjunto. \cite{arquitectura}
 
 \begin{figure}[htbp]\centering\includegraphics[width=\linewidth,height=0.34\textheight,keepaspectratio]{figuras/d1-componentes.png}\caption{Componentes del sistema. Las líneas continuas son el flujo principal; las discontinuas, comunicaciones laterales o que dependen de la configuración.\label{fig-d1}}\end{figure}
 
-La tabla~\ref{tab-d2} indica para qué se usa cada tecnología y por qué se eligió frente a la alternativa más habitual.
+La tabla~\ref{tab-d2} indica para qué se usa cada tecnología y por qué se eligió frente a la alternativa más habitual. \cite{adr}
 
 \begin{table}[htbp]
-\centering\small
+\centering\footnotesize
 \caption{Tecnologías del sistema, su función y el motivo de su elección.}\label{tab-d2}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.17}}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.18}}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.65}}@{}}
 \toprule
@@ -19,11 +19,11 @@ La tabla~\ref{tab-d2} indica para qué se usa cada tecnología y por qué se eli
 \midrule
 React y TypeScript & Interfaz web & El tipado estático detecta en compilación los desajustes con la API; frente a una interfaz generada en el servidor, admite el estado interactivo de las conversaciones en flujo. \\
 FastAPI (Python) & API y procesador & Sus esquemas tipados validan cada entrada y generan el contrato de la API; Python comparte con el procesador las librerías de datos y de inteligencia artificial. \\
-RabbitMQ & Cola de trabajos & Entrega con confirmación y cola duradera: la ingesta continúa aunque el procesador se reinicie. Frente a una cola en la base de datos, separa carga y fallos; a cambio, hay que tolerar mensajes duplicados \cite{adr-arquitectura}. \\
+RabbitMQ & Cola de trabajos & Entrega con confirmación y cola duradera: la ingesta continúa aunque el procesador se reinicie. Frente a una cola en la base de datos, separa carga y fallos; a cambio, hay que tolerar mensajes duplicados. \\
 CockroachDB & Estado: usuarios, trabajos, conversaciones y costes & Habla SQL, compatible con PostgreSQL, de modo que la aplicación puede funcionar sobre PostgreSQL, como prevé la alternativa en la nube. No se afirma que lo supere. \\
-pgvector & Búsqueda por similitud de fragmentos & Extensión de PostgreSQL: un único motor filtra a la vez por cliente y por distancia, sin servicio vectorial dedicado. Calcula la distancia exacta, sin índice aproximado \cite{adr-arquitectura}. \\
-LiteLLM y OpenRouter & Acceso a los modelos & Concentran en un punto las claves, el techo de gasto y la política de privacidad y permiten cambiar de modelo sin tocar el código. El techo, de 10 USD al mes, es el presupuesto máximo de desarrollo y se aplica mediante una clave virtual de la pasarela \cite{adr-arquitectura}. \\
-MinIO & Almacén temporal de archivos subidos & Habla el protocolo S3 y mantiene los binarios fuera de la cola y de la base de datos \cite{guia-ingesta}. \\
+pgvector & Búsqueda por similitud de fragmentos & Extensión de PostgreSQL: un único motor filtra a la vez por cliente y por distancia, sin servicio vectorial dedicado. Calcula la distancia exacta, sin índice aproximado. \\
+LiteLLM y OpenRouter & Acceso a los modelos & Concentran en un punto las claves, el techo de gasto y la política de privacidad y permiten cambiar de modelo sin tocar el código. El techo, de 10 USD al mes, es el presupuesto máximo de desarrollo y se aplica mediante una clave virtual de la pasarela. \\
+MinIO & Almacén temporal de archivos subidos & Habla el protocolo S3 y mantiene los binarios fuera de la cola y de la base de datos. \\
 Prometheus y Grafana & Métricas, alertas y paneles & Estándares abiertos de observabilidad; Grafana presenta también los resultados de la evaluación. \\
 Docker Compose & Despliegue reproducible & Una orden levanta todo el sistema en un portátil o un servidor; no equivale a un orquestador de producción. \\
 \bottomrule
@@ -36,7 +36,7 @@ Ambos flujos operan por cliente: la búsqueda filtra por cliente y los costes se
 
 \subsubsection{El camino de una pregunta}
 
-El asistente atiende cada pregunta por uno de dos caminos. Las consultas estructuradas ---gasto por dimensión, propiedad de los costes y explicación de una anomalía--- las resuelve el servidor con consultas a la base de datos y devuelve cifras exactas con su evidencia, sin intervención del modelo. Las preguntas abiertas recorren el chat con modelo de lenguaje, que se activa por configuración y que la demostración por defecto mantiene apagado \cite{compose-final}.
+El asistente atiende cada pregunta por uno de dos caminos. Las consultas estructuradas ---gasto por dimensión, propiedad de los costes y explicación de una anomalía--- las resuelve el servidor con consultas a la base de datos y devuelve cifras exactas con su evidencia, sin intervención del modelo. Las preguntas abiertas recorren el chat con modelo de lenguaje, que se activa por configuración y que la demostración por defecto mantiene apagado. \cite{despliegue}
 
 En el chat con modelo (figura~\ref{fig-d2}), la API abre una operación asociada a la conversación y la envía al procesador por una red privada y con una firma que solo conocen ambos; el procesador comprueba en cada paso que la operación sigue siendo de esa persona. El servidor prepara una única búsqueda documental por intento, sin que la decida el modelo, que redacta con un esquema fijo; el detalle de la recuperación y de la generación está en el apartado~\ref{e-0}.
 
@@ -46,7 +46,7 @@ La respuesta pasa por dos controles de validación, esquema y evidencia, que se 
 
 \subsubsection{Entrada de datos}
 
-Los costes de Azure se cargan con una herramienta del procesador que consulta una API de Azure simulada, con un conjunto público \cite{dataset-azure} porque no hay cuenta real, los normaliza a importes decimales exactos y los guarda por cliente. Los documentos entran como texto o como archivo (Markdown, TXT, DOCX, DOC y PDF, digital o escaneado con reconocimiento óptico de caracteres local). El navegador sube el original a MinIO con una dirección firmada de vida corta; el procesador extrae su texto en un entorno aislado, lo divide en fragmentos estructurales y guarda en pgvector un vector por fragmento, calculado con text-embedding-3-small. El original se elimina cuando el texto está a salvo \cite{guia-ingesta,adr-arquitectura}.
+Los costes de Azure se cargan con una herramienta del procesador que consulta una API de Azure simulada, con un conjunto público porque no hay cuenta real, los normaliza a importes decimales exactos y los guarda por cliente. Los documentos entran como texto o como archivo (Markdown, TXT, DOCX, DOC y PDF, digital o escaneado con reconocimiento óptico de caracteres local). El navegador sube el original a MinIO con una dirección firmada de vida corta; el procesador extrae su texto en un entorno aislado, lo divide en fragmentos estructurales y guarda en pgvector un vector por fragmento, calculado con text-embedding-3-small. El original se elimina cuando el texto está a salvo. \cite{dataset-azure,arquitectura}
 
 \subsection{Dos formas de despliegue}\label{d-3}
 
@@ -54,18 +54,18 @@ Economicon se despliega de dos formas que comparten la misma arquitectura por ca
 
 \subsubsection{Entorno local}
 
-Docker Compose levanta los servicios permanentes y 2 tareas de un solo uso, que migran la base de datos y preparan el almacén de archivos, con 6 volúmenes persistentes que conservan los datos tras un reinicio; el perfil de inteligencia artificial añade la pasarela y su base de datos, con un volumen más. Prometheus recoge las métricas cada 15 s y Grafana alerta de los fallos de ingesta \cite{compose-final,adr-arquitectura}.
+Docker Compose levanta los servicios permanentes y 2 tareas de un solo uso, que migran la base de datos y preparan el almacén de archivos, con 6 volúmenes persistentes que conservan los datos tras un reinicio; el perfil de inteligencia artificial añade la pasarela y su base de datos, con un volumen más. Prometheus recoge las métricas cada 15 s y Grafana alerta de los fallos de ingesta. \cite{despliegue}
 
 \subsubsection{Alternativa en la nube: AWS}
 
-La figura~\ref{fig-d3} recoge la arquitectura en AWS. El acceso empieza en Route 53 (DNS) y CloudFront, protegido por un cortafuegos web (WAF) y un certificado (ACM); la interfaz es un sitio estático en un S3 privado al que solo llega CloudFront y Cognito gestiona el inicio de sesión con OIDC. Las peticiones a la API llegan, sin caché, a un balanceador interno de una red privada virtual (VPC) con subredes privadas en varias zonas de disponibilidad, donde ECS Fargate ejecuta la API, el procesador y el simulador de la API de Azure, junto a Amazon MQ y dos bases RDS PostgreSQL, una operativa y otra con pgvector. Bedrock, S3, Secrets Manager, KMS, IAM y CloudWatch quedan fuera de la VPC \cite{aws-referencia}.
+La figura~\ref{fig-d3} recoge la arquitectura en AWS. El acceso empieza en Route 53 (DNS) y CloudFront, protegido por un cortafuegos web (WAF) y un certificado (ACM); la interfaz es un sitio estático en un S3 privado al que solo llega CloudFront y Cognito gestiona el inicio de sesión con OIDC. Las peticiones a la API llegan, sin caché, a un balanceador interno de una red privada virtual (VPC) con subredes privadas en varias zonas de disponibilidad, donde ECS Fargate ejecuta la API, el procesador y el simulador de la API de Azure, junto a Amazon MQ y dos bases RDS PostgreSQL, una operativa y otra con pgvector. Bedrock, S3, Secrets Manager, KMS, IAM y CloudWatch quedan fuera de la VPC. \cite{aws}
 
 \begin{figure}[htbp]\centering\includegraphics[width=0.9\linewidth,height=0.34\textheight,keepaspectratio]{figuras/d3-aws.png}\caption{Arquitectura de referencia en AWS. Las líneas continuas son el flujo principal y las conexiones con los datos; las discontinuas, la protección del acceso, los secretos y la observabilidad.\label{fig-d3}}\end{figure}
 
 La tabla~\ref{tab-d3} recoge qué sustituye a cada pieza local y por qué.
 
 \begin{table}[htbp]
-\centering\small
+\centering\footnotesize
 \caption{Equivalencias entre la versión local y la alternativa en AWS.}\label{tab-d3}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.24}}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.22}}>{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.54}}@{}}
 \toprule
@@ -84,9 +84,7 @@ Secretos de Compose & Secrets Manager, KMS e IAM & Claves cifradas y un rol de m
 \end{tabular}
 \end{table}
 
-Las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API; API y procesador a bases y cola). La plantilla de Terraform se valida en local sin ejecutar un plan real, con 12 pruebas con proveedores simulados y 8 casos de enrutamiento de CloudFront; el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. La aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock \cite{aws-referencia,aws-ensayo}.
-
-\clearpage
+Las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API; API y procesador a bases y cola). La plantilla de Terraform se valida en local sin ejecutar un plan real, con 12 pruebas con proveedores simulados y 8 casos de enrutamiento de CloudFront; el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. La aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock.
 
 \subsection{Alcance y límites}\label{d-4}
 
