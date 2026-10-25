@@ -1,0 +1,29 @@
+% Esquema vectorial: corte y fuentes en docs/continuidad/concordancia-develop.md.
+\begingroup
+\small\centering
+\setlength{\fboxsep}{5pt}
+\setlength{\tabcolsep}{4pt}
+\fcolorbox{violeta}{lavanda}{\parbox{0.9\linewidth}{\centering
+\textbf{Acceso público}\\
+Usuario · Route 53 · ACM · WAF · CloudFront\\
+Cognito: identidad de la aplicación}}
+\par\vspace{2pt}$\downarrow$\par\vspace{2pt}
+\begin{tabular}{@{}cc@{}}
+\fcolorbox{violeta}{white}{\parbox[c][24pt][c]{0.38\linewidth}{\centering
+S3 privado\\Interfaz web}} &
+\fcolorbox{violeta}{white}{\parbox[c][24pt][c]{0.46\linewidth}{\centering
+Balanceador interno\\API y ruta /grafana/}} \\
+\end{tabular}
+\par\vspace{2pt}$\downarrow$\par\vspace{2pt}
+\fcolorbox{violeta}{lavanda}{\parbox{0.9\linewidth}{\centering
+\textbf{VPC privada · ECS Fargate}\\
+API · Procesador · Simulador de costes Azure\\
+Tarea de monitorización: Grafana y Prometheus\\
+Amazon MQ · RDS operativo · RDS con pgvector\\
+RDS conserva metadatos de Grafana y evaluaciones}}
+\par\vspace{2pt}$\downarrow$\par\vspace{2pt}
+\fcolorbox{violeta}{white}{\parbox{0.9\linewidth}{\centering
+\textbf{Servicios externos a la VPC}\\
+Bedrock · S3 · Secrets Manager · KMS · IAM\\
+CloudWatch: logs y señales de infraestructura}}
+\endgroup

@@ -54,13 +54,13 @@ Economicon se despliega de dos formas que comparten la misma arquitectura por ca
 
 \subsubsection{Entorno local}
 
-Docker Compose levanta los servicios permanentes y 2 tareas de un solo uso, que migran la base de datos y preparan el almacén de archivos, con 6 volúmenes persistentes que conservan los datos tras un reinicio; el perfil de inteligencia artificial añade la pasarela y su base de datos, con un volumen más. Prometheus recoge las métricas cada 15 s y Grafana alerta de los fallos de ingesta. \cite{despliegue}
+Docker Compose levanta 11 servicios permanentes, incluida la página pública, y 2 tareas de un solo uso, que migran la base de datos y preparan el almacén de archivos, con 6 volúmenes persistentes que conservan los datos tras un reinicio; el perfil de inteligencia artificial añade la pasarela y su base de datos, con un volumen más. Prometheus recoge las métricas cada 15 s y Grafana alerta de los fallos de ingesta. \cite{despliegue}
 
 \subsubsection{Alternativa en la nube: AWS}
 
-La figura~\ref{fig-d3} recoge la arquitectura en AWS. El acceso empieza en Route 53 (DNS) y CloudFront, protegido por un cortafuegos web (WAF) y un certificado (ACM); la interfaz es un sitio estático en un S3 privado al que solo llega CloudFront y Cognito gestiona el inicio de sesión con OIDC. Las peticiones a la API llegan, sin caché, a un balanceador interno de una red privada virtual (VPC) con subredes privadas en varias zonas de disponibilidad, donde ECS Fargate ejecuta la API, el procesador y el simulador de la API de Azure, junto a Amazon MQ y dos bases RDS PostgreSQL, una operativa y otra con pgvector. Bedrock, S3, Secrets Manager, KMS, IAM y CloudWatch quedan fuera de la VPC. \cite{aws}
+La figura~\ref{fig-d3} resume la alternativa preparada en AWS. Route 53 (DNS), CloudFront, un cortafuegos web (WAF) y un certificado (ACM) protegen el acceso; la interfaz reside en S3 privado y Cognito gestiona la identidad con OIDC. El balanceador interno dirige la API y Grafana a tareas de ECS Fargate en una red privada virtual (VPC). Allí se preparan también el procesador, el simulador Azure, Amazon MQ y dos bases RDS PostgreSQL. Prometheus y Grafana comparten una tarea privada; Grafana guarda sus metadatos y lee evaluaciones en RDS. CloudWatch recoge logs y señales de infraestructura. \cite{aws}
 
-\begin{figure}[htbp]\centering\includegraphics[width=0.9\linewidth,height=0.34\textheight,keepaspectratio]{figuras/d3-aws.png}\caption{Arquitectura de referencia en AWS. Las líneas continuas son el flujo principal y las conexiones con los datos; las discontinuas, la protección del acceso, los secretos y la observabilidad.\label{fig-d3}}\end{figure}
+\begin{figure}[htbp]\centering\input{figuras/d3-aws-observabilidad.tex}\caption{Arquitectura preparada en AWS: acceso, servicios privados y observabilidad. Las flechas agrupan flujos; no representan un despliegue ejecutado.\label{fig-d3}}\end{figure}
 
 La tabla~\ref{tab-d3} recoge qué sustituye a cada pieza local y por qué.
 
@@ -78,13 +78,13 @@ CockroachDB y pgvector & Dos bases RDS PostgreSQL & Copias de seguridad y alta d
 LiteLLM y OpenRouter & Amazon Bedrock & Modelos invocados dentro de la cuenta con permisos IAM; cambiar de modelo obliga a repetir la evaluación y reindexar todo el corpus. \\
 Autenticación de demostración & Amazon Cognito & Proveedor de identidad externo; la API sigue resolviendo los clientes autorizados de cada persona. \\
 MinIO & S3 & Mismo protocolo, sin servidor que mantener. \\
-Prometheus y Grafana & CloudWatch & Registros, métricas y alarmas gestionados. \\
+Prometheus y Grafana & ECS Fargate y CloudWatch & Conserva paneles y métricas; Grafana usa RDS para metadatos y evaluaciones. CloudWatch recoge logs y señales de infraestructura. \\
 Secretos de Compose & Secrets Manager, KMS e IAM & Claves cifradas y un rol de mínimo privilegio por servicio. \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Las bases y el broker no son accesibles desde internet: solo se comunican por grupos de seguridad concretos (balanceador a API; API y procesador a bases y cola). La plantilla de Terraform se valida en local sin ejecutar un plan real, con 12 pruebas con proveedores simulados y 8 casos de enrutamiento de CloudFront; el repositorio incluye un flujo manual de ensayo, de subida y de retirada, pensado para la defensa. La aplicación admite ya, por configuración, PostgreSQL, Cognito y Bedrock.
+Las bases y el broker solo admiten conexiones de los grupos de seguridad autorizados. La referencia Terraform tiene 14 pruebas con proveedores simulados y la preparación inicial del controlador, otra; no crean infraestructura real. La CI prueba además el enrutamiento de CloudFront y la monitorización en contenedores aislados. El repositorio prepara un ciclo manual de creación y retirada y admite PostgreSQL, Cognito y Bedrock por configuración. Es aceptación del código sin conexión, no de un despliegue AWS. \cite{aws,ci-integracion}
 
 \subsection{Alcance y límites}\label{d-4}
 

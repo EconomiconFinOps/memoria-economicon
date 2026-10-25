@@ -24,7 +24,7 @@ El asistente busca responder «¿en qué se me va el dinero?» con datos y fuent
 El prototipo implementa ingesta, normalización, indicadores, presupuestos y conversación documental. Las pruebas automáticas y los recorridos con datos reproducibles confirman que el circuito completo funciona de extremo a extremo; la calidad de las respuestas se mide en el apartado~\ref{h-0}. \cite{arquitectura}
 
 \paragraph{Operativa:}
-Docker Compose permite iniciar el entorno local: diez servicios permanentes y dos de inicialización, más dos opcionales para IA. Una API simulada sirve datos públicos de Microsoft FinOps Toolkit con licencia MIT.
+Docker Compose permite iniciar el entorno local: once servicios permanentes, incluida la página pública, y dos de inicialización, más dos opcionales para IA. Una API simulada sirve datos públicos de Microsoft FinOps Toolkit con licencia MIT. \cite{despliegue}
 
 \paragraph{Económica:}
 La tabla~\ref{tab-b1} compara dos escenarios de un año. El modelo cobra un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €, con todos los clientes activos durante el año. Los precios son los que ha calculado el equipo. El coste fijo es de 3.200 € mensuales: 1.200 € de infraestructura, cifra que se toma como hipótesis, y 80 horas de mantenimiento y evolución a 25 € por hora.
@@ -55,7 +55,7 @@ Se pretende facilitar la interpretación de costes sin formación especializada.
 Las mediciones de IA se separan del presupuesto de infraestructura.
 
 \paragraph{Coste de la inteligencia artificial:}
-El coste de los modelos de lenguaje depende del consumo. En las pruebas, una consulta completada costó unos 0,06 USD por cada cien, con contraste de facturación. El registro del gateway situó en 0,0118 USD el coste acumulado de tres tandas diagnósticas y una comprobación de embeddings; esa cifra no es el gasto total del desarrollo. \cite{evaluacion,adr}
+La tabla~\ref{tab-g1} distingue llamadas al modelo y operaciones completas: cada intento de chat tiene dos llamadas y puede reintentarse. La factura contrasta llamadas; el coste por operación procede de otra medición. \cite{coste-chat} El registro del gateway situó en 0,0118 USD el coste acumulado de tres tandas diagnósticas y una comprobación de embeddings; esa cifra no es el gasto total del desarrollo. \cite{evaluacion,adr}
 
 \paragraph{Coste de infraestructura:}
 El presupuesto de 1.200 € mensuales supone operación continua, sin IVA ni capa gratuita. Los modelos de lenguaje son un coste variable aparte, que crece con el uso.

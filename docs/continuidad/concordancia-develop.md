@@ -1,5 +1,39 @@
 # Concordancia con la aplicación
 
+## Actualización de concordancia — 25/10/2026
+
+Origen: petición «Puedes preparar una PR corrigiendo esas inconsistencias», tras la evaluación de `Economicon_Memoria_TFM_v1.2.pdf`. Identificador del chat no disponible. La autorización cubre los capítulos, referencias y figura afectados y la publicación de una PR; no incluye merge.
+
+Base actual de memoria: `40f594a80a0d4f803679ac2035c5992211919d88`, `main`, con versión1.3 y las figuras de PR33 ya incorporadas. Se conserva ese trabajo y los checkouts anteriores. Aplicación: `390721f92d60d29358de62e9cebf99ee028190a2`, confirmada como `develop` en GitHub el25/10; las comprobaciones del manuscrito se hacen contra su archivo Git, sin inferir implementación de otras ramas. Rama nueva `capitulo-b-d-e-f-g-h-consistencia-develop`.
+
+Plan aplicado: corregir las cinco discrepancias del cotejo, añadir fuentes precisas, mantener resultados históricos, verificar estructura/citas y compilar el PDF con el workflow del repositorio; revisar paginación y presentar PR a `main`.
+
+| Tema | Corrección |
+|---|---|
+| Coste B/G/H | Distingue media facturada por llamada de coste histórico por operación. Elimina la proyección de mil operaciones basada en mil llamadas. Dos fases por intento y reintentos no son una sola llamada. |
+| Recuperación E | Distingue selección primaria, umbral, vecinos/prioridad de políticas y presupuestos de evidencia/tokens. Configuración del ejemplo separada de opciones evaluadas. |
+| AWS D | Conserva Grafana/Prometheus preparados en ECS junto a CloudWatch;14 pruebas de referencia y1 de bootstrap. Nuevo esquema vectorial en `figuras/d3-aws-observabilidad.tex`, sin borrar los PNG anteriores. Aceptación offline no equivale a despliegue. |
+| CI F | Diez ejecuciones técnicas al expandir matriz Python; SQL real y monitorización aislada, sin atribuir arranque integral o uso de AWS. |
+| Compose B/D/F | Once servicios permanentes, incluida landing, más dos inicializadores y perfiles aparte. |
+| Chat E/H | Cifras de pantalla con procedencia propia y fuentes agrupadas. Los cortes siguen abiertos en el diagnóstico; las tablas no se presentan como mediciones del cambio reciente. |
+
+Fuentes exactas del corte:
+
+- [Unidades de coste](https://github.com/EconomiconFinOps/tfm-economicon/blob/390721f92d60d29358de62e9cebf99ee028190a2/docs/validation/model-change-memory-figures.md).
+- [Recuperación y expansión](https://github.com/EconomiconFinOps/tfm-economicon/blob/390721f92d60d29358de62e9cebf99ee028190a2/apps/backend/app/services/chat_context.py) y [almacén vectorial](https://github.com/EconomiconFinOps/tfm-economicon/blob/390721f92d60d29358de62e9cebf99ee028190a2/apps/backend/app/services/vector_store.py).
+- [CI](https://github.com/EconomiconFinOps/tfm-economicon/blob/390721f92d60d29358de62e9cebf99ee028190a2/.github/workflows/ci.yml), [Compose](https://github.com/EconomiconFinOps/tfm-economicon/blob/390721f92d60d29358de62e9cebf99ee028190a2/docker-compose.yml) y [AWS monitoring](https://github.com/EconomiconFinOps/tfm-economicon/blob/390721f92d60d29358de62e9cebf99ee028190a2/infra/aws-reference/monitoring.tf).
+- [Pruebas/aceptación offline AWS](https://github.com/EconomiconFinOps/tfm-economicon/blob/390721f92d60d29358de62e9cebf99ee028190a2/docs/evidence/JUP-131-pr161-reconciliation/application-acceptance.md) y [diagnóstico del chat](https://github.com/EconomiconFinOps/tfm-economicon/blob/390721f92d60d29358de62e9cebf99ee028190a2/docs/continuidad/respuestas-largas-chat.md).
+
+Las fuentes del cuerpo mantienen enlaces de lectura sin hashes conforme a las reglas del repositorio; esta nota fija el corte reproducible. A/C/I, tablas históricas deH, VERSION y entregas publicadas se conservan. Compilación integrada no disponible por restricciones de ejecución Windows; usar CI LuaLaTeX/biber y comprobar el artefacto. Sin nuevas campañas, inferencias, cambios de producto, despliegues o mensajes a terceros.
+
+Publicada la [PR34](https://github.com/EconomiconFinOps/memoria-economicon/pull/34) como borrador a `main`. Revisión documental independiente sin defectos materiales; corregida una cita duplicada. Verificación estructural actual:60etiquetas únicas,23claves bibliográficas,75citas con destino, cero marcadores pendientes; tablas históricasH idénticas y `git diff --check` conforme. Compilación y recuento final del PDF pendientes; no se atribuye todavía aceptación visual ni merge.
+
+Primera compilación válida sobre `e1897f11ebc5f663f817c14847d2abf83a79e34f`, [CI40211778159](https://github.com/EconomiconFinOps/memoria-economicon/actions/runs/40211778159): LuaLaTeX/biber SUCCESS. PDF22páginas físicas; capítulos1–19, bibliografía20–21, con una referencia aislada al final. Tablas y nueva figura sin recortes en revisión visual. Se acortan títulos bibliográficos y se pasan los antiguos enlaces de archivos con hash a `develop`, conforme a AGENTS; el corte reproducible permanece fijado en esta nota. Falta comprobar la compilación de ese ajuste; el recuento anterior no se atribuye al candidato posterior. Revisión independiente realizada por agente, sin simular revisiones humanas de la PR.
+
+Compilación del ajuste bibliográfico confirmada en `bb24eea2c274b55de297a0fbc30a3861d6ec583d`, [CI40212174534](https://github.com/EconomiconFinOps/memoria-economicon/actions/runs/40212174534), SUCCESS:21páginas físicas, portada sin numerar, capítulos1–19 y bibliografía20. Referencias completas en una página, figuraAWS y tablasE/G legibles; sin citas indefinidas o desbordamientos en la última pasada. Permanece el aviso previo de configuración hyperref. La tablaF se adelanta a su encabezado por flotación; el último ajuste fija su colocación al pie. El artefacto y la verificación de ese último ajuste se enlazan en la PR34, sin atribuirles por anticipado el recuento anterior. Las dos tablas históricasH siguen idénticas a main40f594a.
+
+Lo que sigue conserva el antecedente del23/10; sus estados de PR13 no son un estado actual de publicación. La integración posterior de PR13 está confirmada en el historial de main.
+
 Encargo del 23/10/2026 desde HAL, chat `01a1270c-e332-7462-9c90-706d49ade92c`: corregir los ocho puntos pendientes del segundo informe y abrir una PR en el repositorio de memoria. La autorización comprende los capítulos y referencias afectados; no incluye nuevas campañas, despliegues ni merge.
 
 ## Fuentes y base
