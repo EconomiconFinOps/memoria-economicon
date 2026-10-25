@@ -33,7 +33,7 @@ La CI comprueba estáticamente la topología Docker, sin arrancar el producto co
 
 \subsection{Contenedores y entorno local}\label{f-3}
 
-Cuatro Dockerfiles empaquetan frontend, backend, processor y API de costes simulada. La página pública se empaqueta por separado. Docker Compose los conecta con CockroachDB, RabbitMQ, PostgreSQL con pgvector, MinIO, Prometheus y Grafana. Las imágenes base están fijadas por su huella (digest); las aplicaciones se ejecutan sin privilegios de administrador y con comprobaciones de salud. El gateway de modelos de IA y su base de datos forman un perfil opcional, de modo que el sistema arranca completo sin credenciales de un proveedor externo. \cite{despliegue}
+Cuatro Dockerfiles empaquetan frontend, backend, processor y API de costes simulada. La página pública, que presenta el producto y enlaza con la aplicación, se empaqueta por separado y cambia sus destinos (aplicación y vídeo) mediante variables de entorno, sin reconstruir la imagen. Docker Compose los conecta con CockroachDB, RabbitMQ, PostgreSQL con pgvector, MinIO, Prometheus y Grafana. Las imágenes base están fijadas por su huella (digest); las aplicaciones se ejecutan sin privilegios de administrador y con comprobaciones de salud. El gateway de modelos de IA y su base de datos forman un perfil opcional, de modo que el sistema arranca completo sin credenciales de un proveedor externo. \cite{despliegue}
 
 Dos ensayos documentan el entorno: uno construyó el sistema y pasó la prueba de humo ---un recorrido corto por salud, autenticación, ingesta y procesamiento--- en el servidor del equipo; otro repitió la prueba en Docker Desktop, con un control negativo y la persistencia de datos tras reiniciar. Son entornos de ensayo, no una certificación de producción.
 
