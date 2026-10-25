@@ -60,7 +60,7 @@ Docker Compose levanta 11 servicios permanentes, incluida la página pública, y
 
 La figura~\ref{fig-d3} resume la alternativa preparada en AWS. Route 53 (DNS), CloudFront, un cortafuegos web (WAF) y un certificado (ACM) protegen el acceso; la interfaz reside en S3 privado y Cognito gestiona la identidad con OIDC. El balanceador interno dirige la API y Grafana a tareas de ECS Fargate en una red privada virtual (VPC). Allí se preparan también el procesador, el simulador Azure, Amazon MQ y dos bases RDS PostgreSQL. Prometheus y Grafana comparten una tarea privada; Grafana guarda sus metadatos y lee evaluaciones en RDS. CloudWatch recoge logs y señales de infraestructura. \cite{aws}
 
-\begin{figure}[htbp]\centering\input{figuras/d3-aws-observabilidad.tex}\caption{Arquitectura preparada en AWS: acceso, servicios privados y observabilidad. Las flechas agrupan flujos; no representan un despliegue ejecutado.\label{fig-d3}}\end{figure}
+\begin{figure}[htbp]\centering\includegraphics[width=\linewidth,height=0.34\textheight,keepaspectratio]{figuras/d3-aws.png}\caption{Arquitectura preparada en AWS: acceso, servicios privados y observabilidad. Las flechas agrupan flujos; no representan un despliegue ejecutado.\label{fig-d3}}\end{figure}
 
 La tabla~\ref{tab-d3} recoge qué sustituye a cada pieza local y por qué.
 
