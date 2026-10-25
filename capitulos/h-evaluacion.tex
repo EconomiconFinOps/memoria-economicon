@@ -6,7 +6,7 @@ Un asistente que redacta sobre costes no se puede dar por bueno por inspección.
 
 Se siguen seis familias de métricas técnicas: exactitud de la respuesta, relevancia de la recuperación, fundamento de citas y cifras, latencia, robustez de la salida y disponibilidad. A ellas se suman tres de negocio (tiempo ahorrado, cobertura del gasto asignado y ahorro potencial), cuyos objetivos son hipótesis de piloto. \cite{panel}
 
-Todas se consultan en el panel de Grafana «Asistente y evidencia»\footnote{Accesible en \url{https://economicon.danteinferno.es/grafana/}.}, con cinco secciones: negocio y fiabilidad de los datos; calidad y robustez del asistente; recuperación documental y citas; coste y rendimiento del chat; y salud técnica y diagnóstico. Cada métrica tiene su panel en la sección que le corresponde, con el modelo declarado y su procedencia. El panel es el lugar donde se verifican todas las cifras; la memoria recoge solo las principales.
+Todas se consultan en el panel de Grafana «Asistente y evidencia»\footnote{Accesible en \url{https://economicon.danteinferno.es/grafana/}.}, con cinco secciones: negocio y fiabilidad de los datos; calidad y robustez del asistente; recuperación documental y citas; coste y rendimiento del chat; y salud técnica y diagnóstico. Cada métrica tiene su panel en la sección que le corresponde, con el modelo declarado y su procedencia. El panel reúne las mediciones técnicas y sintéticas disponibles, no todas las cifras de la memoria: el impacto empresarial sigue pendiente de piloto y algunas comparativas históricas se respaldan en informes separados.
 
 Las mediciones de calidad usan dos bancos: el de 28 preguntas, con 20 que exigen respuesta, 6 que exigen pedir información y 2 que exigen abstenerse, y una batería de robustez de 29 casos, en la que 16 tienen un defecto que el sistema debe señalar sin inventar un resultado. Un caso aprueba solo si cumple todas sus comprobaciones. Los objetivos son aprobar el 80\,\% de las preguntas con respuesta, cumplir el 90\,\% de las reglas objetivas, no dar cifras sin rastro en casos críticos y terminar el 95\,\% de las conversaciones en diez segundos. \cite{evaluacion,adr}
 
@@ -22,7 +22,7 @@ En la recuperación, el documento correcto apareció en 19 de 19 casos evaluable
 
 \begin{table}[htbp]
 \centering\small
-\caption{Banco de 28 preguntas en cuatro mediciones}\label{tab-h1}
+\caption{Banco de 28 preguntas en tres mediciones}\label{tab-h1}
 \begin{tabular}{@{}p{0.25\linewidth}p{0.13\linewidth}p{0.18\linewidth}p{0.2\linewidth}p{0.14\linewidth}@{}}
 \toprule
 \textbf{Qué cuenta} & \textbf{Plantilla sin modelo} & \textbf{DeepSeek V4.1 Flash, antes del arreglo} & \textbf{DeepSeek V4.1 Flash, tras el arreglo} & \textbf{Objetivo} \\
@@ -40,7 +40,7 @@ Documento correcto recuperado & --- & 8 de 20 & 19 de 19 (captura distinta) & --
 
 \subsection{Margen de mejora en las respuestas}\label{h-3}
 
-Los otros objetivos no se han alcanzado. Con el modelo actual y tras el arreglo se aprobaron 7 de las 19 preguntas con respuesta (36,8\,\%), lejos del 80\,\%, y se cumplió el 60,9\,\% de las comprobaciones objetivas, lejos del 90\,\%. Sobre las 28 preguntas, el número de casos aprobados subió de 10 a 13 con el arreglo, en las mismas operaciones. Aprobar comprobaciones sueltas es menos exigente que aprobar casos completos, por lo que las valoraciones juzgadas salen mejor que las objetivas. Con 28 casos, uno solo pesa 3,6 puntos, así que las diferencias pequeñas entre mediciones no son concluyentes.
+Los otros objetivos no se han alcanzado. Con el modelo actual y tras el arreglo se aprobaron 7 de las 19 preguntas con respuesta (36,8\,\%), lejos del 80\,\%, y se cumplió el 60,9\,\% de las comprobaciones objetivas, lejos del 90\,\%. En dos ejecuciones del mismo banco de 28 preguntas se registraron 10 y 13 casos aprobados, antes y después del arreglo; esto no demuestra por sí solo una mejora causada por el arreglo. Aprobar comprobaciones sueltas es menos exigente que aprobar casos completos, por lo que las valoraciones juzgadas salen mejor que las objetivas. Con 28 casos, uno solo pesa 3,6 puntos, así que las diferencias pequeñas entre mediciones no son concluyentes.
 
 En la última medición, para los 44 casos comunes, la mediana fue de 12,0 s y el percentil 95 de 49,5 s, así que el objetivo de diez segundos no se cumple. De las 50 operaciones de la campaña completa, 47 terminaron y 39 se juzgaron conformes por agentes, sin revisión humana. El margen de mejora en las respuestas es, por tanto, amplio.
 
