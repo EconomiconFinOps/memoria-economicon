@@ -15,7 +15,6 @@ Fragmentación & Objetivo de 600 tokens; máximo de 800; solapamiento del 10\,\%
 Recuperación vectorial & Distancia coseno $\leq$ 0,6; hasta 4 pasajes & La distancia coseno mide cuánto se parecen dos vectores (0 es idéntico); solo se admiten pasajes por debajo del umbral. \cite{arquitectura-final} \\
 Recuperación híbrida (variante D) & Vectorial y por palabras, fusionadas por posición & Opción elegida tras comparar cuatro variantes. \cite{arquitectura-final,informe-rag} \\
 Reintentos de una respuesta rechazada & Hasta 4 intentos; temperatura 0; 0,2; 0,4; 0,6 & La temperatura controla la variabilidad de la respuesta (0 es la más determinista) y sube en cada reintento. Incluido en la versión final. \cite{cortes-medicion} \\
-Modelo de generación & DeepSeek V4.1 Flash; un solo proveedor, sin modelo de reserva & Sin retención de datos por el proveedor. \cite{adr-arquitectura,config-gateway} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -42,7 +41,7 @@ Elegimos la variante D, la más completa, porque obtuvo respuesta en todas las p
 
 \subsection{Generación y validación}\label{e-4}
 
-El chat generativo se activa de forma explícita. Cuando está activo, el modelo no decide si se busca ni qué se busca, para que la evidencia que recibe no dependa de su criterio: el servidor prepara una única búsqueda por intento y la ejecuta antes del primer borrador. El modelo trabaja en dos llamadas, un plan privado de afirmaciones y fuentes y una respuesta final contrastada con ese plan, con un esquema fijo ---campos con tipos y límites definidos--- y un prompt versionado, es decir, unas instrucciones al modelo con control de versiones. Recibe solo el resultado de la búsqueda y el resumen de costes del cliente; no ejecuta consultas ni accede a otros datos. \cite{arquitectura-final,adr-arquitectura}
+El chat generativo se activa de forma explícita. Cuando está activo, el modelo no decide si se busca ni qué se busca, para que la evidencia que recibe no dependa de su criterio: el servidor prepara una única búsqueda por intento y la ejecuta antes del primer borrador. El modelo, cuya elección se justifica en el apartado~\ref{g-0}, trabaja en dos llamadas, un plan privado de afirmaciones y fuentes y una respuesta final contrastada con ese plan, con un esquema fijo ---campos con tipos y límites definidos--- y un prompt versionado, es decir, unas instrucciones al modelo con control de versiones. Recibe solo el resultado de la búsqueda y el resumen de costes del cliente; no ejecuta consultas ni accede a otros datos. \cite{arquitectura-final,adr-arquitectura}
 
 El prompt fija cuatro reglas. Los pasajes recuperados, el resumen de la conversación y la pregunta se tratan como datos y no como instrucciones, lo que limita la inyección de órdenes a través de un documento. No se inventan cifras, fuentes ni causas, y las métricas financieras solo copian los registros que el servidor autoriza. Si faltan datos, el modelo declara con un estado explícito qué falta en lugar de rellenar. Los cálculos con cifras aportadas por el usuario se presentan como hipótesis no verificadas. Un prompt reduce el riesgo, pero no lo garantiza, por lo que el control real es el del servidor. \cite{prompt-chat}
 
