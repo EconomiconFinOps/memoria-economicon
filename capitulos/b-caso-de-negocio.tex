@@ -10,21 +10,21 @@ La propuesta se dirige a fundadores de startups, desarrolladores independientes 
 
 \subsection{Análisis de mercado}\label{b-23}
 
-Gartner prevé que el gasto mundial de los usuarios finales en nube pública alcance los 723.400 millones de dólares en 2025, frente a los 595.700 millones de 2024 \cite{gartner2024}. Según Flexera, que encuestó en 2025 a 759 profesionales cloud, el 84\,\% sitúa la gestión del gasto entre sus principales retos y estima en un 27\,\% el gasto en infraestructura y plataformas en la nube (infraestructura y plataforma como servicio, IaaS y PaaS) que se desperdicia \cite{flexera2025}.
+Gartner prevé que el gasto mundial de los usuarios finales en nube pública alcance los 723.400 millones de dólares en 2025, frente a los 595.700 millones de 2024. Según Flexera, que encuestó en 2025 a 759 profesionales cloud, el 84\,\% sitúa la gestión del gasto entre sus principales retos y estima en un 27\,\% el gasto en infraestructura y plataformas en la nube (infraestructura y plataforma como servicio, IaaS y PaaS) que se desperdicia. \cite{gartner2024,flexera2025}
 
 Estos datos justifican investigar el control del gasto. Economicon compite por facilidad de interpretación frente a los paneles nativos del proveedor.
 
 \subsection{Justificación de la solución}\label{b-35}
 
-El asistente busca responder «¿en qué se me va el dinero?» con datos y fuentes. Combina cálculos deterministas de indicadores, anomalías y presupuestos con recuperación documental y generación de explicaciones. Los cálculos del servidor son verificables; la calidad de las respuestas generadas se evalúa en el apartado~\ref{h-0}. Se eligió Azure por disponer de datos públicos y un esquema de costes documentado, evitando usar facturas privadas de clientes. \cite{arquitectura-final}
+El asistente busca responder «¿en qué se me va el dinero?» con datos y fuentes. Combina cálculos deterministas de indicadores, anomalías y presupuestos con recuperación documental y generación de explicaciones. Los cálculos del servidor son verificables; la calidad de las respuestas generadas se evalúa en el apartado~\ref{h-0}. Se eligió Azure por disponer de datos públicos y un esquema de costes documentado, evitando usar facturas privadas de clientes. \cite{arquitectura}
 
 \subsection{Viabilidad}\label{b-41}
 
 \paragraph{Técnica:}
-El prototipo implementa ingesta, normalización, indicadores, presupuestos y conversación documental. Las pruebas automáticas y los recorridos con datos reproducibles confirman que el circuito completo funciona de extremo a extremo; la calidad de las respuestas se mide en el apartado~\ref{h-0}. \cite{arquitectura-final,demo-final}
+El prototipo implementa ingesta, normalización, indicadores, presupuestos y conversación documental. Las pruebas automáticas y los recorridos con datos reproducibles confirman que el circuito completo funciona de extremo a extremo; la calidad de las respuestas se mide en el apartado~\ref{h-0}. \cite{arquitectura}
 
 \paragraph{Operativa:}
-Docker Compose permite iniciar el entorno local: diez servicios permanentes y dos de inicialización, más dos opcionales para IA. Una API simulada sirve datos públicos de Microsoft FinOps Toolkit con licencia MIT. \cite{arquitectura-final}
+Docker Compose permite iniciar el entorno local: diez servicios permanentes y dos de inicialización, más dos opcionales para IA. Una API simulada sirve datos públicos de Microsoft FinOps Toolkit con licencia MIT.
 
 \paragraph{Económica:}
 La tabla~\ref{tab-b1} compara dos escenarios de un año. El modelo cobra un pago único de despliegue de 200 € por cliente y una mensualidad de 50 €, con todos los clientes activos durante el año. Los precios son los que ha calculado el equipo. El coste fijo es de 3.200 € mensuales: 1.200 € de infraestructura, cifra que se toma como hipótesis, y 80 horas de mantenimiento y evolución a 25 € por hora.
@@ -44,18 +44,18 @@ Costes (3.200 € al mes) & 38.400 & 38.400 \\
 \end{tabular}
 \end{table}
 
-En el escenario conservador no se cubren los costes; en el optimista sí. El equilibrio recurrente requiere 64 clientes o 48 en el primer año contando el pago de despliegue. Si el cliente recuperara un tercio del desperdicio medio que cita Flexera, ahorraría el 9\,\% de su gasto: a partir de unos 556 € mensuales, una mensualidad de 50 € se compensa. \cite{flexera2025}
+En el escenario conservador no se cubren los costes; en el optimista sí. El equilibrio recurrente requiere 64 clientes o 48 en el primer año contando el pago de despliegue. Si el cliente recuperara un tercio del desperdicio medio que cita Flexera, ahorraría el 9\,\% de su gasto: a partir de unos 556 € mensuales, una mensualidad de 50 € se compensa.
 
 \subsection{Impacto esperado}
 
-Se pretende facilitar la interpretación de costes sin formación especializada. La evaluación técnica mide acierto, latencia y trazabilidad de cifras, con métodos y objetivos descritos en el apartado~\ref{h-0}. La primera línea base, una plantilla sin modelo, no aprobó ninguno de los veinte casos con respuesta. \cite{jup070} El impacto empresarial requerirá un piloto que mida uso, tiempo ahorrado y beneficio económico.
+Se pretende facilitar la interpretación de costes sin formación especializada. La evaluación técnica mide acierto, latencia y trazabilidad de cifras, con métodos y objetivos descritos en el apartado~\ref{h-0}. La primera línea base, una plantilla sin modelo, no aprobó ninguno de los veinte casos con respuesta. El impacto empresarial requerirá un piloto que mida uso, tiempo ahorrado y beneficio económico. \cite{evaluacion}
 
 \subsection{Costes y supuestos}
 
 Las mediciones de IA se separan del presupuesto de infraestructura.
 
 \paragraph{Coste de la inteligencia artificial:}
-El coste de los modelos de lenguaje depende del consumo. En las pruebas, una consulta completada costó unos 0,06 USD por cada cien, con contraste de facturación. \cite{jup133-coste} El registro del gateway situó en 0,0118 USD el coste acumulado de tres tandas diagnósticas y una comprobación de embeddings; esa cifra no es el gasto total del desarrollo. \cite{adr-registro}
+El coste de los modelos de lenguaje depende del consumo. En las pruebas, una consulta completada costó unos 0,06 USD por cada cien, con contraste de facturación. El registro del gateway situó en 0,0118 USD el coste acumulado de tres tandas diagnósticas y una comprobación de embeddings; esa cifra no es el gasto total del desarrollo. \cite{evaluacion,adr}
 
 \paragraph{Coste de infraestructura:}
 El presupuesto de 1.200 € mensuales supone operación continua, sin IVA ni capa gratuita. Los modelos de lenguaje son un coste variable aparte, que crece con el uso.
@@ -64,6 +64,6 @@ El presupuesto de 1.200 € mensuales supone operación continua, sin IVA ni cap
 
 Los riesgos técnicos principales son la calidad de las respuestas y la latencia. Se controlan con casos reproducibles, límites de generación y registro de fallos.
 
-En lo económico, los reintentos y el volumen pueden elevar el gasto. Los límites por clave y el registro de consumo permiten controlarlo. \cite{adr-registro,campanas-infra}
+En lo económico, los reintentos y el volumen pueden elevar el gasto. Los límites por clave y el registro de consumo permiten controlarlo. \cite{adr}
 
 Para reducir el riesgo de plazo se priorizaron los contenidos obligatorios, las entregas pequeñas revisables y la identificación explícita de los pendientes.
