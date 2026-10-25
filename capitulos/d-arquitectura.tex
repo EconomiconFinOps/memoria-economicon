@@ -36,7 +36,7 @@ Ambos flujos operan por cliente: la búsqueda filtra por cliente y los costes se
 
 \subsubsection{El camino de una pregunta}
 
-El asistente atiende cada pregunta por uno de dos caminos. Las consultas estructuradas ---gasto por dimensión, propiedad de los costes y explicación de una anomalía--- las resuelve el servidor con consultas a la base de datos y devuelve cifras exactas con su evidencia, sin intervención del modelo. Las preguntas abiertas recorren el chat con modelo de lenguaje, que se activa por configuración y que la demostración por defecto mantiene apagado. \cite{despliegue}
+El asistente atiende cada pregunta por uno de dos caminos. Las consultas estructuradas ---gasto por dimensión, propiedad de los costes y explicación de una anomalía--- las resuelve el servidor con consultas a la base de datos y devuelve cifras exactas con su evidencia, sin intervención del modelo. Las preguntas abiertas recorren el chat con modelo de lenguaje. \cite{despliegue}
 
 En el chat con modelo (figura~\ref{fig-d2}), la API abre una operación asociada a la conversación y la envía al procesador por una red privada y con una firma que solo conocen ambos; el procesador comprueba en cada paso que la operación sigue siendo de esa persona. El servidor prepara una única búsqueda documental por intento, sin que la decida el modelo, que redacta con un esquema fijo; el detalle de la recuperación y de la generación está en el apartado~\ref{e-0}.
 
@@ -84,7 +84,7 @@ Secretos de Compose & Secrets Manager, KMS e IAM & Claves cifradas y un rol de m
 \end{tabular}
 \end{table}
 
-Las bases y el broker solo admiten conexiones de los grupos de seguridad autorizados. La referencia Terraform tiene 14 pruebas con proveedores simulados y la preparación inicial del controlador, otra; no crean infraestructura real. La CI prueba además el enrutamiento de CloudFront y la monitorización en contenedores aislados. El repositorio prepara un ciclo manual de creación y retirada y admite PostgreSQL, Cognito y Bedrock por configuración. Es aceptación del código sin conexión, no de un despliegue AWS. \cite{aws,ci-integracion}
+Las bases y el broker solo admiten conexiones de los grupos de seguridad autorizados. La referencia Terraform tiene 14 pruebas con proveedores simulados y la preparación inicial del controlador, otra; no crean infraestructura real. La CI prueba además el enrutamiento de CloudFront y la monitorización en contenedores aislados. El repositorio prepara un ciclo manual de creación y retirada y admite PostgreSQL, Cognito y Bedrock por configuración. El despliegue en una cuenta real de AWS \pendiente{}. \cite{aws,ci-integracion}
 
 \subsection{Alcance y límites}\label{d-4}
 
